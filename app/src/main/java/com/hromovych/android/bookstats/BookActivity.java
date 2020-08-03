@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.hromovych.android.bookstats.ui.readNow.BookNowFragment;
 import com.hromovych.android.bookstats.ui.readYet.BookYetFragment;
+import com.hromovych.android.bookstats.ui.wantRead.WantBookFragment;
 
 import java.util.UUID;
 
@@ -57,6 +58,11 @@ public class BookActivity extends AppCompatActivity
                         .commit();
 
 
+            } else if (fragment_id.equals(WantBookFragment.BOOK_FRAGMENT_ID)) {
+                fragment = WantBookFragment.newInstance(bookId);
+                fm.beginTransaction()
+                        .add(R.id.fragment_container, fragment)
+                        .commit();
             } else {
                 fragment = BookFragment.newInstance(bookId);
                 fm.beginTransaction()
@@ -86,6 +92,13 @@ public class BookActivity extends AppCompatActivity
 
         } else if (fragment_id.equals(BookYetFragment.BOOK_FRAGMENT_ID)) {
             Fragment fragment_new = BookYetFragment.newInstance(bookId);
+            fm.beginTransaction()
+                    .replace(fragment.getId(), fragment_new)
+                    .commit();
+            fragment = fragment_new;
+
+        } else if (fragment_id.equals(WantBookFragment.BOOK_FRAGMENT_ID)) {
+            Fragment fragment_new = WantBookFragment.newInstance(bookId);
             fm.beginTransaction()
                     .replace(fragment.getId(), fragment_new)
                     .commit();

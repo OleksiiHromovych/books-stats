@@ -96,14 +96,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/bookItemTextColor"
-
-            android:visibility="invisible" />
+            android:visibility="gone"
+             />
 
         <TextView
             android:id="@+id/details_down"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/bookItemTextColor"
-            android:visibility="invisible" />
+            android:visibility="gone" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

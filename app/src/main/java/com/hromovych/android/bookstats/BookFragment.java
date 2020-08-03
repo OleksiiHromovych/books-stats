@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import com.hromovych.android.bookstats.database.BookDBSchema;
 import com.hromovych.android.bookstats.ui.readNow.BookNowFragment;
 import com.hromovych.android.bookstats.ui.readYet.BookYetFragment;
+import com.hromovych.android.bookstats.ui.wantRead.WantBookFragment;
 
 import java.util.List;
 import java.util.UUID;
@@ -201,7 +202,7 @@ public class BookFragment extends Fragment {
                 mBook.setStatus(choose[position]);
                 int[] choose_id = {BookYetFragment.BOOK_FRAGMENT_ID,
                         BookNowFragment.BOOK_FRAGMENT_ID,
-                        -1};
+                        WantBookFragment.BOOK_FRAGMENT_ID};
                 mCallbacks.changeFragmentByStatus(choose_id[position]);
                 updateBook();
 
