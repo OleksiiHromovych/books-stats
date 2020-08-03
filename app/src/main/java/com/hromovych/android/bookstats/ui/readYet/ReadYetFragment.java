@@ -1,6 +1,10 @@
 package com.hromovych.android.bookstats.ui.readYet;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -9,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,11 +48,62 @@ public class ReadYetFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.read_yet_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
         updateUI();
 
         return view;
     }
+
+    private ItemTouchHelper.SimpleCallback mItemTouchHelperCallback =
+            new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT ) {
+                @Override
+                public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                    final ColorDrawable backgroundLeft = new ColorDrawable(getResources()
+                            .getColor(R.color.backgroundItem));
+                    backgroundLeft.setBounds(0, viewHolder.itemView.getTop(),
+                            viewHolder.itemView.getLeft() + (int) (dX),
+                            viewHolder.itemView.getBottom());
+                    backgroundLeft.draw(c);
+
+                    final ColorDrawable backgroundRight = new ColorDrawable(Color.GREEN);
+                    backgroundRight.setBounds(viewHolder.itemView.getRight() + (int) dX, viewHolder.itemView.getTop(), viewHolder.itemView.getRight(), viewHolder.itemView.getBottom());
+                    backgroundRight.draw(c);
+
+                    Drawable icon = ContextCompat.getDrawable(recyclerView.getContext(),
+                            R.drawable.ic_read_now);
+
+                    int iconHorizontalMargin = icon.getIntrinsicWidth();
+
+                    int top = viewHolder.itemView.getTop() + ((viewHolder.itemView.getBottom() -
+                            viewHolder.itemView.getTop()) / 2 - (int) icon.getIntrinsicHeight() / 2);
+                    icon.setBounds(viewHolder.itemView.getLeft() + iconHorizontalMargin, top,
+                            viewHolder.itemView.getLeft() + iconHorizontalMargin +
+                                    icon.getIntrinsicWidth(), top + icon.getIntrinsicHeight());
+                    icon.draw(c);
+
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                }
+
+                @Override
+                public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                    return false;
+                }
+
+                @Override
+                public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                    BookLab bookLab = BookLab.get(getActivity());
+                    List<Book> books = bookLab.getBooksByStatus(getResources()
+                            .getString(R.string.title_read_yet));
+
+                    Book book = books.get(viewHolder.getAdapterPosition());
+                    book.setStatus(getResources().getString(R.string.title_read_now));
+                    bookLab.updateBook(book);
+                    updateUI();
+                }
+            };
+
+
 
     @Override
     public void onResume() {
