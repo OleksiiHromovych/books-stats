@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/read_now">
+
+
+    <fragment
+        android:id="@+id/read_yet"
+
+        android:name="com.hromovych.android.bookstats.ui.readYet.ReadYetFragment"
+        android:label="@string/title_read_yet"
+        tools:layout="@layout/fragment_read_yet" />
+
+    <fragment
+        android:id="@+id/read_now"
+        android:name="com.hromovych.android.bookstats.ui.readNow.ReadNowFragment"
+        android:label="@string/title_read_now"
+        tools:layout="@layout/fragment_read_now" />
+
+    <fragment
+        android:id="@+id/want_read"
+        android:name="com.hromovych.android.bookstats.ui.wantRead.WantReadFragment"
+        android:label="@string/title_want_read"
+        tools:layout="@layout/fragment_want_read" />
+</navigation>

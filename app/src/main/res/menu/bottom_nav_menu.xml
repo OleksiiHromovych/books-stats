@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/read_yet"
+        android:icon="@drawable/ic_read_yet"
+        android:title="@string/title_read_yet" />
+
+    <item
+        android:id="@+id/read_now"
+        android:icon="@drawable/ic_read_now"
+        android:title="@string/title_read_now" />
+
+    <item
+        android:id="@+id/want_read"
+        android:icon="@drawable/ic_want_read"
+        android:title="@string/title_want_read" />
+
+</menu>
+
+

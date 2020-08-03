@@ -1,0 +1,46 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/backgroundApp</item>
+        <item name="colorPrimaryDark">@color/backgroundFont</item>
+        <item name="colorAccent">@color/backgroundItem</item>
+
+        <item name="android:windowBackground">@color/backgroundFont</item>
+
+
+    </style>
+
+    <style name="DatePickerDialog" parent="Theme.AppCompat.DayNight.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+
+        <item name="android:textColor">@color/activeIcon</item>
+
+        <item name="android:background">@color/backgroundApp</item>
+        <item name="android:textColorPrimaryInverse">@color/bookPaper</item>
+
+        <item name="android:textColorSecondaryInverse">@color/colorAccent</item>
+
+        <!--        <item name="android:textColorSecondary">@color/colorAccent</item>  week day-->
+        <!--        <item name="android:textColorPrimary">@color/colorAccent</item> color of date number-->
+
+        <!--        <item name="backgroundTint">@color/backgroundItemLight</item>-->
+        <item name="android:colorBackground">@color/backgroundItemLight</item>
+        <item name="colorAccent">@color/activeIcon</item>
+
+    </style>
+
+    <style name="Autocomplete" parent="Widget.AppCompat.Light.AutoCompleteTextView">
+        <item name="android:background">@color/backgroundItem</item>
+        <!--        <item name="colorControlNormal">@color/colorPrimary</item>-->
+        <item name="colorControlActivated">@color/backgroundFont</item>
+
+        <item name="android:textColorHint">@color/bookPaper</item>
+        <item name="android:textColor">@color/bookPaper</item>
+    </style>
+
+
+</resources>

@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Book Stats</string>
+    <string name="title_read_now">Read Now</string>
+    <string name="title_read_yet">Read yet</string>
+    <string name="title_want_read">Want read</string>
+
+    <string name="book_name_title">Book</string>
+    <string name="book_name_hint">Enter book name</string>
+    <string name="book_author_title">Author</string>
+    <string name="book_author_hint">Enter book author</string>
+    <string name="book_pages_title">Pages</string>
+    <string name="book_pages_hint">Enter number of book</string>
+    <string name="book_category_title">Category</string>
+    <string name="book_category_hint">Enter book category</string>
+    <string name="book_status_title">Status:</string>
+    <string name="delete_book">delete</string>
+    <string name="book_start_date_title">Start date</string>
+
+    <string name="book_activity_title">Custom book</string>
+    <string name="date_picker_title">Book date</string>
+    <string name="book_end_date_title">End date</string>
+    <string name="subtitle_number_quantity">pag</string>
+
+    <string-array name="spinner_list">
+        <item>@string/title_read_yet</item>
+        <item>@string/title_read_now</item>
+        <item>@string/title_want_read</item>
+    </string-array>
+
+</resources>

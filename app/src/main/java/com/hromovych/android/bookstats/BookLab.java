@@ -1,0 +1,165 @@
+package com.hromovych.android.bookstats;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.hromovych.android.bookstats.database.BookBaseHelper;
+import com.hromovych.android.bookstats.database.BookCursorWrapper;
+import com.hromovych.android.bookstats.database.BookDBSchema.BookTable;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+public class BookLab {
+
+    private static BookLab sBookLab;
+
+    private Context mContext;
+    private SQLiteDatabase mDatabase;
+
+
+    private BookLab(Context context) {
+        mContext = context.getApplicationContext();
+        mDatabase = new BookBaseHelper(mContext).getWritableDatabase();
+
+    }
+
+    public static BookLab get(Context context) {
+        if (sBookLab == null)
+            sBookLab = new BookLab(context);
+        return sBookLab;
+    }
+
+    public static ContentValues getContentValues(Book book) {
+        ContentValues values = new ContentValues();
+        values.put(BookTable.Cols.UUID, book.getId().toString());
+        values.put(BookTable.Cols.NAME, book.getBookName());
+        values.put(BookTable.Cols.AUTHOR, book.getAuthor());
+        values.put(BookTable.Cols.PAGE, book.getPages());
+        values.put(BookTable.Cols.CATEGORY, book.getCategory());
+        values.put(BookTable.Cols.StartDATE, book.getStartDate().getTime());
+        values.put(BookTable.Cols.EndDATE, book.getEndDate().getTime());
+        values.put(BookTable.Cols.STATUS, book.getStatus());
+        return values;
+    }
+
+    public void addBook(Book b) {
+        ContentValues contentValues = getContentValues(b);
+
+        mDatabase.insert(BookTable.NAME, null, contentValues);
+    }
+
+    public List<Book> getBooks() {
+        List<Book> books = new ArrayList<>();
+
+        BookCursorWrapper cursor = queryBooks(null, null);
+
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                books.add(cursor.getBook());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return books;
+    }
+
+    public List<Book> getBooksByStatus(String s) {
+        List<Book> books = new ArrayList<>();
+
+        BookCursorWrapper cursor = queryBooks(
+                BookTable.Cols.STATUS + " = ?",
+                new String[]{s});
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                books.add(cursor.getBook());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return books;
+    }
+
+    public Book getBook(UUID id) {
+        BookCursorWrapper cursor = queryBooks(
+                BookTable.Cols.UUID + " = ?",
+                new String[]{id.toString()}
+        );
+
+        try {
+            if (cursor.getCount() == 0) {
+                return null;
+            }
+            cursor.moveToFirst();
+            return cursor.getBook();
+        } finally {
+            cursor.close();
+        }
+    }
+
+    public void updateBook(Book book) {
+        String uuidString = book.getId().toString();
+        ContentValues values = getContentValues(book);
+
+        mDatabase.update(BookTable.NAME, values,
+                BookTable.Cols.UUID + " = ?",
+                new String[]{uuidString});
+    }
+
+    private BookCursorWrapper queryBooks(String whereClause, String[] whereArgs) {
+        Cursor cursor = mDatabase.query(
+                BookTable.NAME,
+                null,
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                null);
+
+        return new BookCursorWrapper(cursor);
+    }
+
+    public void deleteBook(Book book) {
+        String uuidString = book.getId().toString();
+        mDatabase.delete(BookTable.NAME, BookTable.Cols.UUID + " = ?",
+                new String[]{uuidString});
+    }
+
+    public List<String> getColumnItems(String name) {
+        List<String> columnItems = new ArrayList<>();
+
+        Cursor cursor = mDatabase.query(
+                BookTable.NAME,
+                new String[]{name},
+                null,
+                null,
+                null,
+                null,
+                null);
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                columnItems.add(cursor.getString(0));
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        Set<String> set = new HashSet<>(columnItems);
+        columnItems.clear();
+        columnItems.addAll(set);
+        columnItems.remove(null);
+        columnItems.remove("");
+        return columnItems;
+
+    }
+}
