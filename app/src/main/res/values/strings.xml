@@ -22,6 +22,15 @@
     <string name="subtitle_number_quantity">pag</string>
     <string name="book_type_title">Type</string>
 
+    <string name="type_book_1">Paper</string>
+    <string name="type_book_2">Electronic</string>
+    <string name="type_book_3">Audio</string>
+
+    <string name="priority_book_1">High</string>
+    <string name="priority_book_2">Medium</string>
+    <string name="priority_book_3">Low</string>
+    <string name="book_priority_title">Priority</string>
+
     <string-array name="status_spinner_list">
         <item>@string/title_read_yet</item>
         <item>@string/title_read_now</item>
@@ -29,15 +38,15 @@
     </string-array>
 
     <string-array name="type_spinner_list">
-        <item>Paper</item>
-        <item>Electronic</item>
-        <item>Audio</item>
+        <item>@string/type_book_1</item>
+        <item>@string/type_book_2</item>
+        <item>@string/type_book_3</item>
     </string-array>
 
     <string-array name="priority_spinner_list">
-        <item>High</item>
-        <item>Medium</item>
-        <item>Low</item>
+        <item>@string/priority_book_1</item>
+        <item>@string/priority_book_2</item>
+        <item>@string/priority_book_3</item>
     </string-array>
 
 </resources>

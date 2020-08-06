@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Book Stats</string>
+    <string name="title_read_now">Читаю</string>
+    <string name="title_read_yet">Прочитал</string>
+    <string name="title_want_read">Прочитаю</string>
+    <string name="book_name_title">Книга</string>
+    <string name="book_name_hint">Введите название книги</string>
+    <string name="book_author_title">Автор</string>
+    <string name="book_author_hint">Введите автора книги</string>
+    <string name="book_pages_title">Страниц</string>
+    <string name="book_pages_hint">Введите количество страниц</string>
+    <string name="book_category_title">Категория</string>
+    <string name="book_category_hint">Введите категорию книги</string>
+    <string name="book_status_title">Статус:</string>
+    <string name="delete_book">Удалить</string>
+    <string name="book_start_date_title">Дата начала</string>
+    <string name="book_activity_title">Редактирования книги</string>
+    <string name="date_picker_title">Дата книги</string>
+    <string name="book_end_date_title">Дата закінчення</string>
+    <string name="subtitle_number_quantity">стр</string>
+    <string name="book_type_title">Тип</string>
+    <string name="type_book_1">Бумажная</string>
+    <string name="type_book_2">Электронная</string>
+    <string name="type_book_3">Аудио</string>
+    <string name="priority_book_1">Высокий</string>
+    <string name="priority_book_2">Средний</string>
+    <string name="priority_book_3">Низкий</string>
+    <string name="book_priority_title">Приоритет</string>
+
+</resources>
