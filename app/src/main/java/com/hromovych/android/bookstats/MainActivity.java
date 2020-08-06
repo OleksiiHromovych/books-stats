@@ -1,11 +1,15 @@
 package com.hromovych.android.bookstats;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -15,7 +19,6 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity implements Callbacks {
 
@@ -52,6 +55,46 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_book:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setTitle("Delete all books?");
+                builder.setMessage("You are about to delete all books info. Do you really want to proceed ?");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "I don't think so. Програміст" +
+                                " ще не написав цього. Sorry \\-_-/ ♥", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+                builder.show();
+                return true;
+            case R.id.import_books:
+                Toast.makeText(getApplicationContext(), "phhh, phh, phh. Import not success," +
+                        " try later", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onBookSelected(Book book) {
 
         startActivityForResult(BookActivity.newIntent(MainActivity.this, book.getId(),
@@ -64,15 +107,5 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void displaySnackbar(String text, String actionName, View.OnClickListener action) {
-        Snackbar snack = Snackbar.make(findViewById(android.R.id.content), text, Snackbar.LENGTH_LONG)
-                .setAction(actionName, action);
 
-        View v = snack.getView();
-//        v.setBackgroundColor(getResources().getColor(R.color.secondary));
-        ((TextView) v.findViewById(R.id.snackbar_text)).setTextColor(Color.WHITE);
-        ((TextView) v.findViewById(R.id.snackbar_action)).setTextColor(Color.BLACK);
-
-        snack.show();
-    }
 }

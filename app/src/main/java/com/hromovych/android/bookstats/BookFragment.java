@@ -1,6 +1,8 @@
 package com.hromovych.android.bookstats;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,8 +28,6 @@ import com.hromovych.android.bookstats.ui.wantRead.WantBookFragment;
 
 import java.util.List;
 import java.util.UUID;
-
-import static android.app.Activity.RESULT_OK;
 
 
 public class BookFragment extends Fragment {
@@ -186,12 +186,10 @@ public class BookFragment extends Fragment {
                 android.R.layout.simple_dropdown_item_1line, items));
 
         mBookStatusSpinner = v.findViewById(R.id.book_status);
-//        ArrayAdapter adapter = (ArrayAdapter) mBookStatusSpinner.getAdapter();
-//        mBookStatusSpinner.setSelection(adapter.getPosition(mBook.getStatus()));
         mBookStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String[] choose = getResources().getStringArray(R.array.spinner_list);
+                String[] choose = getResources().getStringArray(R.array.status_spinner_list);
                 if (mBook.getStatus() == null) {
                     mBook.setStatus(choose[position]);
                     return;
@@ -227,15 +225,33 @@ public class BookFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_book:
-                BookLab.get(getActivity()).deleteBook(mBook);
-                getActivity().setResult(RESULT_OK);
-                getActivity().finish();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                builder.setTitle("Confirm book delete !");
+                builder.setMessage("You are about to delete all book info. Do you really want to proceed ?");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        BookLab.get(getActivity()).deleteBook(mBook);
+                        updateBook();
+                        getActivity().finish();
+                    }
+                });
+
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+                builder.show();
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
     interface Callbacks {
         void changeFragmentByStatus(Integer fragment_id);
     }

@@ -1,26 +1,34 @@
 package com.hromovych.android.bookstats.ui.wantRead;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.hromovych.android.bookstats.Book;
 import com.hromovych.android.bookstats.BookLab;
 import com.hromovych.android.bookstats.Callbacks;
+import com.hromovych.android.bookstats.DateHelper;
 import com.hromovych.android.bookstats.R;
 
 import java.util.List;
 
-public class WantReadFragment extends Fragment {
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
+public class WantReadFragment extends Fragment {
 
 
     private RecyclerView mRecyclerView;
@@ -39,12 +47,81 @@ public class WantReadFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_want_read, container, false);
         mRecyclerView = view.findViewById(R.id.want_read_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
         updateUI();
 
         return view;
     }
+
+
+    private ItemTouchHelper.SimpleCallback mItemTouchHelperCallback =
+            new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                @Override
+                public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                    new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                            .addBackgroundColor(R.color.backgroundFont)
+                            .addActionIcon(R.drawable.ic_read_now)
+                            .addSwipeLeftLabel(getResources().getString(R.string.title_read_now))
+                            .create()
+                            .decorate();
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
+
+                }
+
+                @Override
+                public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                    return false;
+                }
+
+                @Override
+                public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                    final BookLab bookLab = BookLab.get(getActivity());
+                    List<Book> books = bookLab.getBooksByStatus(getResources()
+                            .getString(R.string.title_want_read));
+
+                    final Book book = books.get(viewHolder.getAdapterPosition());
+                    book.setStatus(getResources().getString(R.string.title_read_now));
+                    if (book.getStartDate().equals(DateHelper.undefinedDate))
+                        book.setStartDate(DateHelper.today);
+                    book.setEndDate(DateHelper.undefinedDate);
+                    book.setType(getResources().getStringArray(R.array.type_spinner_list)[0]);
+                    bookLab.updateBook(book);
+                    updateUI();
+
+                    displaySnackbar("Swipe element", "Undo", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            book.setStatus(getResources().getString(R.string.title_want_read));
+                            book.setStartDate(DateHelper.undefinedDate);
+                            book.setEndDate(DateHelper.undefinedDate);
+                            bookLab.updateBook(book);
+                            updateUI();
+                        }
+                    });
+
+                }
+            };
+
+
+    public void displaySnackbar(String text, String actionName, View.OnClickListener action) {
+        Snackbar snack = Snackbar.make(getActivity().findViewById(android.R.id.content), text, Snackbar.LENGTH_LONG)
+                .setAction(actionName, action);
+
+        View v = snack.getView();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) v.getLayoutParams();
+        params.gravity = Gravity.TOP;
+        v.setLayoutParams(params);
+
+        v.setBackgroundColor(getResources().getColor(R.color.backgroundItem));
+        ((TextView) v.findViewById(R.id.snackbar_text)).setTextColor(Color.WHITE);
+        ((TextView) v.findViewById(R.id.snackbar_action)).setTextColor(Color.BLACK);
+
+        snack.show();
+    }
+
 
     @Override
     public void onResume() {
@@ -79,6 +156,7 @@ public class WantReadFragment extends Fragment {
         private TextView bookName;
         private TextView author;
         private TextView pages;
+        private TextView priority;
 
         private Book mBook;
 
@@ -89,6 +167,8 @@ public class WantReadFragment extends Fragment {
             bookName = itemView.findViewById(R.id.book_name);
             author = itemView.findViewById(R.id.author);
             pages = itemView.findViewById(R.id.book_pages);
+            priority = itemView.findViewById(R.id.details_up);
+            priority.setVisibility(View.VISIBLE);
             itemView.setOnClickListener(this);
         }
 
@@ -98,7 +178,8 @@ public class WantReadFragment extends Fragment {
             bookName.setText(mBook.getBookName());
             author.setText(mBook.getAuthor());
             pages.setText("" + mBook.getPages());
-
+            priority.setText(mBook.getType());
+//priority.setTextColor(Color.RED);
         }
 
         @Override

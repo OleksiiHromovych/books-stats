@@ -20,11 +20,24 @@
     <string name="date_picker_title">Book date</string>
     <string name="book_end_date_title">End date</string>
     <string name="subtitle_number_quantity">pag</string>
+    <string name="book_type_title">Type</string>
 
-    <string-array name="spinner_list">
+    <string-array name="status_spinner_list">
         <item>@string/title_read_yet</item>
         <item>@string/title_read_now</item>
         <item>@string/title_want_read</item>
+    </string-array>
+
+    <string-array name="type_spinner_list">
+        <item>Paper</item>
+        <item>Electronic</item>
+        <item>Audio</item>
+    </string-array>
+
+    <string-array name="priority_spinner_list">
+        <item>High</item>
+        <item>Medium</item>
+        <item>Low</item>
     </string-array>
 
 </resources>

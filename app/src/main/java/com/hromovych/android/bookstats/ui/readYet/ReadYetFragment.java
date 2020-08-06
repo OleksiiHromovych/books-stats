@@ -3,30 +3,31 @@ package com.hromovych.android.bookstats.ui.readYet;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.hromovych.android.bookstats.Book;
 import com.hromovych.android.bookstats.BookLab;
 import com.hromovych.android.bookstats.Callbacks;
+import com.hromovych.android.bookstats.DateHelper;
 import com.hromovych.android.bookstats.R;
-import com.hromovych.android.bookstats.UnknownDate;
 
-import java.util.Date;
 import java.util.List;
+
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class ReadYetFragment extends Fragment {
 
@@ -35,6 +36,7 @@ public class ReadYetFragment extends Fragment {
     private ReadYetFragment.BookAdapter mAdapter;
     private Callbacks mCallbacks;
 
+    private int mLastUpdatedPosition;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -56,33 +58,20 @@ public class ReadYetFragment extends Fragment {
     }
 
     private ItemTouchHelper.SimpleCallback mItemTouchHelperCallback =
-            new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT ) {
+            new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
                 @Override
                 public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                    final ColorDrawable backgroundLeft = new ColorDrawable(getResources()
-                            .getColor(R.color.backgroundItem));
-                    backgroundLeft.setBounds(0, viewHolder.itemView.getTop(),
-                            viewHolder.itemView.getLeft() + (int) (dX),
-                            viewHolder.itemView.getBottom());
-                    backgroundLeft.draw(c);
 
-                    final ColorDrawable backgroundRight = new ColorDrawable(Color.GREEN);
-                    backgroundRight.setBounds(viewHolder.itemView.getRight() + (int) dX, viewHolder.itemView.getTop(), viewHolder.itemView.getRight(), viewHolder.itemView.getBottom());
-                    backgroundRight.draw(c);
-
-                    Drawable icon = ContextCompat.getDrawable(recyclerView.getContext(),
-                            R.drawable.ic_read_now);
-
-                    int iconHorizontalMargin = icon.getIntrinsicWidth();
-
-                    int top = viewHolder.itemView.getTop() + ((viewHolder.itemView.getBottom() -
-                            viewHolder.itemView.getTop()) / 2 - (int) icon.getIntrinsicHeight() / 2);
-                    icon.setBounds(viewHolder.itemView.getLeft() + iconHorizontalMargin, top,
-                            viewHolder.itemView.getLeft() + iconHorizontalMargin +
-                                    icon.getIntrinsicWidth(), top + icon.getIntrinsicHeight());
-                    icon.draw(c);
+                    new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                            .addBackgroundColor(R.color.backgroundFont)
+                            .addActionIcon(R.drawable.ic_read_now)
+                            .addSwipeRightLabel(getResources().getString(R.string.title_read_now))
+                            .create()
+                            .decorate();
 
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
+
                 }
 
                 @Override
@@ -92,18 +81,51 @@ public class ReadYetFragment extends Fragment {
 
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                    BookLab bookLab = BookLab.get(getActivity());
+                    final BookLab bookLab = BookLab.get(getActivity());
                     List<Book> books = bookLab.getBooksByStatus(getResources()
                             .getString(R.string.title_read_yet));
 
-                    Book book = books.get(viewHolder.getAdapterPosition());
+                    final Book book = books.get(viewHolder.getAdapterPosition());
                     book.setStatus(getResources().getString(R.string.title_read_now));
+                    if (book.getStartDate().equals(DateHelper.undefinedDate))
+                        book.setStartDate(DateHelper.today);
+                    book.setEndDate(DateHelper.undefinedDate);
+                    book.setType(getResources().getStringArray(R.array.type_spinner_list)[0]);
                     bookLab.updateBook(book);
                     updateUI();
+
+                    displaySnackbar("Swipe element", "Undo", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            book.setStatus(getResources().getString(R.string.title_read_yet));
+                            if (book.getStartDate().equals(DateHelper.undefinedDate))
+                                book.setStartDate(DateHelper.today);
+
+                            if (book.getEndDate().equals(DateHelper.undefinedDate))
+                                book.setEndDate(DateHelper.today);
+
+                            bookLab.updateBook(book);
+                            updateUI();
+                        }
+                    });
+
                 }
             };
 
+    public void displaySnackbar(String text, String actionName, View.OnClickListener action) {
+        Snackbar snack = Snackbar.make(getActivity().findViewById(android.R.id.content), text, Snackbar.LENGTH_LONG)
+                .setAction(actionName, action);
 
+        View v = snack.getView();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) v.getLayoutParams();
+        params.gravity = Gravity.TOP;
+        v.setLayoutParams(params);
+        v.setBackgroundColor(getResources().getColor(R.color.backgroundItem));
+        ((TextView) v.findViewById(R.id.snackbar_text)).setTextColor(Color.WHITE);
+        ((TextView) v.findViewById(R.id.snackbar_action)).setTextColor(Color.BLACK);
+
+        snack.show();
+    }
 
     @Override
     public void onResume() {
@@ -127,7 +149,12 @@ public class ReadYetFragment extends Fragment {
             mRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.setBooks(books);
-            mAdapter.notifyDataSetChanged();
+            if (mLastUpdatedPosition > -1) {
+                mAdapter.notifyItemChanged(mLastUpdatedPosition);
+                mLastUpdatedPosition = -1;
+            } else {
+                mAdapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -164,10 +191,9 @@ public class ReadYetFragment extends Fragment {
             bookName.setText(mBook.getBookName());
             author.setText(mBook.getAuthor());
             pages.setText("" + mBook.getPages());
-            Date unknownDate = new UnknownDate().getUnknownDate();
-            if (!mBook.getStartDate().equals(unknownDate))
+            if (!mBook.getStartDate().equals(DateHelper.unknownDate))
                 startDate.setText(DateFormat.format("MMM dd, yyyy", mBook.getStartDate()));
-            if (!mBook.getEndDate().equals(unknownDate))
+            if (!mBook.getEndDate().equals(DateHelper.unknownDate))
 
                 endDate.setText(DateFormat.format("MMM dd, yyyy", mBook.getEndDate()));
 
@@ -175,6 +201,7 @@ public class ReadYetFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
+            mLastUpdatedPosition = this.getAdapterPosition();
             mCallbacks.onBookSelected(mBook);
         }
     }
@@ -198,6 +225,7 @@ public class ReadYetFragment extends Fragment {
         public void onBindViewHolder(@NonNull ReadYetFragment.BookHolder holder, int position) {
             Book book = mBooks.get(position);
             holder.bind(book, position);
+
         }
 
         @Override

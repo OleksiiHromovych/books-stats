@@ -12,6 +12,7 @@ public class Book {
     private Date startDate;
     private Date endDate;
     private String status;
+private String type;
 
     public Book() {
         this(UUID.randomUUID());
@@ -19,8 +20,8 @@ public class Book {
 
     public Book(UUID id) {
         this.id = id;
-        startDate = new Date();
-        endDate = new Date();
+        startDate = DateHelper.undefinedDate;
+        endDate = DateHelper.undefinedDate;
     }
 
     public UUID getId() {
@@ -85,6 +86,14 @@ public class Book {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
 

@@ -42,9 +42,10 @@ public class BookLab {
         values.put(BookTable.Cols.AUTHOR, book.getAuthor());
         values.put(BookTable.Cols.PAGE, book.getPages());
         values.put(BookTable.Cols.CATEGORY, book.getCategory());
-        values.put(BookTable.Cols.StartDATE, book.getStartDate().getTime());
-        values.put(BookTable.Cols.EndDATE, book.getEndDate().getTime());
+        values.put(BookTable.Cols.START_DATE, book.getStartDate().getTime());
+        values.put(BookTable.Cols.END_DATE, book.getEndDate().getTime());
         values.put(BookTable.Cols.STATUS, book.getStatus());
+        values.put(BookTable.Cols.TYPE, book.getType());
         return values;
     }
 
@@ -123,7 +124,7 @@ public class BookLab {
                 whereArgs,
                 null,
                 null,
-                null);
+                BookTable.Cols.END_DATE + " , " + BookTable.Cols.START_DATE);
 
         return new BookCursorWrapper(cursor);
     }

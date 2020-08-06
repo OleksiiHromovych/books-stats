@@ -39,12 +39,15 @@
 
             android:textSize="18sp" />
 
-        <Button
-            android:id="@+id/book_priority_date"
+
+        <Spinner
+            android:id="@+id/book_priority_spinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@color/backgroundItemLight" />
+            android:entries="@array/priority_spinner_list"
+            android:popupBackground="@color/backgroundItem" />
 
     </LinearLayout>
 

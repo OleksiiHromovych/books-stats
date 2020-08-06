@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/backgroundFont"
     android:orientation="vertical"
-    android:padding="1dp"
+    android:padding="5dp"
     tools:context=".BookFragment">
 
 
@@ -168,7 +168,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:entries="@array/spinner_list"
+            android:entries="@array/status_spinner_list"
             android:popupBackground="@color/backgroundItem" />
 
     </LinearLayout>

@@ -6,20 +6,24 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.hromovych.android.bookstats.BookFragment;
+import com.hromovych.android.bookstats.DateHelper;
 import com.hromovych.android.bookstats.DatePickerFragment;
 import com.hromovych.android.bookstats.R;
-import com.hromovych.android.bookstats.UnknownDate;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -47,7 +51,11 @@ public class BookNowFragment extends BookFragment {
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
         mBookStatusSpinner.setSelection(1);
-        mUnknownDate = new UnknownDate().getUnknownDate();
+        mBook.setEndDate(DateHelper.undefinedDate);
+        if (mBook.getStartDate().equals(DateHelper.undefinedDate))
+            mBook.setStartDate(DateHelper.today);
+
+        mUnknownDate = DateHelper.unknownDate;
 
         mCheckBox = v.findViewById(R.id.book_start_date_checkbox);
         mCheckBox.setChecked(mBook.getStartDate().equals(mUnknownDate));
@@ -77,6 +85,28 @@ public class BookNowFragment extends BookFragment {
                 dialog.setTargetFragment(BookNowFragment.this, REQUEST_DATE);
                 dialog.show(getFragmentManager(), DIALOG_DATE);
 
+
+            }
+        });
+
+        Spinner typeSpinner = v.findViewById(R.id.book_type_spinner);
+        List<String> choose = Arrays.asList(getResources().getStringArray(
+                R.array.type_spinner_list));
+
+        if (!choose.contains(mBook.getType()))
+            mBook.setType(choose.get(0));
+
+        typeSpinner.setSelection(choose.indexOf(mBook.getType()));
+        typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mBook.setType(getResources().getStringArray(
+                        R.array.type_spinner_list)[position]);
+                updateBook();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });

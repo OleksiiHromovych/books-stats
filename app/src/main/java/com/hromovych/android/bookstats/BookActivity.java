@@ -3,7 +3,9 @@ package com.hromovych.android.bookstats;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -37,6 +39,10 @@ public class BookActivity extends AppCompatActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book);
+
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_done_edit_menu);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         bookId = (UUID) getIntent().getSerializableExtra(ARG_BOOK_ID);
 
         Integer fragment_id = getIntent().getIntExtra(ARG_BOOK_FRAGMENT, -1);
@@ -79,6 +85,16 @@ public class BookActivity extends AppCompatActivity
         finish();
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void changeFragmentByStatus(Integer fragment_id) {

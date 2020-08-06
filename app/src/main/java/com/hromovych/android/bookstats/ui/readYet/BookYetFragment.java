@@ -1,25 +1,31 @@
 package com.hromovych.android.bookstats.ui.readYet;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.hromovych.android.bookstats.BookFragment;
+import com.hromovych.android.bookstats.DateHelper;
 import com.hromovych.android.bookstats.DatePickerFragment;
 import com.hromovych.android.bookstats.R;
-import com.hromovych.android.bookstats.UnknownDate;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -49,8 +55,14 @@ public class BookYetFragment extends BookFragment {
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
         mBookStatusSpinner.setSelection(0);
-        mUnknownDate = new UnknownDate().getUnknownDate();
 
+        if (mBook.getStartDate().equals(DateHelper.undefinedDate))
+            mBook.setStartDate(DateHelper.today);
+
+        if (mBook.getEndDate().equals(DateHelper.undefinedDate))
+            mBook.setEndDate(DateHelper.today);
+
+        mUnknownDate = DateHelper.unknownDate;
 
         mStartDateCheckBox = v.findViewById(R.id.book_start_date_checkbox);
         mStartDateCheckBox.setChecked(mBook.getStartDate().equals(mUnknownDate));
@@ -61,7 +73,7 @@ public class BookYetFragment extends BookFragment {
                     mBook.setStartDate(mUnknownDate);
                     mBookStartDate.setEnabled(false);
                 } else {
-                    mBook.setStartDate(new Date());
+                    mBook.setStartDate(DateHelper.today);
                     mBookStartDate.setEnabled(true);
 
                 }
@@ -116,6 +128,29 @@ public class BookYetFragment extends BookFragment {
             }
         });
 
+
+        Spinner typeSpinner = v.findViewById(R.id.book_type_spinner);
+        List<String> choose = Arrays.asList(getResources().getStringArray(
+                R.array.type_spinner_list));
+
+        if (!choose.contains(mBook.getType()))
+            mBook.setType(choose.get(0));
+
+        typeSpinner.setSelection(choose.indexOf(mBook.getType()));
+        typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mBook.setType(getResources().getStringArray(
+                        R.array.type_spinner_list)[position]);
+                updateBook();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         return v;
     }
 
@@ -141,23 +176,77 @@ public class BookYetFragment extends BookFragment {
         switch (requestCode) {
             case REQUEST_START_DATE:
                 Date lastDate = mBook.getStartDate();
-                Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+                final Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
                 date.setHours(lastDate.getHours());
                 date.setMinutes(lastDate.getMinutes());
+                Date checkEndDate = mBook.getEndDate();
+                if (date.compareTo(checkEndDate) > 0
+                        && !checkEndDate.equals(DateHelper.unknownDate)
+                        && !checkEndDate.equals(DateHelper.undefinedDate)){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-                mBook.setStartDate(date);
-                updateBook();
-                updateStartDate();
+                    builder.setTitle("Date problem");
+                    builder.setMessage("Book start date more then end date");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mBook.setStartDate(date);
+                            updateBook();
+                            updateStartDate();
+                        }
+                    });
+
+                    builder.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+
+                    builder.show();
+                } else {
+                    mBook.setStartDate(date);
+                    updateBook();
+                    updateStartDate();}
                 break;
+
             case REQUEST_END_DATE:
                 Date lastEndDate = mBook.getEndDate();
-                Date endDate = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+                final Date endDate = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
                 endDate.setHours(lastEndDate.getHours());
                 endDate.setMinutes(lastEndDate.getMinutes());
+                Date checkStartDate = mBook.getStartDate();
+                if (endDate.compareTo(checkStartDate) < 0
+                        && !checkStartDate.equals(DateHelper.unknownDate)
+                        && !checkStartDate.equals(DateHelper.undefinedDate)){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-                mBook.setEndDate(endDate);
-                updateBook();
-                updateEndDate();
+                    builder.setTitle("Date problem");
+                    builder.setMessage("Book end date less then start date");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mBook.setEndDate(endDate);
+                            updateBook();
+                            updateEndDate();
+                        }
+                    });
+
+                    builder.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+
+                    builder.show();
+                } else {
+                    mBook.setEndDate(endDate);
+                    updateBook();
+                    updateEndDate();
+                }
+
+
             default:
                 super.onActivityResult(requestCode, resultCode, data);
         }
