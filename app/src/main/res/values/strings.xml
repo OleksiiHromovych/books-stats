@@ -49,4 +49,16 @@
         <item>@string/priority_book_3</item>
     </string-array>
 
+    <!--    Slider text-->
+    <string name="slide1_heading">Hello</string>
+    <string name="slide2_heading">Save</string>
+    <string name="slide3_heading">Create</string>
+    <string name="slide1_description">Welcome to our community. Read, grow, enjoy</string>
+    <string name="slide2_description">Convenient, clean, and simple interface. One-click - a new book.
+        One swipe is to change the status of the book. Everything is in sight and easy.</string>
+    <string name="slide3_description">Easily write books, edit them. If you do not want to fill in all the fields - do not do it, come back later or leave it blank.</string>
+    <string name="slide_finish_title">Finish</string>
+    <string name="slide_next_title">Next</string>
+    <string name="slide_back_title">Back</string>
+
 </resources>

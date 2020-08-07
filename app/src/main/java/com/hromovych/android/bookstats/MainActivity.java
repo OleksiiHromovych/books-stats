@@ -3,6 +3,7 @@ package com.hromovych.android.bookstats;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.hromovych.android.bookstats.slider.IntroSlider;
 
 public class MainActivity extends AppCompatActivity implements Callbacks {
 
@@ -29,6 +31,12 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SharedPreferences prefs = getSharedPreferences("com.hromovych.android.bookstats",
+                MODE_PRIVATE);
+        if (prefs.getBoolean("firstrun", true)) {
+            startActivity(new Intent(this, IntroSlider.class));
+            prefs.edit().putBoolean("firstrun", false).apply();
+        }
         navView = findViewById(R.id.nav_view);
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -92,6 +100,11 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     @Override

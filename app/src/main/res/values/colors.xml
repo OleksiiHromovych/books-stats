@@ -13,4 +13,5 @@
 
     <color name="bookItemTextColor">#000000</color>
 
+    <color name="colorTransparentWhite">#cccccc</color>
 </resources>

@@ -12,6 +12,8 @@
         <activity
             android:name=".BookActivity"
             android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".slider.IntroSlider"/>
 
         <activity
             android:name=".MainActivity"

@@ -73,6 +73,7 @@
             tools:text="N" />
 
         <TextView
+            android:id="@+id/book_pages_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/subtitle_number_quantity"

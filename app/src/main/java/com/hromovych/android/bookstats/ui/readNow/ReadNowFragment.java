@@ -191,6 +191,7 @@ public class ReadNowFragment extends Fragment {
             count.setText("" + (pos + 1));
             bookName.setText(mBook.getBookName());
             author.setText(mBook.getAuthor());
+
             pages.setText("" + mBook.getPages());
             if (!mBook.getStartDate().equals(DateHelper.unknownDate))
                 startDate.setText(DateFormat.format("MMM dd, yyyy", mBook.getStartDate()));

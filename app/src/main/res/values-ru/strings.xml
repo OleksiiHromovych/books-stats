@@ -27,5 +27,14 @@
     <string name="priority_book_2">Средний</string>
     <string name="priority_book_3">Низкий</string>
     <string name="book_priority_title">Приоритет</string>
+    <string name="slide2_description">Удобный, чистый и простой интерфейс. Одним клыком - новая книга. Один свайп - изменить статус книги. Все на виду и легко.</string>
+    <string name="slide1_description">Добро пожаловать в наше сообщество. Читай, развивайся, наслаждайся</string>
+    <string name="slide1_heading">Привет</string>
+    <string name="slide2_heading">Сберегать</string>
+    <string name="slide3_heading">Создавать</string>
+    <string name="slide3_description">Легко записывайте книги, редактировать их. Если не хотите заполнять все поля - не делайте этого, вернитесь позже или оставьте его пустым.</string>
+    <string name="slide_finish_title">Завершить</string>
+    <string name="slide_next_title">Дальше</string>
+    <string name="slide_back_title">Назад</string>
 
 </resources>
