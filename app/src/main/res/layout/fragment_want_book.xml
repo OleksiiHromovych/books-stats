@@ -16,11 +16,14 @@
 
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:background="@color/backgroundItem"
+        android:background="@drawable/layout_corners_round"
         android:orientation="horizontal"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
         app:layout_constraintTop_toBottomOf="@id/include_layout">
 
         <TextView
@@ -41,8 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:entries="@array/priority_spinner_list"
-            android:popupBackground="@color/backgroundItem" />
+            android:entries="@array/priority_spinner_list"/>
 
     </LinearLayout>
 

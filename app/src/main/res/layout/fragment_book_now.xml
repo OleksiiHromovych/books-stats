@@ -16,7 +16,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/include_layout">
 
@@ -25,7 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@color/backgroundItem"
+            android:paddingStart="15dp"
+            android:background="@drawable/layout_corners_round"
             android:orientation="horizontal">
 
             <ImageView
@@ -56,7 +57,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/backgroundItem"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:background="@drawable/layout_corners_round"
             android:orientation="horizontal">
 
             <CheckBox
@@ -79,8 +82,7 @@
                 android:id="@+id/book_start_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/backgroundItemLight" />
+                android:layout_weight="1" />
 
         </LinearLayout>
     </LinearLayout>

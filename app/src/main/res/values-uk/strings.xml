@@ -36,6 +36,7 @@
     <string name="slide_finish_title">Завершити</string>
     <string name="slide_next_title">Далі</string>
     <string name="slide_back_title">Назад</string>
+    <string name="book_description_title">Опис</string>
 
 
 </resources>

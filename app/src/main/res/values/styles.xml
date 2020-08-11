@@ -10,8 +10,32 @@
         <item name="android:windowBackground">@color/backgroundFont</item>
         <item name="itemBackground">@color/backgroundItem</item>
 
+        <item name="editTextStyle">@style/InputFieldEditText</item>
+        <item name="autoCompleteTextViewStyle">@style/InputFieldEditText</item>
+        <item name="spinnerStyle">@style/SpinnerCustomStyle</item>
+        <item name="buttonStyle">@style/ButtonStyle</item>
 
     </style>
+
+    <style name="InputFieldEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/edit_text_selector</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/bookPaper</item>
+    </style>
+
+    <style name="ButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_effect</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/bookPaper</item>
+    </style>
+
+    <style name="SpinnerCustomStyle" parent="Widget.AppCompat.Spinner">
+        <item name="android:textAlignment">center</item>
+        <item name="android:popupBackground">@color/backgroundItem</item>
+        <item name="android:textColor">@color/bookPaper</item>
+
+    </style>
+
 
     <style name="DatePickerDialog" parent="Theme.AppCompat.DayNight.Dialog">
         <item name="android:windowFrame">@null</item>
@@ -25,10 +49,6 @@
 
         <item name="android:textColorSecondaryInverse">@color/colorAccent</item>
 
-        <!--        <item name="android:textColorSecondary">@color/colorAccent</item>  week day-->
-        <!--        <item name="android:textColorPrimary">@color/colorAccent</item> color of date number-->
-
-        <!--        <item name="backgroundTint">@color/backgroundItemLight</item>-->
         <item name="android:colorBackground">@color/backgroundItemLight</item>
         <item name="colorAccent">@color/activeIcon</item>
 
@@ -36,7 +56,6 @@
 
     <style name="Autocomplete" parent="Widget.AppCompat.Light.AutoCompleteTextView">
         <item name="android:background">@color/backgroundItem</item>
-        <!--        <item name="colorControlNormal">@color/colorPrimary</item>-->
         <item name="colorControlActivated">@color/backgroundFont</item>
 
         <item name="android:textColorHint">@color/bookPaper</item>

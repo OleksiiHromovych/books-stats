@@ -6,13 +6,15 @@
     android:background="@color/backgroundFont"
     android:orientation="vertical"
     android:padding="5dp"
+
     tools:context=".BookFragment">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/backgroundItem"
+        android:background="@drawable/layout_left_up_corners"
+        android:paddingStart="15dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -37,8 +39,9 @@
             android:layout_weight="1"
             android:cursorVisible="true"
             android:hint="@string/book_name_hint"
+
             android:textColorHint="@color/bookPaper"
-            android:textCursorDrawable="@null" />
+            />
 
     </LinearLayout>
 
@@ -46,6 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/backgroundItem"
+        android:paddingStart="15dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -78,6 +82,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="15dp"
         android:background="@color/backgroundItem"
         android:orientation="horizontal">
 
@@ -112,7 +117,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:paddingStart="15dp"
         android:background="@color/backgroundItem"
         android:orientation="horizontal">
 
@@ -142,10 +147,41 @@
 
     </LinearLayout>
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="15dp"
         android:background="@color/backgroundItem"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="105dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:baselineAligned="false"
+            android:text="@string/book_description_title"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/book_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:background="@drawable/edit_text_selector"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:background="@drawable/layout_right_down_corners"
         android:orientation="horizontal">
 
         <ImageView
@@ -166,10 +202,11 @@
             android:id="@+id/book_status"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+
             android:layout_gravity="center"
             android:layout_weight="1"
             android:entries="@array/status_spinner_list"
-            android:popupBackground="@color/backgroundItem" />
+            />
 
     </LinearLayout>
 
