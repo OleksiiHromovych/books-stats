@@ -46,6 +46,7 @@ public class BookLab {
         values.put(BookTable.Cols.END_DATE, book.getEndDate().getTime());
         values.put(BookTable.Cols.STATUS, book.getStatus());
         values.put(BookTable.Cols.TYPE, book.getType());
+        values.put(BookTable.Cols.DESCRIPTION, book.getDescription());
         return values;
     }
 

@@ -14,6 +14,7 @@ public class BookDBSchema {
             public static final String CATEGORY = "category";
             public static final String STATUS = "status";
             public static final String TYPE = "type";
+            public static final String DESCRIPTION = "description";
         }
     }
 }

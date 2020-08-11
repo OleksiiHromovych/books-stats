@@ -33,9 +33,9 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
         setContentView(R.layout.activity_main);
         SharedPreferences prefs = getSharedPreferences("com.hromovych.android.bookstats",
                 MODE_PRIVATE);
-        if (prefs.getBoolean("firstrun", true)) {
+        if (prefs.getBoolean("first_run", true)) {
             startActivity(new Intent(this, IntroSlider.class));
-            prefs.edit().putBoolean("firstrun", false).apply();
+            prefs.edit().putBoolean("first_run", false).apply();
         }
         navView = findViewById(R.id.nav_view);
 

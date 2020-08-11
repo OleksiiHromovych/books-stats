@@ -155,14 +155,16 @@ public class BookYetFragment extends BookFragment {
     }
 
     private void updateStartDate() {
-        if (!mBook.getStartDate().equals(mUnknownDate))
-            mBookStartDate.setText(new SimpleDateFormat("E dd:MM:yyyy", Locale.getDefault())
-                    .format(mBook.getStartDate()));
+        if (mBook.getStartDate().equals(mUnknownDate))
+            mBookStartDate.setText("");
+        else mBookStartDate.setText(new SimpleDateFormat("E dd:MM:yyyy", Locale.getDefault())
+                .format(mBook.getStartDate()));
     }
 
     private void updateEndDate() {
-        if (!mBook.getEndDate().equals(mUnknownDate))
-            mBookEndDate.setText(new SimpleDateFormat("E dd:MM:yyyy", Locale.getDefault())
+        if (mBook.getEndDate().equals(mUnknownDate))
+            mBookEndDate.setText("");
+        else mBookEndDate.setText(new SimpleDateFormat("E dd:MM:yyyy", Locale.getDefault())
                     .format(mBook.getEndDate()));
     }
 
@@ -182,7 +184,7 @@ public class BookYetFragment extends BookFragment {
                 Date checkEndDate = mBook.getEndDate();
                 if (date.compareTo(checkEndDate) > 0
                         && !checkEndDate.equals(DateHelper.unknownDate)
-                        && !checkEndDate.equals(DateHelper.undefinedDate)){
+                        && !checkEndDate.equals(DateHelper.undefinedDate)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                     builder.setTitle("Date problem");
@@ -207,7 +209,8 @@ public class BookYetFragment extends BookFragment {
                 } else {
                     mBook.setStartDate(date);
                     updateBook();
-                    updateStartDate();}
+                    updateStartDate();
+                }
                 break;
 
             case REQUEST_END_DATE:
@@ -218,7 +221,7 @@ public class BookYetFragment extends BookFragment {
                 Date checkStartDate = mBook.getStartDate();
                 if (endDate.compareTo(checkStartDate) < 0
                         && !checkStartDate.equals(DateHelper.unknownDate)
-                        && !checkStartDate.equals(DateHelper.undefinedDate)){
+                        && !checkStartDate.equals(DateHelper.undefinedDate)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                     builder.setTitle("Date problem");

@@ -26,6 +26,7 @@ public class BookCursorWrapper extends CursorWrapper {
         String category = getString(getColumnIndex(BookTable.Cols.CATEGORY));
         String status = getString(getColumnIndex(BookTable.Cols.STATUS));
         String type = getString(getColumnIndex(BookTable.Cols.TYPE));
+        String description = getString(getColumnIndex(BookTable.Cols.DESCRIPTION));
 
         Book book = new Book(UUID.fromString(uuidString));
         book.setAuthor(author);
@@ -36,6 +37,7 @@ public class BookCursorWrapper extends CursorWrapper {
         book.setStatus(status);
         book.setEndDate(new Date(endDate));
         book.setType(type);
+        book.setDescription(description);
 
         return book;
     }

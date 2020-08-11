@@ -10,7 +10,7 @@ import static com.hromovych.android.bookstats.database.BookDBSchema.BookTable;
 
 public class BookBaseHelper extends SQLiteOpenHelper {
 
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
     private static final String DATABASE_NAME = "bookBase.db";
 
     public BookBaseHelper(@Nullable Context context) {
@@ -29,6 +29,7 @@ public class BookBaseHelper extends SQLiteOpenHelper {
                 BookTable.Cols.CATEGORY + ", " +
                 BookTable.Cols.PAGE + ", " +
                 BookTable.Cols.TYPE + ", " +
+                BookTable.Cols.DESCRIPTION + ", " +
                 BookTable.Cols.STATUS +
                 ")");
     }
@@ -40,5 +41,9 @@ public class BookBaseHelper extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE " + BookTable.NAME + " ADD COLUMN " + BookTable.Cols.TYPE +
                     " TEXT");
         }
+        if (oldVersion < 3)
+            db.execSQL("ALTER TABLE " + BookTable.NAME + " ADD COLUMN " + BookTable.Cols.DESCRIPTION
+            + " TEXT");
     }
+
 }

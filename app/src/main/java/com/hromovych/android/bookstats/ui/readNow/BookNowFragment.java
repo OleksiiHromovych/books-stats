@@ -116,8 +116,9 @@ public class BookNowFragment extends BookFragment {
 
 
     private void updateDate() {
-        if (!mBook.getStartDate().equals(mUnknownDate))
-            mBookStartDate.setText(new SimpleDateFormat("E dd:MM:yyyy", Locale.getDefault())
+        if (mBook.getStartDate().equals(mUnknownDate))
+            mBookStartDate.setText("");
+        else mBookStartDate.setText(new SimpleDateFormat("E dd:MM:yyyy", Locale.getDefault())
                     .format(mBook.getStartDate()));
     }
 

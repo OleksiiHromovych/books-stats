@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bookPaper">
+
+        <EditText
+            android:id="@+id/description_edit_text"
+            android:layout_margin="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="textStart"
+            android:ellipsize="end"
+            android:background="@color/bookPaper"
+            android:textColor="@color/bookItemTextColor" />
+
+    </ScrollView>
+
+        <Button
+            android:id="@+id/dialog_ok_button"
+            android:layout_width="96dp"
+            android:layout_height="43dp"
+            android:textColor="@color/bookItemTextColor"
+android:background="@color/bookPaper"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="10dp"
+            android:text="OK" />
+
+</RelativeLayout>

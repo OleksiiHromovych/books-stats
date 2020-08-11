@@ -1,6 +1,7 @@
 package com.hromovych.android.bookstats;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -15,8 +16,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -41,6 +44,7 @@ public class BookFragment extends Fragment {
     private EditText mBookAuthorField;
     private EditText mBookPagesField;
     private AutoCompleteTextView mBookCategoryField;
+    private TextView mBookDescriptionField;
     private int book_layout;
     private Callbacks mCallbacks;
 
@@ -212,6 +216,30 @@ public class BookFragment extends Fragment {
             }
         });
 
+        mBookDescriptionField = (TextView) v.findViewById(R.id.book_description);
+        mBookDescriptionField.setText(mBook.getDescription());
+        mBookDescriptionField.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final Dialog dialog = new Dialog(getActivity(), R.style.DatePickerDialog);
+                dialog.setContentView(R.layout.dialog_description);
+
+                Button okButton = (Button) dialog.findViewById(R.id.dialog_ok_button);
+                final EditText edit = (EditText) dialog.findViewById(R.id.description_edit_text);
+                edit.setText(mBook.getDescription());
+                okButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mBook.setDescription(edit.getText().toString());
+                        mBookDescriptionField.setText(edit.getText().toString());
+                        updateBook();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
         return v;
     }
 
@@ -252,6 +280,7 @@ public class BookFragment extends Fragment {
                 return super.onOptionsItemSelected(item);
         }
     }
+
     interface Callbacks {
         void changeFragmentByStatus(Integer fragment_id);
     }
