@@ -10,7 +10,8 @@
         />
 
     <item
-        android:title="knopo4ka"/>
+        android:id="@+id/menu_date_format"
+        android:title="Show date"/>
 
     <item
         android:title="Stats"/>

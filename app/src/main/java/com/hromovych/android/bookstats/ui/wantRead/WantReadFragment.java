@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -157,7 +158,7 @@ public class WantReadFragment extends Fragment {
         private TextView author;
         private TextView pages;
         private TextView priority;
-
+private LinearLayout pageLayout;
         private Book mBook;
 
         public BookHolder(LayoutInflater inflater, ViewGroup parent) {
@@ -168,6 +169,7 @@ public class WantReadFragment extends Fragment {
             author = itemView.findViewById(R.id.author);
             pages = itemView.findViewById(R.id.book_pages);
             priority = itemView.findViewById(R.id.details_up);
+            pageLayout = itemView.findViewById(R.id.page_layout);
             priority.setVisibility(View.VISIBLE);
             itemView.setOnClickListener(this);
         }
@@ -177,7 +179,13 @@ public class WantReadFragment extends Fragment {
             count.setText("" + (pos + 1));
             bookName.setText(mBook.getBookName());
             author.setText(mBook.getAuthor());
-            pages.setText("" + mBook.getPages());
+
+            if (mBook.getPages() != 0)
+                pages.setText("" + mBook.getPages());
+            else
+                pageLayout.setVisibility(View.GONE);
+
+
             priority.setText(mBook.getType());
 //priority.setTextColor(Color.RED);
         }

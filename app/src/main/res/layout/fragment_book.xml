@@ -29,7 +29,7 @@
             android:layout_gravity="center"
             android:text="@string/book_name_title"
             android:textAlignment="center"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/book_name"
@@ -64,7 +64,7 @@
             android:layout_gravity="center"
             android:text="@string/book_author_title"
             android:textAlignment="center"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/book_author"
@@ -99,7 +99,7 @@
 
             android:text="@string/book_pages_title"
             android:textAlignment="center"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/book_pages"
@@ -134,7 +134,7 @@
             android:baselineAligned="false"
             android:text="@string/book_category_title"
             android:textAlignment="center"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <AutoCompleteTextView
             android:id="@+id/book_category"
@@ -162,7 +162,7 @@
             android:baselineAligned="false"
             android:text="@string/book_description_title"
             android:textAlignment="center"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/book_description"
@@ -171,6 +171,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:maxLines="1"
+            android:ellipsize="end"
             android:background="@drawable/edit_text_selector"/>
 
     </LinearLayout>
@@ -196,7 +197,7 @@
             android:layout_gravity="center"
             android:text="@string/book_status_title"
             android:textAlignment="center"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <Spinner
             android:id="@+id/book_status"

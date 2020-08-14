@@ -25,17 +25,20 @@ import com.hromovych.android.bookstats.slider.IntroSlider;
 public class MainActivity extends AppCompatActivity implements Callbacks {
 
     public static final int REQUEST_CODE_BOOK = 1;
+    public static final String GET_SHARED_PREFERENCES = "com.hromovych.android.bookstats";
+    public static final String SHOW_DATE_PREFERENCES = "date_format";
     private BottomNavigationView navView;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SharedPreferences prefs = getSharedPreferences("com.hromovych.android.bookstats",
+        mSharedPreferences = getSharedPreferences(GET_SHARED_PREFERENCES,
                 MODE_PRIVATE);
-        if (prefs.getBoolean("first_run", true)) {
+        if (mSharedPreferences.getBoolean("first_run", true)) {
             startActivity(new Intent(this, IntroSlider.class));
-            prefs.edit().putBoolean("first_run", false).apply();
+            mSharedPreferences.edit().putBoolean("first_run", false).apply();
         }
         navView = findViewById(R.id.nav_view);
 
@@ -46,8 +49,6 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-
-
         FloatingActionButton fab =
                 findViewById(R.id.fab);
         fab.show();
@@ -92,6 +93,10 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
                 });
 
                 builder.show();
+                return true;
+            case R.id.menu_date_format:
+                mSharedPreferences.edit().putBoolean(SHOW_DATE_PREFERENCES,
+                        !mSharedPreferences.getBoolean(SHOW_DATE_PREFERENCES, true)).apply();
                 return true;
             case R.id.import_books:
                 Toast.makeText(getApplicationContext(), "phhh, phh, phh. Import not success," +

@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -224,10 +225,14 @@ public class BookFragment extends Fragment {
 
                 final Dialog dialog = new Dialog(getActivity(), R.style.DatePickerDialog);
                 dialog.setContentView(R.layout.dialog_description);
-
                 Button okButton = (Button) dialog.findViewById(R.id.dialog_ok_button);
                 final EditText edit = (EditText) dialog.findViewById(R.id.description_edit_text);
                 edit.setText(mBook.getDescription());
+
+                edit.setSelection(edit.getText().length());
+                edit.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
                 okButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

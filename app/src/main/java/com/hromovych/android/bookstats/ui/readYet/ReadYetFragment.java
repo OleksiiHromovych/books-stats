@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.hromovych.android.bookstats.Book;
 import com.hromovych.android.bookstats.BookLab;
 import com.hromovych.android.bookstats.Callbacks;
 import com.hromovych.android.bookstats.DateHelper;
+import com.hromovych.android.bookstats.MainActivity;
 import com.hromovych.android.bookstats.R;
 
 import java.util.List;
@@ -167,7 +169,7 @@ public class ReadYetFragment extends Fragment {
         private TextView pages;
         private TextView startDate;
         private TextView endDate;
-
+        private LinearLayout pageLayout;
 
         private Book mBook;
 
@@ -180,6 +182,7 @@ public class ReadYetFragment extends Fragment {
             pages = itemView.findViewById(R.id.book_pages);
             startDate = itemView.findViewById(R.id.details_up);
             endDate = itemView.findViewById(R.id.details_down);
+            pageLayout = itemView.findViewById(R.id.page_layout);
             startDate.setVisibility(View.VISIBLE);
             endDate.setVisibility(View.VISIBLE);
             itemView.setOnClickListener(this);
@@ -190,12 +193,32 @@ public class ReadYetFragment extends Fragment {
             count.setText("" + (pos + 1));
             bookName.setText(mBook.getBookName());
             author.setText(mBook.getAuthor());
-            pages.setText("" + mBook.getPages());
-            if (!mBook.getStartDate().equals(DateHelper.unknownDate))
-                startDate.setText(DateFormat.format("MMM dd, yyyy", mBook.getStartDate()));
-            if (!mBook.getEndDate().equals(DateHelper.unknownDate))
 
-                endDate.setText(DateFormat.format("MMM dd, yyyy", mBook.getEndDate()));
+            if (mBook.getPages() != 0)
+                pages.setText("" + mBook.getPages());
+            else
+                pageLayout.setVisibility(View.GONE);
+            if (getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
+                    Context.MODE_PRIVATE).getBoolean(MainActivity.SHOW_DATE_PREFERENCES, true)
+                    && (!mBook.getStartDate().equals(DateHelper.unknownDate))) {
+
+                if (!mBook.getStartDate().equals(DateHelper.unknownDate))
+                    startDate.setText("+ " + DateFormat.format("MMM dd, yyyy", mBook.getStartDate()));
+                if (!mBook.getEndDate().equals(DateHelper.unknownDate))
+
+                    endDate.setText("- " + DateFormat.format("MMM dd, yyyy", mBook.getEndDate()));
+
+            } else {
+                if (!mBook.getStartDate().equals(DateHelper.unknownDate) &&
+                        !mBook.getEndDate().equals(DateHelper.unknownDate)) {
+
+                    long days = (mBook.getEndDate().getTime() - mBook.getStartDate().getTime())
+                            / 1000 / 60 / 60 / 24;
+                    startDate.setText("" + days);
+                    endDate.setVisibility(View.GONE);
+                }
+
+            }
 
         }
 

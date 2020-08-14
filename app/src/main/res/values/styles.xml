@@ -15,6 +15,7 @@
         <item name="spinnerStyle">@style/SpinnerCustomStyle</item>
         <item name="buttonStyle">@style/ButtonStyle</item>
 
+
     </style>
 
     <style name="InputFieldEditText" parent="Widget.AppCompat.EditText">
