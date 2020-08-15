@@ -25,6 +25,7 @@ import com.hromovych.android.bookstats.slider.IntroSlider;
 public class MainActivity extends AppCompatActivity implements Callbacks {
 
     public static final int REQUEST_CODE_BOOK = 1;
+    public static final int REQUEST_CODE_IMPORT = 2;
     public static final String GET_SHARED_PREFERENCES = "com.hromovych.android.bookstats";
     public static final String SHOW_DATE_PREFERENCES = "date_format";
     private BottomNavigationView navView;
@@ -99,8 +100,10 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
                         !mSharedPreferences.getBoolean(SHOW_DATE_PREFERENCES, true)).apply();
                 return true;
             case R.id.import_books:
-                Toast.makeText(getApplicationContext(), "phhh, phh, phh. Import not success," +
-                        " try later", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "phhh, phh, phh. Import not success," +
+//                        " try later", Toast.LENGTH_SHORT).show();
+                startActivityForResult(ImportDataActivity.newIntent(MainActivity.this),
+                        REQUEST_CODE_IMPORT);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
