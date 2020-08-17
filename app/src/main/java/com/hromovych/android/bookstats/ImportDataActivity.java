@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -16,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-class ImportDataActivity extends AppCompatActivity {
+public class ImportDataActivity extends AppCompatActivity {
     private Button clipBoardBtn;
     private Button splitTextBtn;
     private Button splitSplittedTextBtn;
@@ -27,7 +28,7 @@ class ImportDataActivity extends AppCompatActivity {
 
 
     public static Intent newIntent(Context context) {
-        Intent intent = new Intent(context, BookActivity.class);
+        Intent intent = new Intent(context, ImportDataActivity.class);
         return intent;
     }
 
@@ -62,7 +63,7 @@ class ImportDataActivity extends AppCompatActivity {
         final TextView import_choice_split_type_text1 =
                 (TextView) findViewById(R.id.import_choice_split_type_text1);
 
-        TextView import_choice_split_type_text2 =
+        final TextView import_choice_split_type_text2 =
                 (TextView) findViewById(R.id.import_choice_split_type_text2);
 
         splitSplittedTextBtn = (Button) findViewById(R.id.import_split_splitted_text);
@@ -70,19 +71,42 @@ class ImportDataActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 splitSplittedText = new ArrayList<>();
-                for (String s: splittedText) {
+                for (String s : splittedText) {
                     splitSplittedText.add(s.split((
                             (EditText) findViewById(R.id.import_split_splitted_symbol))
                             .getText().toString()));
                 }
                 import_choice_split_type_text1.setText(splitSplittedText.get(0)[0]);
-                import_choice_split_type_text1.setText(splitSplittedText.get(0)[1]);
-                
+                import_choice_split_type_text2.setText(splitSplittedText.get(0)[1]);
+
             }
         });
+        final Button finishBtn = (Button) findViewById(R.id.import_finish_btn);
+        finishBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> spinnersChoices = new ArrayList<>();
 
-
-
+                spinnersChoices.add(
+                        ((Spinner) findViewById(R.id.import_choice_split_type_spinner1)).getSelectedItem().toString());
+                spinnersChoices.add(
+                        ((Spinner) findViewById(R.id.import_choice_split_type_spinner2)).getSelectedItem().toString());
+                String status = ((Spinner) findViewById(R.id.import_status_spinner)).getSelectedItem().toString();
+                int author_index = spinnersChoices.indexOf(
+                        getResources().getString(R.string.book_author_title));
+                int name_index = spinnersChoices.indexOf(
+                        getResources().getString(R.string.book_name_title));
+                BookLab bookLab = BookLab.get(getApplicationContext());
+                for (String[] strings : splitSplittedText) {
+                    Book book = new Book();
+                    book.setStatus(status);
+                    book.setAuthor(strings[author_index]);
+                    book.setBookName(strings[name_index]);
+                    bookLab.addBook(book);
+                }
+                finish();
+            }
+        });
 
 
     }

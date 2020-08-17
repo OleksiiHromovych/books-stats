@@ -214,7 +214,8 @@ public class ReadYetFragment extends Fragment {
 
                     long days = (mBook.getEndDate().getTime() - mBook.getStartDate().getTime())
                             / 1000 / 60 / 60 / 24;
-                    startDate.setText("" + days);
+                    if (days != 0)
+                        startDate.setText("" + days);
                     endDate.setVisibility(View.GONE);
                 }
 

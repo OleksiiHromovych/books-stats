@@ -149,6 +149,7 @@
 
 
             <Spinner
+                android:id="@+id/import_status_spinner"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -158,6 +159,7 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/import_finish_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Import" />
