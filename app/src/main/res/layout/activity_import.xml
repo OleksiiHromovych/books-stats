@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
-    android:background="@color/backgroundApp">
+    android:background="@color/backgroundApp"
+    android:padding="5dp">
 
     <Button
         android:id="@+id/import_clipboard_btn"
@@ -13,7 +13,7 @@
         android:text="Get from clipboard"
 
         app:layout_constraintTop_toTopOf="parent" />
-<!--android:visibility="gone"-->
+    <!--android:visibility="gone"-->
     <LinearLayout
 
         android:id="@+id/import_main_layout"
@@ -81,7 +81,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Enter you split symbol" />
+                android:hint="Enter you split symbol ( ~ )" />
         </LinearLayout>
 
         <Button
@@ -93,47 +93,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="textEnd"
+                android:layout_weight="1"
+                android:text="Add item" />
+
+            <Button
+                android:id="@+id/import_add_item_button"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:foreground="@android:drawable/ic_input_add" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/import_appropriate_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Spinner
-                    android:id="@+id/import_choice_split_type_spinner1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/import_spinner_list" />
-
-                <TextView
-                    android:id="@+id/import_choice_split_type_text1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="item1 text" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Spinner
-                    android:id="@+id/import_choice_split_type_spinner2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/import_spinner_list" />
-
-                <TextView
-                    android:id="@+id/import_choice_split_type_text2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="item1 text" />
-
-            </LinearLayout>
 
         </LinearLayout>
 
@@ -151,8 +131,8 @@
             <Spinner
                 android:id="@+id/import_status_spinner"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:entries="@array/status_spinner_list" />
 
 
@@ -163,7 +143,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Import" />
-
 
 
     </LinearLayout>

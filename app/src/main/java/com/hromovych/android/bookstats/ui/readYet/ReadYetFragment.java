@@ -38,7 +38,6 @@ public class ReadYetFragment extends Fragment {
     private ReadYetFragment.BookAdapter mAdapter;
     private Callbacks mCallbacks;
 
-    private int mLastUpdatedPosition;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -151,12 +150,8 @@ public class ReadYetFragment extends Fragment {
             mRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.setBooks(books);
-            if (mLastUpdatedPosition > -1) {
-                mAdapter.notifyItemChanged(mLastUpdatedPosition);
-                mLastUpdatedPosition = -1;
-            } else {
-                mAdapter.notifyDataSetChanged();
-            }
+            mAdapter.notifyDataSetChanged();
+
         }
     }
 
@@ -194,13 +189,15 @@ public class ReadYetFragment extends Fragment {
             bookName.setText(mBook.getBookName());
             author.setText(mBook.getAuthor());
 
-            if (mBook.getPages() != 0)
+            if (mBook.getPages() != 0) {
                 pages.setText("" + mBook.getPages());
-            else
+                pageLayout.setVisibility(View.VISIBLE);
+            } else {
                 pageLayout.setVisibility(View.GONE);
+            }
+            endDate.setVisibility(View.VISIBLE);
             if (getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
-                    Context.MODE_PRIVATE).getBoolean(MainActivity.SHOW_DATE_PREFERENCES, true)
-                    && (!mBook.getStartDate().equals(DateHelper.unknownDate))) {
+                    Context.MODE_PRIVATE).getBoolean(MainActivity.SHOW_DATE_PREFERENCES, true)) {
 
                 if (!mBook.getStartDate().equals(DateHelper.unknownDate))
                     startDate.setText("+ " + DateFormat.format("MMM dd, yyyy", mBook.getStartDate()));
@@ -225,7 +222,6 @@ public class ReadYetFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            mLastUpdatedPosition = this.getAdapterPosition();
             mCallbacks.onBookSelected(mBook);
         }
     }
