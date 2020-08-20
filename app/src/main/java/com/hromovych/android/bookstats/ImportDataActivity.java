@@ -29,6 +29,7 @@ public class ImportDataActivity extends AppCompatActivity {
     private String importText = "";
     private String[] splittedText;
     private List<String[]> splitSplittedText;
+    private int line_index = 0;
 
 
     public static Intent newIntent(Context context) {
@@ -55,12 +56,27 @@ public class ImportDataActivity extends AppCompatActivity {
         });
 
         splitTextBtn = (Button) findViewById(R.id.import_split_text);
+        final TextView splitted_line_view = (TextView) findViewById(R.id.import_splitted_line_view);
         splitTextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 splittedText = importText.split(((EditText) findViewById(R.id.import_split_symbol))
                         .getText().toString());
-                ((TextView) findViewById(R.id.import_splitted_line_view)).setText(splittedText[0]);
+                splitted_line_view.setText(splittedText[line_index]);
+            }
+        });
+
+        ((Button) findViewById(R.id.import_splitted_line_next_btn)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                splitted_line_view.setText(splittedText[++line_index%splittedText.length]);
+            }
+        });
+
+        ((Button) findViewById(R.id.import_splitted_line_prev_btn)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                splitted_line_view.setText(splittedText[--line_index%splittedText.length]);
             }
         });
 
