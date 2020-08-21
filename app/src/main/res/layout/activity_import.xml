@@ -53,10 +53,10 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/import_splitted_line_next_btn"
+                android:id="@+id/import_splitted_line_prev_btn"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:text="\<" />
+                android:text="&lt;" />
 
             <TextView
                 android:id="@+id/import_splitted_line_view"
@@ -67,10 +67,10 @@
                 android:textAlignment="center" />
 
             <Button
-                android:id="@+id/import_splitted_line_prev_btn"
+                android:id="@+id/import_splitted_line_next_btn"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:text="\>" />
+                android:text="&gt;" />
 
         </LinearLayout>
 

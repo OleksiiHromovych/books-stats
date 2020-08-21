@@ -69,14 +69,16 @@ public class ImportDataActivity extends AppCompatActivity {
         ((Button) findViewById(R.id.import_splitted_line_next_btn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                splitted_line_view.setText(splittedText[++line_index%splittedText.length]);
+                splitted_line_view.setText(splittedText[(++line_index + splittedText.length)
+                        % splittedText.length]);
             }
         });
 
         ((Button) findViewById(R.id.import_splitted_line_prev_btn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                splitted_line_view.setText(splittedText[--line_index%splittedText.length]);
+                splitted_line_view.setText(splittedText[(--line_index + splittedText.length)
+                        % splittedText.length]);
             }
         });
 
@@ -85,10 +87,13 @@ public class ImportDataActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 splitSplittedText = new ArrayList<>();
-                StringBuilder stringBuilder = new StringBuilder("[");
-                stringBuilder.append(Arrays.toString(((EditText) findViewById(R.id.import_split_splitted_symbol))
-                        .getText().toString().split(" ~ ")));
-                stringBuilder.append("]");
+                StringBuilder stringBuilder = new StringBuilder("");
+                for (String s : (((EditText) findViewById(R.id.import_split_splitted_symbol))
+                        .getText().toString().split(" ~ "))) {
+                    stringBuilder.append(s);
+                    stringBuilder.append("|");
+                }
+                stringBuilder.deleteCharAt(stringBuilder.lastIndexOf("|"));
                 for (String s : splittedText) {
                     splitSplittedText.add(s.split(stringBuilder.toString()));
                 }
@@ -101,7 +106,7 @@ public class ImportDataActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String[] strings = {"Author", "Name", "Description", "Date",};
                 for (String s : strings)
-                    appropriateFieldLayout.addView(createItemLayout(s, splitSplittedText.get(0)));
+                    appropriateFieldLayout.addView(createItemLayout(s, splitSplittedText.get(line_index)));
             }
         });
 
@@ -117,14 +122,14 @@ public class ImportDataActivity extends AppCompatActivity {
                         ((Spinner) appropriateFieldLayout.getChildAt(1).findViewById(R.id.import_item_choice_split_type_spinner)).getSelectedItem().toString());
 
                 String el = ((Spinner) appropriateFieldLayout.getChildAt(2).findViewById(R.id.import_item_choice_split_type_spinner)).getSelectedItem().toString();
-                if(spinnersChoices.contains(el))
+                if (spinnersChoices.contains(el))
                     spinnersChoices.add("");
                 else
                     spinnersChoices.add(el);
 
                 String status = ((Spinner) findViewById(R.id.import_status_spinner)).getSelectedItem().toString();
 
-                List<String> list = new ArrayList<>(Arrays.asList(splitSplittedText.get(0)));
+                List<String> list = new ArrayList<>(Arrays.asList(splitSplittedText.get(line_index)));
 
                 int author_index = list.indexOf(spinnersChoices.get(0));
                 int name_index = list.indexOf(spinnersChoices.get(1));
@@ -134,9 +139,11 @@ public class ImportDataActivity extends AppCompatActivity {
                 for (String[] strings : splitSplittedText) {
                     Book book = new Book();
                     book.setStatus(status);
-                    book.setAuthor(strings[author_index].replaceAll("\\s+",""));
-                    book.setBookName(strings[name_index].replaceAll("\\s+",""));
-                    book.setDescription(strings[description_index].replaceAll("\\s+",""));
+                    book.setAuthor(strings[author_index].replaceAll("^\\s+|\\s+$", ""));
+                    if (strings.length > 1)
+                        book.setBookName(strings[name_index].replaceAll("^\\s+|\\s+$", ""));
+                    if (strings.length > 2)
+                        book.setDescription(strings[description_index].replaceAll("^\\s+|\\s+$", ""));
                     bookLab.addBook(book);
                 }
                 finish();

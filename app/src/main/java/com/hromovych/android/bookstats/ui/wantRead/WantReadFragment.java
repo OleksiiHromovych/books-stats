@@ -24,6 +24,7 @@ import com.hromovych.android.bookstats.BookLab;
 import com.hromovych.android.bookstats.Callbacks;
 import com.hromovych.android.bookstats.DateHelper;
 import com.hromovych.android.bookstats.R;
+import com.hromovych.android.bookstats.database.BookDBSchema;
 
 import java.util.List;
 
@@ -140,7 +141,7 @@ public class WantReadFragment extends Fragment {
     public void updateUI() {
         BookLab bookLab = BookLab.get(getActivity());
         List<Book> books = bookLab.getBooksByStatus(getResources()
-                .getString(R.string.title_want_read));
+                .getString(R.string.title_want_read), BookDBSchema.BookTable.Cols.AUTHOR);
         if (mAdapter == null) {
             mAdapter = new WantReadFragment.BookAdapter(books);
             mRecyclerView.setAdapter(mAdapter);

@@ -66,5 +66,6 @@
     <string name="slide_next_title">Next</string>
     <string name="slide_back_title">Back</string>
     <string name="book_description_title">Description</string>
+    <string name="book_description_hint">Enter your description here</string>
 
 </resources>

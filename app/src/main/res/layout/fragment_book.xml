@@ -37,6 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:inputType="textCapWords"
             android:cursorVisible="true"
             android:hint="@string/book_name_hint"
 
@@ -73,6 +74,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:cursorVisible="true"
+            android:inputType="textCapWords"
             android:hint="@string/book_author_hint"
             android:textColorHint="@color/bookPaper"
             android:textCursorDrawable="@null" />
@@ -108,6 +110,8 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:cursorVisible="true"
+            android:ems="10"
+            android:inputType="number"
             android:hint="@string/book_pages_hint"
             android:textColorHint="@color/bookPaper"
             android:textCursorDrawable="@null" />
@@ -140,6 +144,7 @@
             android:id="@+id/book_category"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:inputType="textCapWords"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:hint="@string/book_category_hint"
@@ -170,6 +175,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:hint="@string/book_description_hint"
+            android:textColorHint="@color/bookPaper"
             android:maxLines="1"
             android:ellipsize="end"
             android:background="@drawable/edit_text_selector"/>

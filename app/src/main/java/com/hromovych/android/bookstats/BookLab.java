@@ -56,11 +56,12 @@ public class BookLab {
         mDatabase.insert(BookTable.NAME, null, contentValues);
     }
 
-    public List<Book> getBooks() {
+    public List<Book> getBooksByStatus(String s) {
         List<Book> books = new ArrayList<>();
 
-        BookCursorWrapper cursor = queryBooks(null, null);
-
+        BookCursorWrapper cursor = queryBooks(
+                BookTable.Cols.STATUS + " = ?",
+                new String[]{s});
         try {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -73,12 +74,12 @@ public class BookLab {
         return books;
     }
 
-    public List<Book> getBooksByStatus(String s) {
+    public List<Book> getBooksByStatus(String s, String orderBy) {
         List<Book> books = new ArrayList<>();
 
         BookCursorWrapper cursor = queryBooks(
                 BookTable.Cols.STATUS + " = ?",
-                new String[]{s});
+                new String[]{s}, orderBy);
         try {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -126,6 +127,19 @@ public class BookLab {
                 null,
                 null,
                 BookTable.Cols.END_DATE + " , " + BookTable.Cols.START_DATE);
+
+        return new BookCursorWrapper(cursor);
+    }
+
+    private BookCursorWrapper queryBooks(String whereClause, String[] whereArgs, String orderBy) {
+        Cursor cursor = mDatabase.query(
+                BookTable.NAME,
+                null,
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                orderBy);
 
         return new BookCursorWrapper(cursor);
     }
