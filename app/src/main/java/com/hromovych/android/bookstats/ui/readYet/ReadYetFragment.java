@@ -87,6 +87,7 @@ public class ReadYetFragment extends Fragment {
                             .getString(R.string.title_read_yet));
 
                     final Book book = books.get(viewHolder.getAdapterPosition());
+                    final Book oldBook = book;
                     book.setStatus(getResources().getString(R.string.title_read_now));
                     if (book.getStartDate().equals(DateHelper.undefinedDate))
                         book.setStartDate(DateHelper.today);
@@ -98,14 +99,7 @@ public class ReadYetFragment extends Fragment {
                     displaySnackbar("Swipe element", "Undo", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            book.setStatus(getResources().getString(R.string.title_read_yet));
-                            if (book.getStartDate().equals(DateHelper.undefinedDate))
-                                book.setStartDate(DateHelper.today);
-
-                            if (book.getEndDate().equals(DateHelper.undefinedDate))
-                                book.setEndDate(DateHelper.today);
-
-                            bookLab.updateBook(book);
+                            bookLab.updateBook(oldBook);
                             updateUI();
                         }
                     });

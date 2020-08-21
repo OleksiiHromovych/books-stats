@@ -82,9 +82,9 @@ public class WantReadFragment extends Fragment {
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     final BookLab bookLab = BookLab.get(getActivity());
                     List<Book> books = bookLab.getBooksByStatus(getResources()
-                            .getString(R.string.title_want_read));
-
+                            .getString(R.string.title_want_read), BookDBSchema.BookTable.Cols.AUTHOR);
                     final Book book = books.get(viewHolder.getAdapterPosition());
+                    final Book oldBook = book;
                     book.setStatus(getResources().getString(R.string.title_read_now));
                     if (book.getStartDate().equals(DateHelper.undefinedDate))
                         book.setStartDate(DateHelper.today);
@@ -96,10 +96,7 @@ public class WantReadFragment extends Fragment {
                     displaySnackbar("Swipe element", "Undo", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            book.setStatus(getResources().getString(R.string.title_want_read));
-                            book.setStartDate(DateHelper.undefinedDate);
-                            book.setEndDate(DateHelper.undefinedDate);
-                            bookLab.updateBook(book);
+                            bookLab.updateBook(oldBook);
                             updateUI();
                         }
                     });

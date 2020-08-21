@@ -20,7 +20,10 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.hromovych.android.bookstats.database.BookDBSchema;
 import com.hromovych.android.bookstats.slider.IntroSlider;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements Callbacks {
 
@@ -79,17 +82,27 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
                 builder.setTitle("Delete all books?");
                 builder.setMessage("You are about to delete all books info. Do you really want to proceed ?");
                 builder.setCancelable(false);
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Want", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(getApplicationContext(), "I don't think so. Програміст" +
                                 " ще не написав цього. Sorry \\-_-/ ♥", Toast.LENGTH_LONG).show();
+                        BookLab bookLab = BookLab.get(MainActivity.this);
+                        List<Book> books = bookLab.getBooksByStatus(getResources()
+                                .getString(R.string.title_want_read), BookDBSchema.BookTable.Cols.AUTHOR);
+                        for (Book book: books)
+                            bookLab.deleteBook(book);
                     }
                 });
 
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Yet", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        BookLab bookLab = BookLab.get(MainActivity.this);
+                        List<Book> books = bookLab.getBooksByStatus(getResources()
+                                .getString(R.string.title_read_yet));
+                        for (Book book: books)
+                            bookLab.deleteBook(book);
                     }
                 });
 

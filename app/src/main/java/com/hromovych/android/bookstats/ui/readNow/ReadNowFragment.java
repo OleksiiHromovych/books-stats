@@ -88,6 +88,7 @@ public class ReadNowFragment extends Fragment {
                             .getString(R.string.title_read_now));
 
                     final Book book = books.get(viewHolder.getAdapterPosition());
+                    final Book oldBook = book;
                     if (direction == ItemTouchHelper.LEFT) {
                         book.setStatus(getResources().getString(R.string.title_read_yet));
                         if (book.getStartDate().equals(DateHelper.undefinedDate))
@@ -108,12 +109,7 @@ public class ReadNowFragment extends Fragment {
                     displaySnackbar("Swipe element", "Undo", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            book.setStatus(getResources().getString(R.string.title_read_now));
-                            if (book.getStartDate().equals(DateHelper.undefinedDate))
-                                book.setStartDate(DateHelper.today);
-                            book.setEndDate(DateHelper.undefinedDate);
-
-                            bookLab.updateBook(book);
+                            bookLab.updateBook(oldBook);
                             updateUI();
                         }
                     });
