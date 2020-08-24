@@ -38,6 +38,8 @@ public class ReadNowFragment extends Fragment {
     private BookAdapter mAdapter;
     private Callbacks mCallbacks;
 
+    private boolean showDate;
+
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -53,6 +55,9 @@ public class ReadNowFragment extends Fragment {
 
         new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
         updateUI();
+
+        showDate = getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
+                Context.MODE_PRIVATE).getBoolean(MainActivity.SHOW_DATE_PREFERENCES, true);
 
         return view;
     }
@@ -159,6 +164,7 @@ public class ReadNowFragment extends Fragment {
             mAdapter.notifyDataSetChanged();
         }
     }
+
     private class BookHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
@@ -193,22 +199,23 @@ public class ReadNowFragment extends Fragment {
             bookName.setText(mBook.getBookName());
             author.setText(mBook.getAuthor());
 
-            if (mBook.getPages() != 0)
+            if (mBook.getPages() != 0) {
                 pages.setText("" + mBook.getPages());
-            else
+                pageLayout.setVisibility(View.VISIBLE);
+            } else
                 pageLayout.setVisibility(View.GONE);
-            if (getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
-                    Context.MODE_PRIVATE).getBoolean(MainActivity.SHOW_DATE_PREFERENCES, true)
-                    && (!mBook.getStartDate().equals(DateHelper.unknownDate))) {
-                startDate.setText("+ " + DateFormat.format("MMM dd, yyyy", mBook.getStartDate()));
 
-            } else if (!mBook.getStartDate().equals(DateHelper.unknownDate)) {
+            if (!mBook.getStartDate().equals(DateHelper.unknownDate)
+                    && !mBook.getStartDate().equals(DateHelper.undefinedDate)) {
 
-                long days = (DateHelper.today.getTime() - mBook.getStartDate().getTime()) / 1000 / 60 / 60 / 24;
-                startDate.setText("" + days);
+                if (showDate) {
+                    startDate.setText("+ " + DateFormat.format("MMM dd, yyyy", mBook.getStartDate()));
 
+                } else {
+                    long days = (DateHelper.today.getTime() - mBook.getStartDate().getTime()) / 1000 / 60 / 60 / 24;
+                    startDate.setText("" + days);
+                }
             }
-
         }
 
         @Override

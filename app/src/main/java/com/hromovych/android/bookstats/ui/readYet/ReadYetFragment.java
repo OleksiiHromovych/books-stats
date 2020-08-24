@@ -38,6 +38,7 @@ public class ReadYetFragment extends Fragment {
     private ReadYetFragment.BookAdapter mAdapter;
     private Callbacks mCallbacks;
 
+    private boolean showDate;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -54,6 +55,9 @@ public class ReadYetFragment extends Fragment {
         new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
         updateUI();
+
+        showDate = getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
+                Context.MODE_PRIVATE).getBoolean(MainActivity.SHOW_DATE_PREFERENCES, true);
 
         return view;
     }
@@ -189,19 +193,23 @@ public class ReadYetFragment extends Fragment {
             } else {
                 pageLayout.setVisibility(View.GONE);
             }
-            endDate.setVisibility(View.VISIBLE);
-            if (getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
-                    Context.MODE_PRIVATE).getBoolean(MainActivity.SHOW_DATE_PREFERENCES, true)) {
 
-                if (!mBook.getStartDate().equals(DateHelper.unknownDate))
+            endDate.setVisibility(View.VISIBLE);
+            if (showDate) {
+
+                if (!mBook.getStartDate().equals(DateHelper.unknownDate)
+                        && !mBook.getStartDate().equals(DateHelper.undefinedDate))
                     startDate.setText("+ " + DateFormat.format("MMM dd, yyyy", mBook.getStartDate()));
-                if (!mBook.getEndDate().equals(DateHelper.unknownDate))
+                if (!mBook.getEndDate().equals(DateHelper.unknownDate)
+                        && !mBook.getEndDate().equals(DateHelper.undefinedDate))
 
                     endDate.setText("- " + DateFormat.format("MMM dd, yyyy", mBook.getEndDate()));
 
             } else {
                 if (!mBook.getStartDate().equals(DateHelper.unknownDate) &&
-                        !mBook.getEndDate().equals(DateHelper.unknownDate)) {
+                        !mBook.getEndDate().equals(DateHelper.unknownDate)
+                        && !mBook.getStartDate().equals(DateHelper.undefinedDate)
+                        && !mBook.getEndDate().equals(DateHelper.undefinedDate)) {
 
                     long days = (mBook.getEndDate().getTime() - mBook.getStartDate().getTime())
                             / 1000 / 60 / 60 / 24;
