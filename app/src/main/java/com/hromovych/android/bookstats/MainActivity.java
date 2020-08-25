@@ -107,14 +107,14 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
                 });
 
                 builder.show();
+                this.recreate();
                 return true;
             case R.id.menu_date_format:
                 mSharedPreferences.edit().putBoolean(SHOW_DATE_PREFERENCES,
                         !mSharedPreferences.getBoolean(SHOW_DATE_PREFERENCES, true)).apply();
+                this.recreate();
                 return true;
             case R.id.import_books:
-//                Toast.makeText(getApplicationContext(), "phhh, phh, phh. Import not success," +
-//                        " try later", Toast.LENGTH_SHORT).show();
                 startActivityForResult(ImportDataActivity.newIntent(MainActivity.this),
                         REQUEST_CODE_IMPORT);
                 return true;
