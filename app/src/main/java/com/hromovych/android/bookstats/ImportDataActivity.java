@@ -4,11 +4,13 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class ImportDataActivity extends AppCompatActivity {
@@ -104,9 +107,29 @@ public class ImportDataActivity extends AppCompatActivity {
         ((Button) findViewById(R.id.import_add_item_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] strings = {"Author", "Name", "Description", "Date",};
+                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
+
+                String[] strings = {"Author", "Name", "Description",};
+                if (((Spinner) findViewById(R.id.import_status_spinner)).getSelectedItem().toString()
+                        .equals(getString(R.string.title_read_yet)))
+                    strings = new String[]{"Author", "Name", "Description", "Date",};
+
                 for (String s : strings)
-                    appropriateFieldLayout.addView(createItemLayout(s, splitSplittedText.get(line_index)));
+                    popupMenu.getMenu().add(s);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getTitle().toString().equals("Date")) {
+                            appropriateFieldLayout.addView(createItemLayout("Date",
+                                    new String[]{"2017", "2018", "2019", "2020"}));
+                        } else {
+                            appropriateFieldLayout.addView(createItemLayout(item.getTitle().toString(),
+                                    splitSplittedText.get(line_index)));
+                        }
+                        return true;
+                    }
+                });
+                popupMenu.show();
             }
         });
 
@@ -114,36 +137,52 @@ public class ImportDataActivity extends AppCompatActivity {
         finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<String> spinnersChoices = new ArrayList<>();
-                spinnersChoices.add(
-                        ((Spinner) appropriateFieldLayout.getChildAt(0).
-                                findViewById(R.id.import_item_choice_split_type_spinner)).getSelectedItem().toString());
-                spinnersChoices.add(
-                        ((Spinner) appropriateFieldLayout.getChildAt(1).findViewById(R.id.import_item_choice_split_type_spinner)).getSelectedItem().toString());
-
-                String el = ((Spinner) appropriateFieldLayout.getChildAt(2).findViewById(R.id.import_item_choice_split_type_spinner)).getSelectedItem().toString();
-                if (spinnersChoices.contains(el))
-                    spinnersChoices.add("");
-                else
-                    spinnersChoices.add(el);
+                List<String[]> spinnersChoices = new ArrayList<>();
+                for (int i = 0; i < appropriateFieldLayout.getChildCount(); i++)
+                    spinnersChoices.add(new String[]{
+                            ((TextView) appropriateFieldLayout.getChildAt(i).
+                                    findViewById(R.id.import_item_choice_split_type_text)).getText().toString(),
+                            ((Spinner) appropriateFieldLayout.getChildAt(i).
+                                    findViewById(R.id.import_item_choice_split_type_spinner)).getSelectedItem().toString()});
 
                 String status = ((Spinner) findViewById(R.id.import_status_spinner)).getSelectedItem().toString();
 
                 List<String> list = new ArrayList<>(Arrays.asList(splitSplittedText.get(line_index)));
+                int author_index = -1, name_index = -1, description_index = -1;
+                String date = null;
 
-                int author_index = list.indexOf(spinnersChoices.get(0));
-                int name_index = list.indexOf(spinnersChoices.get(1));
-                int description_index = list.indexOf(spinnersChoices.get(2));
+                for (int i = 0; i < spinnersChoices.size(); i++) {
+                    String[] strings = spinnersChoices.get(i);
+                    switch (strings[0]) {
+                        case "Author":
+                            author_index = list.indexOf(strings[1]);
+                            break;
+                        case "Name":
+                            name_index = list.indexOf(strings[1]);
+                            break;
+                        case "Description":
+                            description_index = list.indexOf(strings[1]);
+                            break;
+                        case "Date":
+                            date = strings[1];
+                            break;
+                    }
+                }
 
                 BookLab bookLab = BookLab.get(getApplicationContext());
                 for (String[] strings : splitSplittedText) {
                     Book book = new Book();
                     book.setStatus(status);
-                    book.setAuthor(strings[author_index].replaceAll("^\\s+|\\s+$", ""));
-                    if (strings.length > 1)
+                    if (author_index != -1)
+                        book.setAuthor(strings[author_index].replaceAll("^\\s+|\\s+$", ""));
+                    if (name_index != -1)
                         book.setBookName(strings[name_index].replaceAll("^\\s+|\\s+$", ""));
-                    if (strings.length > 2)
+                    if (description_index != -1)
                         book.setDescription(strings[description_index].replaceAll("^\\s+|\\s+$", ""));
+                    if (!date.equals(null) && status.equals(getString(R.string.title_read_yet))) {
+                        book.setEndDate(new GregorianCalendar(Integer.parseInt(date), 0, 1).
+                                getTime());
+                    }
                     bookLab.addBook(book);
                 }
                 finish();
@@ -157,7 +196,10 @@ public class ImportDataActivity extends AppCompatActivity {
                 appropriateFieldLayout, false);
         TextView textView = (TextView) layout.findViewById(R.id.import_item_choice_split_type_text);
         textView.setText(name);
-
+        List<String> a = new ArrayList<>(Arrays.asList(items));
+        a.add("");
+        items = new String[a.size()];
+        a.toArray(items);
         Spinner spinner = (Spinner) layout.findViewById(R.id.import_item_choice_split_type_spinner);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),
                 android.R.layout.simple_spinner_item, items);
