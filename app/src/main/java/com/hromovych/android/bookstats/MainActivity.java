@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -79,28 +78,34 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
             case R.id.delete_book:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-                builder.setTitle("Delete all books?");
+                builder.setTitle("What book category you want to delete?");
                 builder.setMessage("You are about to delete all books info. Do you really want to proceed ?");
                 builder.setCancelable(false);
-                builder.setPositiveButton("Want", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "I don't think so. Програміст" +
-                                " ще не написав цього. Sorry \\-_-/ ♥", Toast.LENGTH_LONG).show();
-                        BookLab bookLab = BookLab.get(MainActivity.this);
-                        List<Book> books = bookLab.getBooksByStatus(getResources()
-                                .getString(R.string.title_want_read), BookDBSchema.BookTable.Cols.AUTHOR);
-                        for (Book book: books)
-                            bookLab.deleteBook(book);
-                    }
-                });
-
-                builder.setNegativeButton("Yet", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.title_read_yet, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         BookLab bookLab = BookLab.get(MainActivity.this);
                         List<Book> books = bookLab.getBooksByStatus(getResources()
                                 .getString(R.string.title_read_yet));
+                        for (Book book: books)
+                            bookLab.deleteBook(book);
+                    }
+                });
+                builder.setNeutralButton(R.string.title_read_now, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        BookLab bookLab = BookLab.get(MainActivity.this);
+                        List<Book> books = bookLab.getBooksByStatus(getString(R.string.title_read_now));
+                             for (Book book: books)
+                                 bookLab.deleteBook(book);
+                    }
+                });
+                builder.setPositiveButton(R.string.title_want_read, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        BookLab bookLab = BookLab.get(MainActivity.this);
+                        List<Book> books = bookLab.getBooksByStatus(getResources()
+                                .getString(R.string.title_want_read), BookDBSchema.BookTable.Cols.AUTHOR);
                         for (Book book: books)
                             bookLab.deleteBook(book);
                     }
