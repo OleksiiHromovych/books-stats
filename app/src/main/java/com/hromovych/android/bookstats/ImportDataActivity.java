@@ -28,11 +28,16 @@ public class ImportDataActivity extends AppCompatActivity {
     private Button splitSplittedTextBtn;
     private LinearLayout appropriateFieldLayout;
 
+    //    Layout for hide and show consequent
+    private LinearLayout firstState;
+    private LinearLayout secondState;
+    private LinearLayout thirtyState;
 
     private String importText = "";
     private String[] splittedText;
     private List<String[]> splitSplittedText;
     private int line_index = 0;
+    private boolean dateSet = false;
 
 
     public static Intent newIntent(Context context) {
@@ -45,31 +50,43 @@ public class ImportDataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_import);
 
-        appropriateFieldLayout = (LinearLayout) findViewById(R.id.import_appropriate_field);
-        clipBoardBtn = (Button) findViewById(R.id.import_clipboard_btn);
+        firstState = findViewById(R.id.import_first_show_state);
+        secondState = findViewById(R.id.import_second_hide_stage);
+        thirtyState = findViewById(R.id.import_thirty_show_state);
+        final Button finishBtn = findViewById(R.id.import_finish_btn);
+
+        firstState.setVisibility(View.GONE);
+        secondState.setVisibility(View.GONE);
+        thirtyState.setVisibility(View.GONE);
+        finishBtn.setVisibility(View.GONE);
+
+        appropriateFieldLayout = findViewById(R.id.import_appropriate_field);
+//        start btn, get text from clipboard
+        clipBoardBtn = findViewById(R.id.import_clipboard_btn);
 
         clipBoardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 importText = ((ClipboardManager) getSystemService(CLIPBOARD_SERVICE))
                         .getText().toString();
-                ((LinearLayout) findViewById(R.id.import_main_layout)).setVisibility(View.VISIBLE);
+                firstState.setVisibility(View.VISIBLE);
 
             }
         });
 
-        splitTextBtn = (Button) findViewById(R.id.import_split_text);
-        final TextView splitted_line_view = (TextView) findViewById(R.id.import_splitted_line_view);
+        splitTextBtn = findViewById(R.id.import_split_text);
+        final TextView splitted_line_view = findViewById(R.id.import_splitted_line_view);
         splitTextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 splittedText = importText.split(((EditText) findViewById(R.id.import_split_symbol))
                         .getText().toString());
                 splitted_line_view.setText(splittedText[line_index]);
+                secondState.setVisibility(View.VISIBLE);
             }
         });
 
-        ((Button) findViewById(R.id.import_splitted_line_next_btn)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.import_splitted_line_next_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 splitted_line_view.setText(splittedText[(++line_index + splittedText.length)
@@ -77,7 +94,7 @@ public class ImportDataActivity extends AppCompatActivity {
             }
         });
 
-        ((Button) findViewById(R.id.import_splitted_line_prev_btn)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.import_splitted_line_prev_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 splitted_line_view.setText(splittedText[(--line_index + splittedText.length)
@@ -85,12 +102,12 @@ public class ImportDataActivity extends AppCompatActivity {
             }
         });
 
-        splitSplittedTextBtn = (Button) findViewById(R.id.import_split_splitted_text);
+        splitSplittedTextBtn = findViewById(R.id.import_split_splitted_text);
         splitSplittedTextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 splitSplittedText = new ArrayList<>();
-                StringBuilder stringBuilder = new StringBuilder("");
+                StringBuilder stringBuilder = new StringBuilder();
                 for (String s : (((EditText) findViewById(R.id.import_split_splitted_symbol))
                         .getText().toString().split(" ~ "))) {
                     stringBuilder.append(s);
@@ -100,40 +117,43 @@ public class ImportDataActivity extends AppCompatActivity {
                 for (String s : splittedText) {
                     splitSplittedText.add(s.split(stringBuilder.toString()));
                 }
+                thirtyState.setVisibility(View.VISIBLE);
 
             }
         });
 
-        ((Button) findViewById(R.id.import_add_item_button)).setOnClickListener(new View.OnClickListener() {
+        final List<String> popupMenuElement =
+                new ArrayList<String>(Arrays.asList("Author", "Name", "Description"));
+        findViewById(R.id.import_add_item_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
-
-                String[] strings = {"Author", "Name", "Description",};
                 if (((Spinner) findViewById(R.id.import_status_spinner)).getSelectedItem().toString()
-                        .equals(getString(R.string.title_read_yet)))
-                    strings = new String[]{"Author", "Name", "Description", "Date",};
-
-                for (String s : strings)
+                        .equals(getString(R.string.title_read_yet)) && !dateSet) {
+                    popupMenuElement.add("Date");
+                    dateSet = true;
+                }
+                for (String s : popupMenuElement)
                     popupMenu.getMenu().add(s);
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getTitle().toString().equals("Date")) {
+                        String item_text = item.getTitle().toString();
+                        if (item_text.equals("Date"))
                             appropriateFieldLayout.addView(createItemLayout("Date",
                                     new String[]{"2017", "2018", "2019", "2020"}));
-                        } else {
-                            appropriateFieldLayout.addView(createItemLayout(item.getTitle().toString(),
+                        else
+                            appropriateFieldLayout.addView(createItemLayout(item_text,
                                     splitSplittedText.get(line_index)));
-                        }
+                        popupMenuElement.remove(item_text);
                         return true;
                     }
                 });
                 popupMenu.show();
+                finishBtn.setVisibility(View.VISIBLE);
             }
         });
 
-        final Button finishBtn = (Button) findViewById(R.id.import_finish_btn);
         finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,6 +202,7 @@ public class ImportDataActivity extends AppCompatActivity {
                     if (!date.equals(null) && status.equals(getString(R.string.title_read_yet))) {
                         book.setEndDate(new GregorianCalendar(Integer.parseInt(date), 0, 1).
                                 getTime());
+                        book.setStartDate(DateHelper.unknownDate);
                     }
                     bookLab.addBook(book);
                 }
@@ -194,13 +215,13 @@ public class ImportDataActivity extends AppCompatActivity {
     private LinearLayout createItemLayout(String name, String[] items) {
         LinearLayout layout = (LinearLayout) getLayoutInflater().inflate(R.layout.list_item_import,
                 appropriateFieldLayout, false);
-        TextView textView = (TextView) layout.findViewById(R.id.import_item_choice_split_type_text);
+        TextView textView = layout.findViewById(R.id.import_item_choice_split_type_text);
         textView.setText(name);
         List<String> a = new ArrayList<>(Arrays.asList(items));
         a.add("");
         items = new String[a.size()];
         a.toArray(items);
-        Spinner spinner = (Spinner) layout.findViewById(R.id.import_item_choice_split_type_spinner);
+        Spinner spinner = layout.findViewById(R.id.import_item_choice_split_type_spinner);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),
                 android.R.layout.simple_spinner_item, items);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

@@ -13,10 +13,8 @@
         android:text="Get from clipboard"
 
         app:layout_constraintTop_toTopOf="parent" />
-    <!--android:visibility="gone"-->
-    <LinearLayout
 
-        android:id="@+id/import_main_layout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/backgroundItem"
@@ -24,126 +22,148 @@
         app:layout_constraintTop_toBottomOf="@id/import_clipboard_btn">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Items split by " />
-
-            <EditText
-                android:id="@+id/import_split_symbol"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Enter you split symbol" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/import_split_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Split items" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/import_splitted_line_prev_btn"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:text="&lt;" />
-
-            <TextView
-                android:id="@+id/import_splitted_line_view"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="You line"
-                android:textAlignment="center" />
-
-            <Button
-                android:id="@+id/import_splitted_line_next_btn"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:text="&gt;" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Split item by " />
-
-            <EditText
-                android:id="@+id/import_split_splitted_symbol"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Enter you split symbol ( ~ )" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/import_split_splitted_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Split item" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAlignment="textEnd"
-                android:layout_weight="1"
-                android:text="Add item" />
-
-            <Button
-                android:id="@+id/import_add_item_button"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:foreground="@android:drawable/ic_input_add" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/import_appropriate_field"
+            android:id="@+id/import_first_show_state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Items split by " />
+
+                <EditText
+                    android:id="@+id/import_split_symbol"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Enter you split symbol" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/import_split_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Split items" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/import_second_hide_stage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
+            <!--            android:visibility="gone"-->
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="import to" />
+                android:orientation="horizontal">
 
+                <Button
+                    android:id="@+id/import_splitted_line_prev_btn"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="&lt;" />
 
-            <Spinner
-                android:id="@+id/import_status_spinner"
-                android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/import_splitted_line_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="You line"
+                    android:textAlignment="center" />
+
+                <Button
+                    android:id="@+id/import_splitted_line_next_btn"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="&gt;" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:entries="@array/status_spinner_list" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Split item by " />
+
+                <EditText
+                    android:id="@+id/import_split_splitted_symbol"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Enter you split symbol ( ~ )" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/import_split_splitted_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Split item" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/import_thirty_show_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Add item"
+                    android:textAlignment="textEnd" />
+
+                <Button
+                    android:id="@+id/import_add_item_button"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:foreground="@android:drawable/ic_input_add" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/import_appropriate_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="import to" />
 
 
+                <Spinner
+                    android:id="@+id/import_status_spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:entries="@array/status_spinner_list" />
+
+
+            </LinearLayout>
         </LinearLayout>
 
         <Button
