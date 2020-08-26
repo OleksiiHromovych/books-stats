@@ -8,6 +8,8 @@
     <color name="backgroundFont">#4A4949</color>
     <color name="activeIcon">#ECEBEB</color>
     <color name="bookPaper">#E9E5C5</color>
+    <color name="bookPaperLight">#F4F1DE</color>
+    <color name="bookPaperDark">#ECE3A8</color>
     <color name="backgroundItem">#8E8DB1</color>
     <color name="backgroundItemLight">#A7A6CE</color>
 

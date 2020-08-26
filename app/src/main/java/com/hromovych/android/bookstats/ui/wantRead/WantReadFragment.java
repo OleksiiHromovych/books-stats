@@ -156,12 +156,12 @@ public class WantReadFragment extends Fragment {
         private TextView author;
         private TextView pages;
         private TextView priority;
-private LinearLayout pageLayout;
+        private LinearLayout pageLayout;
         private Book mBook;
 
         public BookHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_book, parent, false));
-
+            itemView.setBackgroundColor(getResources().getColor(R.color.bookPaperLight));
             count = itemView.findViewById(R.id.book_count);
             bookName = itemView.findViewById(R.id.book_name);
             author = itemView.findViewById(R.id.author);

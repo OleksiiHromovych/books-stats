@@ -168,7 +168,7 @@ public class ReadYetFragment extends Fragment {
 
         public BookHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_book, parent, false));
-
+            itemView.setBackgroundColor(getResources().getColor(R.color.bookPaperDark));
             count = itemView.findViewById(R.id.book_count);
             bookName = itemView.findViewById(R.id.book_name);
             author = itemView.findViewById(R.id.author);

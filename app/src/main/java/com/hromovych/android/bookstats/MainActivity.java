@@ -19,7 +19,6 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.hromovych.android.bookstats.database.BookDBSchema;
 import com.hromovych.android.bookstats.slider.IntroSlider;
 
 import java.util.List;
@@ -81,38 +80,27 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
                 builder.setTitle("What book category you want to delete?");
                 builder.setMessage("You are about to delete all books info. Do you really want to proceed ?");
                 builder.setCancelable(false);
+
                 builder.setNegativeButton(R.string.title_read_yet, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        BookLab bookLab = BookLab.get(MainActivity.this);
-                        List<Book> books = bookLab.getBooksByStatus(getResources()
-                                .getString(R.string.title_read_yet));
-                        for (Book book: books)
-                            bookLab.deleteBook(book);
+                        deleteBook(getString(R.string.title_read_yet));
                     }
                 });
                 builder.setNeutralButton(R.string.title_read_now, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        BookLab bookLab = BookLab.get(MainActivity.this);
-                        List<Book> books = bookLab.getBooksByStatus(getString(R.string.title_read_now));
-                             for (Book book: books)
-                                 bookLab.deleteBook(book);
+                        deleteBook(getString(R.string.title_read_now));
                     }
                 });
                 builder.setPositiveButton(R.string.title_want_read, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        BookLab bookLab = BookLab.get(MainActivity.this);
-                        List<Book> books = bookLab.getBooksByStatus(getResources()
-                                .getString(R.string.title_want_read), BookDBSchema.BookTable.Cols.AUTHOR);
-                        for (Book book: books)
-                            bookLab.deleteBook(book);
+                        deleteBook(getString(R.string.title_want_read));
                     }
                 });
 
                 builder.show();
-                this.recreate();
                 return true;
             case R.id.menu_date_format:
                 mSharedPreferences.edit().putBoolean(SHOW_DATE_PREFERENCES,
@@ -122,10 +110,21 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
             case R.id.import_books:
                 startActivityForResult(ImportDataActivity.newIntent(MainActivity.this),
                         REQUEST_CODE_IMPORT);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+    private void deleteBook(String status){
+        BookLab bookLab = BookLab.get(MainActivity.this);
+        List<Book> books = bookLab.getBooksByStatus(status);
+        for (Book book: books)
+            bookLab.deleteBook(book);
+
+        MainActivity.this.recreate();
     }
 
     @Override
