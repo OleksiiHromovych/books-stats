@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -78,25 +81,27 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
                 builder.setTitle("What book category you want to delete?");
-                builder.setMessage("You are about to delete all books info. Do you really want to proceed ?");
-                builder.setCancelable(false);
+                final ArrayAdapter<String> adp = new ArrayAdapter<String>(this,
+                        android.R.layout.simple_spinner_item, getResources()
+                        .getStringArray(R.array.status_spinner_list));
 
-                builder.setNegativeButton(R.string.title_read_yet, new DialogInterface.OnClickListener() {
+                final Spinner sp = new Spinner(this);
+                sp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                sp.setAdapter(adp);
+                sp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                sp.setPadding(5,15,5,10);
+
+                builder.setView(sp);
+                builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteBook(getString(R.string.title_read_yet));
+
                     }
                 });
-                builder.setNeutralButton(R.string.title_read_now, new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteBook(getString(R.string.title_read_now));
-                    }
-                });
-                builder.setPositiveButton(R.string.title_want_read, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteBook(getString(R.string.title_want_read));
+                        deleteBooks(sp.getSelectedItem().toString());
                     }
                 });
 
@@ -118,10 +123,10 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
     }
 
 
-    private void deleteBook(String status){
+    private void deleteBooks(String status) {
         BookLab bookLab = BookLab.get(MainActivity.this);
         List<Book> books = bookLab.getBooksByStatus(status);
-        for (Book book: books)
+        for (Book book : books)
             bookLab.deleteBook(book);
 
         MainActivity.this.recreate();
