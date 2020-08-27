@@ -23,9 +23,11 @@ import com.hromovych.android.bookstats.Book;
 import com.hromovych.android.bookstats.BookLab;
 import com.hromovych.android.bookstats.Callbacks;
 import com.hromovych.android.bookstats.DateHelper;
+import com.hromovych.android.bookstats.Holders;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookDBSchema;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -37,6 +39,10 @@ public class WantReadFragment extends Fragment {
     private WantReadFragment.BookAdapter mAdapter;
     private Callbacks mCallbacks;
 
+
+    private static final String BOOK_CATEGORY_TEXT = "book_category_text";
+    private static final int BOOK_VIEWTYPE = 0;
+    private static final int CATEGORY_VIEWTYPE = 1;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -82,9 +88,12 @@ public class WantReadFragment extends Fragment {
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     final BookLab bookLab = BookLab.get(getActivity());
                     List<Book> books = bookLab.getBooksByStatus(getResources()
-                            .getString(R.string.title_want_read), BookDBSchema.BookTable.Cols.AUTHOR);
+                            .getString(R.string.title_want_read),
+                            BookDBSchema.BookTable.Cols.CATEGORY + " , " +
+                                    BookDBSchema.BookTable.Cols.AUTHOR);
+
                     final Book book = books.get(viewHolder.getAdapterPosition());
-                    final Book oldBook = book;
+                    final Book oldBook = bookLab.getBook(book.getId());
                     book.setStatus(getResources().getString(R.string.title_read_now));
                     if (book.getStartDate().equals(DateHelper.undefinedDate))
                         book.setStartDate(DateHelper.today);
@@ -138,7 +147,24 @@ public class WantReadFragment extends Fragment {
     public void updateUI() {
         BookLab bookLab = BookLab.get(getActivity());
         List<Book> books = bookLab.getBooksByStatus(getResources()
-                .getString(R.string.title_want_read), BookDBSchema.BookTable.Cols.AUTHOR);
+                        .getString(R.string.title_want_read),
+                BookDBSchema.BookTable.Cols.CATEGORY + " , " +
+                        BookDBSchema.BookTable.Cols.AUTHOR);
+        List<Book> booksCategory = new ArrayList<>();
+        String lastCategory = "";
+        for (Book book : books) {
+            String category = book.getCategory();
+            if (category != null && !category.equals(lastCategory)) {
+                lastCategory = category;
+                Book bookCategory = new Book();
+                bookCategory.setCategory(book.getCategory());
+                bookCategory.setStatus(BOOK_CATEGORY_TEXT);
+                booksCategory.add(bookCategory);
+            }
+            booksCategory.add(book);
+
+        }
+        books = booksCategory;
         if (mAdapter == null) {
             mAdapter = new WantReadFragment.BookAdapter(books);
             mRecyclerView.setAdapter(mAdapter);
@@ -148,8 +174,7 @@ public class WantReadFragment extends Fragment {
         }
     }
 
-    private class BookHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener {
+    private class BookHolder extends Holders.BaseHolder {
 
         private TextView count;
         private TextView bookName;
@@ -172,9 +197,8 @@ public class WantReadFragment extends Fragment {
             itemView.setOnClickListener(this);
         }
 
-        public void bind(Book book, int pos) {
+        public void bind(Book book) {
             mBook = book;
-            count.setText("" + (pos + 1));
             bookName.setText(mBook.getBookName());
             author.setText(mBook.getAuthor());
 
@@ -183,9 +207,13 @@ public class WantReadFragment extends Fragment {
             else
                 pageLayout.setVisibility(View.GONE);
 
-
             priority.setText(mBook.getType());
-//priority.setTextColor(Color.RED);
+
+        }
+
+        public void bind(Book book, int pos){
+            count.setText("" + (pos + 1));
+            bind(book);
         }
 
         @Override
@@ -194,7 +222,7 @@ public class WantReadFragment extends Fragment {
         }
     }
 
-    private class BookAdapter extends RecyclerView.Adapter<WantReadFragment.BookHolder> {
+    private class BookAdapter extends RecyclerView.Adapter<Holders.BaseHolder> {
 
         private List<Book> mBooks;
 
@@ -204,15 +232,25 @@ public class WantReadFragment extends Fragment {
 
         @NonNull
         @Override
-        public WantReadFragment.BookHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public Holders.BaseHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            return new WantReadFragment.BookHolder(layoutInflater, parent);
+            if (viewType == CATEGORY_VIEWTYPE) {
+                return new Holders.CategoryHolder(layoutInflater, parent);
+            } else {
+                return new WantReadFragment.BookHolder(layoutInflater, parent);
+            }
         }
 
         @Override
-        public void onBindViewHolder(@NonNull WantReadFragment.BookHolder holder, int position) {
-            Book book = mBooks.get(position);
-            holder.bind(book, position);
+        public void onBindViewHolder(@NonNull Holders.BaseHolder holder, int position) {
+            holder.bind(mBooks.get(position));
+        }
+
+
+        @Override
+        public int getItemViewType(int position) {
+            return mBooks.get(position).getStatus().equals(BOOK_CATEGORY_TEXT) ? CATEGORY_VIEWTYPE
+                    : BOOK_VIEWTYPE;
         }
 
         @Override

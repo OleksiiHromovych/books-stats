@@ -12,8 +12,8 @@ public class Book {
     private Date startDate;
     private Date endDate;
     private String status;
-private String type;
-private String description;
+    private String type;
+    private String description;
 
     public Book() {
         this(UUID.randomUUID());

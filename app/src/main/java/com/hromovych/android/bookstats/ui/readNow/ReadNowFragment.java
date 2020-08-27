@@ -93,7 +93,7 @@ public class ReadNowFragment extends Fragment {
                             .getString(R.string.title_read_now));
 
                     final Book book = books.get(viewHolder.getAdapterPosition());
-                    final Book oldBook = book;
+                    final Book oldBook = bookLab.getBook(book.getId());
                     if (direction == ItemTouchHelper.LEFT) {
                         book.setStatus(getResources().getString(R.string.title_read_yet));
                         if (book.getStartDate().equals(DateHelper.undefinedDate))
