@@ -4,13 +4,16 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,8 +25,15 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.hromovych.android.bookstats.database.BookBaseHelper;
+import com.hromovych.android.bookstats.menuOption.Import.ImportDataActivity;
 import com.hromovych.android.bookstats.slider.IntroSlider;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements Callbacks {
@@ -44,6 +54,15 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
         if (mSharedPreferences.getBoolean("first_run", true)) {
             startActivity(new Intent(this, IntroSlider.class));
             mSharedPreferences.edit().putBoolean("first_run", false).apply();
+        }
+
+        if (getIntent().getData() != null) {
+            startActivityForResult(ImportDataActivity.newIntent(MainActivity.this,
+                     getIntent().getData().getPath()),
+                    REQUEST_CODE_IMPORT);
+            Toast.makeText(getApplicationContext(), getIntent().getData().getPath(), Toast.LENGTH_LONG).show();
+            getIntent().setData(null);
+
         }
         navView = findViewById(R.id.nav_view);
 
@@ -89,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
                 sp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 sp.setAdapter(adp);
                 sp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                sp.setPadding(5,15,5,10);
+                sp.setPadding(5, 15, 5, 10);
 
                 builder.setView(sp);
                 builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
@@ -117,6 +136,27 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
                         REQUEST_CODE_IMPORT);
 
                 return true;
+            case R.id.export_books:
+                File sd = Environment.getExternalStorageDirectory();
+                File data = Environment.getDataDirectory();
+                FileChannel source = null;
+                FileChannel destination = null;
+                String currentDBPath = "/data/" + "com.hromovych.android.bookstats" + "/databases/" +
+                        BookBaseHelper.DATABASE_NAME;
+                String backupDBPath = BookBaseHelper.DATABASE_NAME;
+                File currentDB = new File(data, currentDBPath);
+                File backupDB = new File(sd, backupDBPath);
+                try {
+                    source = new FileInputStream(currentDB).getChannel();
+                    destination = new FileOutputStream(backupDB).getChannel();
+                    destination.transferFrom(source, 0, source.size());
+                    source.close();
+                    destination.close();
+                    Toast.makeText(this, "DB Exported! " + sd.getAbsolutePath() +
+                            backupDBPath, Toast.LENGTH_LONG).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }

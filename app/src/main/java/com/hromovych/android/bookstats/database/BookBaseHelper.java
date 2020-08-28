@@ -11,7 +11,7 @@ import static com.hromovych.android.bookstats.database.BookDBSchema.BookTable;
 public class BookBaseHelper extends SQLiteOpenHelper {
 
     private static final int VERSION = 3;
-    private static final String DATABASE_NAME = "bookBase.db";
+    public static final String DATABASE_NAME = "bookBase.db";
 
     public BookBaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, VERSION);

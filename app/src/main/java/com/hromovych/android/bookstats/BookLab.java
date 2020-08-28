@@ -178,4 +178,27 @@ public class BookLab {
         return columnItems;
 
     }
+
+    public void extendFromBase(SQLiteDatabase database){
+        List<Book> books = new ArrayList<>();
+        BookCursorWrapper cursor = new BookCursorWrapper(database.query(
+                BookTable.NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null));
+
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                sBookLab.addBook(cursor.getBook());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+    }
+
 }

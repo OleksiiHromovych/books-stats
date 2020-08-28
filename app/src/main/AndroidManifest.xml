@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.hromovych.android.bookstats">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -11,11 +15,10 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".BookActivity"
-            android:parentActivityName=".MainActivity"/>
-        <activity
-            android:name=".slider.IntroSlider"/>
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".slider.IntroSlider" />
 
-        <activity android:name=".ImportDataActivity"/>
+        <activity android:name=".menuOption.Import.ImportDataActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -24,7 +27,33 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter
+                android:scheme="file"
+                tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+<!--                <data-->
+<!--                    android:host="."-->
+<!--                    android:scheme="application" />-->
+                <data android:mimeType="application/*" />
+                <data android:pathPattern=".*\\.db" />
+            </intent-filter>
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+
+<!--                <data-->
+<!--                    android:scheme="file"-->
+<!--                    android:host="https://example.com"-->
+<!--                    android:mimeType="text/*"-->
+<!--                    android:pathPattern="/.*\\.db" />-->
+<!--            </intent-filter>-->
         </activity>
+
     </application>
 
 </manifest>

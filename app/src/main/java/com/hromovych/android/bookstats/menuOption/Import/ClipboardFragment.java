@@ -1,11 +1,14 @@
-package com.hromovych.android.bookstats;
+package com.hromovych.android.bookstats.menuOption.Import;
 
 import android.content.ClipboardManager;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,15 +17,21 @@ import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import com.hromovych.android.bookstats.Book;
+import com.hromovych.android.bookstats.BookLab;
+import com.hromovych.android.bookstats.DateHelper;
+import com.hromovych.android.bookstats.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class ImportDataActivity extends AppCompatActivity {
+import static android.content.Context.CLIPBOARD_SERVICE;
+
+public class ClipboardFragment extends Fragment {
+
+
     private Button clipBoardBtn;
     private Button splitTextBtn;
     private Button splitSplittedTextBtn;
@@ -40,53 +49,63 @@ public class ImportDataActivity extends AppCompatActivity {
     private boolean dateSet = false;
 
 
-    public static Intent newIntent(Context context) {
-        Intent intent = new Intent(context, ImportDataActivity.class);
-        return intent;
+    public ClipboardFragment() {
+        // Required empty public constructor
+    }
+
+    public static ClipboardFragment newInstance() {
+        ClipboardFragment fragment = new ClipboardFragment();
+        return fragment;
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_import);
 
-        firstState = findViewById(R.id.import_first_show_state);
-        secondState = findViewById(R.id.import_second_hide_stage);
-        thirtyState = findViewById(R.id.import_thirty_show_state);
-        final Button finishBtn = findViewById(R.id.import_finish_btn);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_import_clipboard, container, false);
+        firstState = v.findViewById(R.id.import_first_show_state);
+        secondState = v.findViewById(R.id.import_second_hide_stage);
+        thirtyState = v.findViewById(R.id.import_thirty_show_state);
+        final Button finishBtn = v.findViewById(R.id.import_finish_btn);
 
         firstState.setVisibility(View.GONE);
         secondState.setVisibility(View.GONE);
         thirtyState.setVisibility(View.GONE);
         finishBtn.setVisibility(View.GONE);
 
-        appropriateFieldLayout = findViewById(R.id.import_appropriate_field);
-//        start btn, get text from clipboard
-        clipBoardBtn = findViewById(R.id.import_clipboard_btn);
 
+        appropriateFieldLayout = v.findViewById(R.id.import_appropriate_field);
+//        start btn, get text from clipboard
+        clipBoardBtn = v.findViewById(R.id.import_clipboard_btn);
         clipBoardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                importText = ((ClipboardManager) getSystemService(CLIPBOARD_SERVICE))
+                importText = ((ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE))
                         .getText().toString();
                 firstState.setVisibility(View.VISIBLE);
 
             }
         });
 
-        splitTextBtn = findViewById(R.id.import_split_text);
-        final TextView splitted_line_view = findViewById(R.id.import_splitted_line_view);
+        splitTextBtn = v.findViewById(R.id.import_split_text);
+        final TextView splitted_line_view = v.findViewById(R.id.import_splitted_line_view);
         splitTextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                splittedText = importText.split(((EditText) findViewById(R.id.import_split_symbol))
+                splittedText = importText.split(((EditText) v.findViewById(R.id.import_split_symbol))
                         .getText().toString());
                 splitted_line_view.setText(splittedText[line_index]);
                 secondState.setVisibility(View.VISIBLE);
             }
         });
 
-        findViewById(R.id.import_splitted_line_next_btn).setOnClickListener(new View.OnClickListener() {
+        v.findViewById(R.id.import_splitted_line_next_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 splitted_line_view.setText(splittedText[(++line_index + splittedText.length)
@@ -94,7 +113,7 @@ public class ImportDataActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.import_splitted_line_prev_btn).setOnClickListener(new View.OnClickListener() {
+        v.findViewById(R.id.import_splitted_line_prev_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 splitted_line_view.setText(splittedText[(--line_index + splittedText.length)
@@ -102,13 +121,13 @@ public class ImportDataActivity extends AppCompatActivity {
             }
         });
 
-        splitSplittedTextBtn = findViewById(R.id.import_split_splitted_text);
+        splitSplittedTextBtn = v.findViewById(R.id.import_split_splitted_text);
         splitSplittedTextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 splitSplittedText = new ArrayList<>();
                 StringBuilder stringBuilder = new StringBuilder();
-                for (String s : (((EditText) findViewById(R.id.import_split_splitted_symbol))
+                for (String s : (((EditText) v.findViewById(R.id.import_split_splitted_symbol))
                         .getText().toString().split(" ~ "))) {
                     stringBuilder.append(s);
                     stringBuilder.append("|");
@@ -124,11 +143,11 @@ public class ImportDataActivity extends AppCompatActivity {
 
         final List<String> popupMenuElement =
                 new ArrayList<String>(Arrays.asList("Author", "Name", "Description"));
-        findViewById(R.id.import_add_item_button).setOnClickListener(new View.OnClickListener() {
+        v.findViewById(R.id.import_add_item_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
-                if (((Spinner) findViewById(R.id.import_status_spinner)).getSelectedItem().toString()
+                PopupMenu popupMenu = new PopupMenu(getActivity(), v);
+                if (((Spinner) v.findViewById(R.id.import_status_spinner)).getSelectedItem().toString()
                         .equals(getString(R.string.title_read_yet)) && !dateSet) {
                     popupMenuElement.add("Date");
                     dateSet = true;
@@ -165,7 +184,7 @@ public class ImportDataActivity extends AppCompatActivity {
                             ((Spinner) appropriateFieldLayout.getChildAt(i).
                                     findViewById(R.id.import_item_choice_split_type_spinner)).getSelectedItem().toString()});
 
-                String status = ((Spinner) findViewById(R.id.import_status_spinner)).getSelectedItem().toString();
+                String status = ((Spinner) v.findViewById(R.id.import_status_spinner)).getSelectedItem().toString();
 
                 List<String> list = new ArrayList<>(Arrays.asList(splitSplittedText.get(line_index)));
                 int author_index = -1, name_index = -1, description_index = -1;
@@ -189,7 +208,7 @@ public class ImportDataActivity extends AppCompatActivity {
                     }
                 }
 
-                BookLab bookLab = BookLab.get(getApplicationContext());
+                BookLab bookLab = BookLab.get(getActivity());
                 for (String[] strings : splitSplittedText) {
                     Book book = new Book();
                     book.setStatus(status);
@@ -199,16 +218,18 @@ public class ImportDataActivity extends AppCompatActivity {
                         book.setBookName(strings[name_index].replaceAll("^\\s+|\\s+$", ""));
                     if (description_index != -1)
                         book.setDescription(strings[description_index].replaceAll("^\\s+|\\s+$", ""));
-                    if (!date.equals(null) && status.equals(getString(R.string.title_read_yet))) {
+                    if (date != null && status.equals(getString(R.string.title_read_yet))) {
                         book.setEndDate(new GregorianCalendar(Integer.parseInt(date), 0, 1).
                                 getTime());
                         book.setStartDate(DateHelper.unknownDate);
                     }
                     bookLab.addBook(book);
                 }
-                finish();
+                getActivity().finish();
             }
         });
+
+        return v;
 
     }
 
@@ -222,11 +243,12 @@ public class ImportDataActivity extends AppCompatActivity {
         items = new String[a.size()];
         a.toArray(items);
         Spinner spinner = layout.findViewById(R.id.import_item_choice_split_type_spinner);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_item, items);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
 
         return layout;
+
     }
 }

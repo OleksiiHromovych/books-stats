@@ -22,6 +22,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Category"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
         android:textAlignment="center"
         android:textColor="@color/bookItemTextColor"
         app:layout_constraintBottom_toBottomOf="parent"

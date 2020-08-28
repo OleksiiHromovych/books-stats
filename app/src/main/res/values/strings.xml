@@ -67,5 +67,7 @@
     <string name="slide_back_title">Back</string>
     <string name="book_description_title">Description</string>
     <string name="book_description_hint">Enter your description here</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
