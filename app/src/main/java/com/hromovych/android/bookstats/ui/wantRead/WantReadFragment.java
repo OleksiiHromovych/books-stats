@@ -75,8 +75,13 @@ public class WantReadFragment extends Fragment {
                             .create()
                             .decorate();
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                }
 
-
+                @Override
+                public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+                    if (viewHolder instanceof Holders.CategoryHolder)
+                        return 0;
+                    return super.getMovementFlags(recyclerView, viewHolder);
                 }
 
                 @Override
@@ -87,10 +92,7 @@ public class WantReadFragment extends Fragment {
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     final BookLab bookLab = BookLab.get(getActivity());
-                    List<Book> books = bookLab.getBooksByStatus(getResources()
-                            .getString(R.string.title_want_read),
-                            BookDBSchema.BookTable.Cols.CATEGORY + " , " +
-                                    BookDBSchema.BookTable.Cols.AUTHOR);
+                    List<Book> books = getBooks(bookLab);
 
                     final Book book = books.get(viewHolder.getAdapterPosition());
                     final Book oldBook = bookLab.getBook(book.getId());
@@ -146,6 +148,17 @@ public class WantReadFragment extends Fragment {
 
     public void updateUI() {
         BookLab bookLab = BookLab.get(getActivity());
+        List<Book> books = getBooks(bookLab);
+        if (mAdapter == null) {
+            mAdapter = new WantReadFragment.BookAdapter(books);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.setBooks(books);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private List<Book> getBooks(BookLab bookLab) {
         List<Book> books = bookLab.getBooksByStatus(getResources()
                         .getString(R.string.title_want_read),
                 BookDBSchema.BookTable.Cols.CATEGORY + " , " +
@@ -164,17 +177,10 @@ public class WantReadFragment extends Fragment {
             booksCategory.add(book);
 
         }
-        books = booksCategory;
-        if (mAdapter == null) {
-            mAdapter = new WantReadFragment.BookAdapter(books);
-            mRecyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.setBooks(books);
-            mAdapter.notifyDataSetChanged();
-        }
+        return booksCategory;
     }
 
-    private class BookHolder extends Holders.BaseHolder {
+    private class BookHolder extends Holders.BaseHolder implements View.OnClickListener {
 
         private TextView count;
         private TextView bookName;

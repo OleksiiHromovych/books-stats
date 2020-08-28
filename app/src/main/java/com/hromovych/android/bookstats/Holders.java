@@ -16,7 +16,6 @@ public class Holders {
         public CategoryHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_group, parent, false));
             titleView = (TextView) itemView.findViewById(R.id.group_book_category);
-            itemView.setOnClickListener(this);
         }
 
         @Override
@@ -24,13 +23,9 @@ public class Holders {
             titleView.setText(book.getCategory());
         }
 
-        @Override
-        public void onClick(View v) {
-        }
     }
 
-    public abstract static class BaseHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener {
+    public abstract static class BaseHolder extends RecyclerView.ViewHolder {
 
         abstract public void bind(Book book);
 

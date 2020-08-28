@@ -74,7 +74,6 @@ public class ReadYetFragment extends Fragment {
             new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
                 @Override
                 public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
                     new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                             .addBackgroundColor(R.color.backgroundFont)
                             .addActionIcon(R.drawable.ic_read_now)
@@ -93,14 +92,15 @@ public class ReadYetFragment extends Fragment {
                 }
 
                 @Override
+                public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+                    if (viewHolder instanceof Holders.CategoryHolder)
+                        return 0;
+                    return super.getMovementFlags(recyclerView, viewHolder);
+                }
+                @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     final BookLab bookLab = BookLab.get(getActivity());
-                    List<Book> books = bookLab.getBooksByStatus(getResources()
-                            .getString(R.string.title_read_yet),
-                            BookDBSchema.BookTable.Cols.CATEGORY + " , " +
-                                    BookDBSchema.BookTable.Cols.END_DATE + " , " +
-                                    BookDBSchema.BookTable.Cols.START_DATE);
-
+                    List<Book> books = getBooks(bookLab);
                     final Book book = books.get(viewHolder.getAdapterPosition());
                     final Book oldBook = bookLab.getBook(book.getId());
                     book.setStatus(getResources().getString(R.string.title_read_now));
@@ -152,6 +152,18 @@ public class ReadYetFragment extends Fragment {
 
     public void updateUI() {
         BookLab bookLab = BookLab.get(getActivity());
+        List<Book> books = getBooks(bookLab);
+        if (mAdapter == null) {
+            mAdapter = new ReadYetFragment.BookAdapter(books);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.setBooks(books);
+            mAdapter.notifyDataSetChanged();
+
+        }
+    }
+
+    private List<Book> getBooks(BookLab bookLab) {
         List<Book> books = bookLab.getBooksByStatus(getResources()
                         .getString(R.string.title_read_yet),
                 BookDBSchema.BookTable.Cols.CATEGORY + " , " +
@@ -173,19 +185,10 @@ public class ReadYetFragment extends Fragment {
             booksCategory.add(book);
 
         }
-
-        books = booksCategory;
-        if (mAdapter == null) {
-            mAdapter = new ReadYetFragment.BookAdapter(books);
-            mRecyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.setBooks(books);
-            mAdapter.notifyDataSetChanged();
-
-        }
+        return booksCategory;
     }
 
-    private class BookHolder extends BaseHolder {
+    private class BookHolder extends BaseHolder implements View.OnClickListener {
 
         private TextView count;
         private TextView bookName;
@@ -225,8 +228,8 @@ public class ReadYetFragment extends Fragment {
                 pageLayout.setVisibility(View.GONE);
             }
 
-            endDate.setVisibility(View.VISIBLE);
             if (showDate) {
+                endDate.setVisibility(View.VISIBLE);
 
                 if (!mBook.getStartDate().equals(DateHelper.unknownDate)
                         && !mBook.getStartDate().equals(DateHelper.undefinedDate))
@@ -237,6 +240,7 @@ public class ReadYetFragment extends Fragment {
                     endDate.setText("- " + DateFormat.format("MMM dd, yyyy", mBook.getEndDate()));
 
             } else {
+                startDate.setText("");
                 if (!mBook.getStartDate().equals(DateHelper.unknownDate) &&
                         !mBook.getEndDate().equals(DateHelper.unknownDate)
                         && !mBook.getStartDate().equals(DateHelper.undefinedDate)
@@ -246,8 +250,8 @@ public class ReadYetFragment extends Fragment {
                             / 1000 / 60 / 60 / 24;
                     if (days != 0)
                         startDate.setText("" + days);
-                    endDate.setVisibility(View.GONE);
                 }
+                endDate.setVisibility(View.GONE);
 
             }
 
