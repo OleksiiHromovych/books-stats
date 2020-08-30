@@ -2,15 +2,13 @@ package com.hromovych.android.bookstats.menuOption.Import;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.fragment.app.Fragment;
 
 import com.hromovych.android.bookstats.BookLab;
 import com.hromovych.android.bookstats.R;
@@ -44,7 +42,7 @@ public class FromFileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_from_file, container, false);
-        import_from_file_btn = (Button) v.findViewById(R.id.import_from_file_btn);
+        import_from_file_btn = v.findViewById(R.id.import_from_file_btn);
         import_from_file_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,7 +60,6 @@ public class FromFileFragment extends Fragment {
         Log.d("TAG", "exportFromFile: " +
                 new File(path).exists());
         Log.d("TAG", "exportFromFile: " + path);
-        Log.d("TAG", "exportFromFile: " + new File(path).getAbsolutePath());
         SQLiteDatabase db =
                 SQLiteDatabase.openDatabase(path,null, SQLiteDatabase.OPEN_READONLY);
         BookLab.get(getActivity()).extendFromBase(db);

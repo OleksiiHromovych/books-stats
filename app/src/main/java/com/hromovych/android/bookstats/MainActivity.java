@@ -57,10 +57,12 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
         }
 
         if (getIntent().getData() != null) {
+            Uri uri = getIntent().getData();
+//            String path = new FileUtils(getApplicationContext()).getPath(uri);
+            String path = new FileUtils(this).getPath(uri);
             startActivityForResult(ImportDataActivity.newIntent(MainActivity.this,
-                     getIntent().getData().getPath()),
+                    path),
                     REQUEST_CODE_IMPORT);
-            Toast.makeText(getApplicationContext(), getIntent().getData().getPath(), Toast.LENGTH_LONG).show();
             getIntent().setData(null);
 
         }
