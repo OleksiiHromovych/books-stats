@@ -13,11 +13,13 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.hromovych.android.bookstats.Book;
 import com.hromovych.android.bookstats.BookLab;
+import com.hromovych.android.bookstats.Constants;
 import com.hromovych.android.bookstats.DateHelper;
 import com.hromovych.android.bookstats.R;
 
@@ -86,7 +88,7 @@ public class ClipboardFragment extends Fragment {
         splitTextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                splittedText = importText.split(((EditText) v.findViewById(R.id.import_split_symbol))
+                splittedText = importText.split(((EditText) firstState.findViewById(R.id.import_split_symbol))
                         .getText().toString());
                 splitted_line_view.setText(splittedText[line_index]);
                 secondState.setVisibility(View.VISIBLE);
@@ -115,7 +117,7 @@ public class ClipboardFragment extends Fragment {
             public void onClick(View v) {
                 splitSplittedText = new ArrayList<>();
                 StringBuilder stringBuilder = new StringBuilder();
-                for (String s : (((EditText) v.findViewById(R.id.import_split_splitted_symbol))
+                for (String s : (((EditText) secondState.findViewById(R.id.import_split_splitted_symbol))
                         .getText().toString().split(" ~ "))) {
                     stringBuilder.append(s);
                     stringBuilder.append("|");
@@ -131,11 +133,11 @@ public class ClipboardFragment extends Fragment {
 
         final List<String> popupMenuElement =
                 new ArrayList<String>(Arrays.asList("Author", "Name", "Description"));
-        v.findViewById(R.id.import_add_item_button).setOnClickListener(new View.OnClickListener() {
+        thirtyState.findViewById(R.id.import_add_item_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(getActivity(), v);
-                if (((Spinner) v.findViewById(R.id.import_status_spinner)).getSelectedItem().toString()
+                if (((Spinner) thirtyState.findViewById(R.id.import_status_spinner)).getSelectedItem().toString()
                         .equals(getString(R.string.title_read_yet)) && !dateSet) {
                     popupMenuElement.add("Date");
                     dateSet = true;
@@ -172,7 +174,13 @@ public class ClipboardFragment extends Fragment {
                             ((Spinner) appropriateFieldLayout.getChildAt(i).
                                     findViewById(R.id.import_item_choice_split_type_spinner)).getSelectedItem().toString()});
 
-                String status = ((Spinner) v.findViewById(R.id.import_status_spinner)).getSelectedItem().toString();
+                String status = ((Spinner) thirtyState.findViewById(R.id.import_status_spinner)).getSelectedItem().toString();
+                if (status.equals(getString(R.string.title_read_now)))
+                    status = Constants.Status.READ_NOW;
+                else if (status.equals(getString(R.string.title_read_yet)))
+                    status = Constants.Status.READ_YET;
+                else if (status.equals(getString(R.string.title_want_read)))
+                    status = Constants.Status.WANT_READ;
 
                 List<String> list = new ArrayList<>(Arrays.asList(splitSplittedText.get(line_index)));
                 int author_index = -1, name_index = -1, description_index = -1;
@@ -199,18 +207,25 @@ public class ClipboardFragment extends Fragment {
                 BookLab bookLab = BookLab.get(getActivity());
                 for (String[] strings : splitSplittedText) {
                     Book book = new Book();
-                    book.setStatus(status);
-                    if (author_index != -1)
-                        book.setAuthor(strings[author_index].replaceAll("^\\s+|\\s+$", ""));
-                    if (name_index != -1)
-                        book.setBookName(strings[name_index].replaceAll("^\\s+|\\s+$", ""));
-                    if (description_index != -1)
-                        book.setDescription(strings[description_index].replaceAll("^\\s+|\\s+$", ""));
-                    if (date != null && status.equals(getString(R.string.title_read_yet))) {
+                    try {
+                        if (author_index != -1)
+                            book.setAuthor(strings[author_index].replaceAll("^\\s+|\\s+$", ""));
+                        if (name_index != -1)
+                            book.setBookName(strings[name_index].replaceAll("^\\s+|\\s+$", ""));
+                        if (description_index != -1)
+                            book.setDescription(strings[description_index].replaceAll("^\\s+|\\s+$", ""));
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        Toast.makeText(getActivity(), Arrays.toString(strings) + " not import",
+                                Toast.LENGTH_SHORT).show();
+                        continue;
+                    }
+                    if (date != null && status.equals(Constants.Status.READ_YET)) {
                         book.setEndDate(new GregorianCalendar(Integer.parseInt(date), 0, 1).
                                 getTime());
                         book.setStartDate(DateHelper.unknownDate);
                     }
+
+                    book.setStatus(status);
                     bookLab.addBook(book);
                 }
                 getActivity().finish();

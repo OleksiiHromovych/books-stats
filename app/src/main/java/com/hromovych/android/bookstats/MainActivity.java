@@ -170,9 +170,8 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
 
     private void deleteBooks(String status) {
         BookLab bookLab = BookLab.get(MainActivity.this);
-        List<Book> books;
         if (status.equals("All")) {
-            books = bookLab.getBooks();
+            bookLab.deleteBooks();
         } else {
             if (status.equals(getString(R.string.title_read_now)))
                 status = Constants.Status.READ_NOW;
@@ -180,11 +179,12 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
                 status =  Constants.Status.READ_YET;
             else if (status.equals(getString(R.string.title_want_read)))
                 status = Constants.Status.WANT_READ;
-            books = bookLab.getBooksByStatus(status);
+            List<Book> books = bookLab.getBooksByStatus(status);
+            for (Book book : books)
+                bookLab.deleteBook(book);
+
         }
 
-        for (Book book : books)
-            bookLab.deleteBook(book);
 
         MainActivity.this.recreate();
     }
