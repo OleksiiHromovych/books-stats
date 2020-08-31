@@ -2,9 +2,6 @@ package com.hromovych.android.bookstats.menuOption.Import;
 
 import android.content.ClipboardManager;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import com.hromovych.android.bookstats.Book;
 import com.hromovych.android.bookstats.BookLab;
@@ -48,20 +47,9 @@ public class ClipboardFragment extends Fragment {
     private int line_index = 0;
     private boolean dateSet = false;
 
-
-    public ClipboardFragment() {
-        // Required empty public constructor
-    }
-
     public static ClipboardFragment newInstance() {
         ClipboardFragment fragment = new ClipboardFragment();
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
     }
 
     @Override

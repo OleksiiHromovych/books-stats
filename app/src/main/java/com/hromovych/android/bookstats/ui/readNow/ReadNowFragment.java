@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,12 +25,13 @@ import com.hromovych.android.bookstats.Callbacks;
 import com.hromovych.android.bookstats.DateHelper;
 import com.hromovych.android.bookstats.MainActivity;
 import com.hromovych.android.bookstats.R;
+import com.hromovych.android.bookstats.SimpleFragment;
 
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
-public class ReadNowFragment extends Fragment {
+public class ReadNowFragment extends SimpleFragment {
 
 
     private RecyclerView mRecyclerView;
@@ -89,13 +89,12 @@ public class ReadNowFragment extends Fragment {
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     final BookLab bookLab = BookLab.get(getActivity());
-                    List<Book> books = bookLab.getBooksByStatus(getResources()
-                            .getString(R.string.title_read_now));
+                    List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getString(R.string.title_read_now)));
 
                     final Book book = books.get(viewHolder.getAdapterPosition());
                     final Book oldBook = bookLab.getBook(book.getId());
                     if (direction == ItemTouchHelper.LEFT) {
-                        book.setStatus(getResources().getString(R.string.title_read_yet));
+                        book.setStatus(getStatusConstant(getString(R.string.title_read_yet)));
                         if (book.getStartDate().equals(DateHelper.undefinedDate))
                             book.setStartDate(DateHelper.today);
 
@@ -103,8 +102,9 @@ public class ReadNowFragment extends Fragment {
                             book.setEndDate(DateHelper.today);
 
                     } else if (direction == ItemTouchHelper.RIGHT) {
-                        book.setType(getResources().getStringArray(R.array.priority_spinner_list)[1]);
-                        book.setStatus(getResources().getString(R.string.title_want_read));
+                        // Type is priority
+                        book.setType(getPriorityConstant(getResources().getStringArray(R.array.priority_spinner_list)[1]));
+                        book.setStatus(getStatusConstant(getString(R.string.title_want_read)));
                         book.setStartDate(DateHelper.undefinedDate);
                         book.setEndDate(DateHelper.undefinedDate);
                     }
@@ -153,8 +153,7 @@ public class ReadNowFragment extends Fragment {
 
     public void updateUI() {
         BookLab bookLab = BookLab.get(getActivity());
-        List<Book> books = bookLab.getBooksByStatus(getResources()
-                .getString(R.string.title_read_now));
+        List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getString(R.string.title_read_now)));
 
         if (mAdapter == null) {
             mAdapter = new BookAdapter(books);

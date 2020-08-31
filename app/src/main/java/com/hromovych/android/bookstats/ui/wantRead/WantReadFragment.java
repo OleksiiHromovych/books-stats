@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +24,7 @@ import com.hromovych.android.bookstats.Callbacks;
 import com.hromovych.android.bookstats.DateHelper;
 import com.hromovych.android.bookstats.Holders;
 import com.hromovych.android.bookstats.R;
+import com.hromovych.android.bookstats.SimpleFragment;
 import com.hromovych.android.bookstats.database.BookDBSchema;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
-public class WantReadFragment extends Fragment {
+public class WantReadFragment extends SimpleFragment {
 
 
     private RecyclerView mRecyclerView;
@@ -96,11 +96,11 @@ public class WantReadFragment extends Fragment {
 
                     final Book book = books.get(viewHolder.getAdapterPosition());
                     final Book oldBook = bookLab.getBook(book.getId());
-                    book.setStatus(getResources().getString(R.string.title_read_now));
+                    book.setStatus(getStatusConstant(getResources().getString(R.string.title_read_now)));
                     if (book.getStartDate().equals(DateHelper.undefinedDate))
                         book.setStartDate(DateHelper.today);
                     book.setEndDate(DateHelper.undefinedDate);
-                    book.setType(getResources().getStringArray(R.array.type_spinner_list)[0]);
+                    book.setType(getTypeConstant(getResources().getStringArray(R.array.type_spinner_list)[0]));
                     bookLab.updateBook(book);
                     updateUI();
 
@@ -159,8 +159,8 @@ public class WantReadFragment extends Fragment {
     }
 
     private List<Book> getBooks(BookLab bookLab) {
-        List<Book> books = bookLab.getBooksByStatus(getResources()
-                        .getString(R.string.title_want_read),
+        List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
+                        .getString(R.string.title_want_read)),
                 BookDBSchema.BookTable.Cols.CATEGORY + " , " +
                         BookDBSchema.BookTable.Cols.AUTHOR);
         List<Book> booksCategory = new ArrayList<>();

@@ -39,16 +39,16 @@ public class WantBookFragment extends BookFragment {
         Spinner prioritySpinner = v.findViewById(R.id.book_priority_spinner);
         List<String> choose = Arrays.asList(getResources().getStringArray(
                 R.array.priority_spinner_list));
-
+//This type is priority for want book
         if (!choose.contains(mBook.getType()))
-            mBook.setType(choose.get(1));
+            mBook.setType(getPriorityConstant(choose.get(1)));
 
         prioritySpinner.setSelection(choose.indexOf(mBook.getType()));
         prioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mBook.setType(getResources().getStringArray(
-                        R.array.priority_spinner_list)[position]);
+                mBook.setType(getPriorityConstant(getResources().getStringArray(
+                        R.array.priority_spinner_list)[position]));
                 updateBook();
             }
 

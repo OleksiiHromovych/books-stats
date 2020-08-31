@@ -56,6 +56,23 @@ public class BookLab {
         mDatabase.insert(BookTable.NAME, null, contentValues);
     }
 
+    public List<Book> getBooks() {
+        List<Book> books = new ArrayList<>();
+
+        BookCursorWrapper cursor = queryBooks(null, null);
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                books.add(cursor.getBook());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return books;
+    }
+
+
     public List<Book> getBooksByStatus(String s) {
         List<Book> books = new ArrayList<>();
 

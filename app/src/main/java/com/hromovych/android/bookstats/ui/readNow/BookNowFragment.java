@@ -94,14 +94,14 @@ public class BookNowFragment extends BookFragment {
                 R.array.type_spinner_list));
 
         if (!choose.contains(mBook.getType()))
-            mBook.setType(choose.get(0));
+            mBook.setType(getTypeConstant(choose.get(0)));
 
         typeSpinner.setSelection(choose.indexOf(mBook.getType()));
         typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mBook.setType(getResources().getStringArray(
-                        R.array.type_spinner_list)[position]);
+                mBook.setType(getTypeConstant(getResources().getStringArray(
+                        R.array.type_spinner_list)[position]));
                 updateBook();
             }
 

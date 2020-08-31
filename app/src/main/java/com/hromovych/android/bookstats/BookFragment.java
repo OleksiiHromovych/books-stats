@@ -23,7 +23,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 import com.hromovych.android.bookstats.database.BookDBSchema;
 import com.hromovych.android.bookstats.ui.readNow.BookNowFragment;
@@ -34,7 +33,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-public class BookFragment extends Fragment {
+public class BookFragment extends SimpleFragment {
 
     private static final String ARG_BOOK_ID = "book_id";
     private static final String ARG_BOOK_LAYOUT = "book_layout";
@@ -189,20 +188,19 @@ public class BookFragment extends Fragment {
 
         mBookCategoryField.setAdapter(new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, items));
-
         mBookStatusSpinner = v.findViewById(R.id.book_status);
         mBookStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String[] choose = getResources().getStringArray(R.array.status_spinner_list);
                 if (mBook.getStatus() == null) {
-                    mBook.setStatus(choose[position]);
+                    mBook.setStatus(getStatusConstant(choose[position]));
                     return;
                 }
-                if (mBook.getStatus().equals(choose[position])) {
+                if (mBook.getStatus().equals(getStatusConstant(choose[position]))) {
                     return;
                 }
-                mBook.setStatus(choose[position]);
+                mBook.setStatus(getStatusConstant(choose[position]));
                 int[] choose_id = {BookYetFragment.BOOK_FRAGMENT_ID,
                         BookNowFragment.BOOK_FRAGMENT_ID,
                         WantBookFragment.BOOK_FRAGMENT_ID};
@@ -289,5 +287,4 @@ public class BookFragment extends Fragment {
     interface Callbacks {
         void changeFragmentByStatus(Integer fragment_id);
     }
-
 }

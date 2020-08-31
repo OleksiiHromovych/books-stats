@@ -34,6 +34,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements Callbacks {
@@ -58,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
 
         if (getIntent().getData() != null) {
             Uri uri = getIntent().getData();
-//            String path = new FileUtils(getApplicationContext()).getPath(uri);
             String path = new FileUtils(this).getPath(uri);
             startActivityForResult(ImportDataActivity.newIntent(MainActivity.this,
                     path),
@@ -102,14 +103,16 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
                 builder.setTitle("What book category you want to delete?");
+                List<String> list = new ArrayList<>(Arrays.asList(getResources()
+                        .getStringArray(R.array.status_spinner_list)));
+                list.add("All");
                 final ArrayAdapter<String> adp = new ArrayAdapter<String>(this,
-                        android.R.layout.simple_spinner_item, getResources()
-                        .getStringArray(R.array.status_spinner_list));
-
+                        android.R.layout.simple_spinner_item, list);
                 final Spinner sp = new Spinner(this);
                 sp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 sp.setAdapter(adp);
                 sp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                sp.setMinimumHeight(80);
                 sp.setPadding(5, 15, 5, 10);
 
                 builder.setView(sp);
@@ -167,7 +170,19 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
 
     private void deleteBooks(String status) {
         BookLab bookLab = BookLab.get(MainActivity.this);
-        List<Book> books = bookLab.getBooksByStatus(status);
+        List<Book> books;
+        if (status.equals("All")) {
+            books = bookLab.getBooks();
+        } else {
+            if (status.equals(getString(R.string.title_read_now)))
+                status = Constants.Status.READ_NOW;
+            else if (status.equals(getString(R.string.title_read_yet)))
+                status =  Constants.Status.READ_YET;
+            else if (status.equals(getString(R.string.title_want_read)))
+                status = Constants.Status.WANT_READ;
+            books = bookLab.getBooksByStatus(status);
+        }
+
         for (Book book : books)
             bookLab.deleteBook(book);
 
