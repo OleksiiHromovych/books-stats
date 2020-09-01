@@ -10,6 +10,7 @@ import android.widget.Spinner;
 import com.hromovych.android.bookstats.BookFragment;
 import com.hromovych.android.bookstats.DateHelper;
 import com.hromovych.android.bookstats.R;
+import com.hromovych.android.bookstats.database.ValueConvector;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,14 +41,17 @@ public class WantBookFragment extends BookFragment {
         List<String> choose = Arrays.asList(getResources().getStringArray(
                 R.array.priority_spinner_list));
 //This type is priority for want book
-        if (!choose.contains(mBook.getType()))
-            mBook.setType(getPriorityConstant(choose.get(1)));
+        if (!choose.contains(ValueConvector.FromConstant.fromPriorityConstant(getContext(),
+                mBook.getType())))
+            mBook.setType(ValueConvector.ToConstant.toPriorityConstant(getContext(), choose.get(1)));
 
-        prioritySpinner.setSelection(choose.indexOf(mBook.getType()));
+        prioritySpinner.setSelection(choose.indexOf(ValueConvector.FromConstant.fromPriorityConstant(getContext(),
+                mBook.getType())));
         prioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mBook.setType(getPriorityConstant(getResources().getStringArray(
+                mBook.setType(ValueConvector.ToConstant.toPriorityConstant(getContext(),
+                        getResources().getStringArray(
                         R.array.priority_spinner_list)[position]));
                 updateBook();
             }

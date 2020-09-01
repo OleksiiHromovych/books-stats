@@ -19,9 +19,9 @@ import androidx.fragment.app.Fragment;
 
 import com.hromovych.android.bookstats.Book;
 import com.hromovych.android.bookstats.BookLab;
-import com.hromovych.android.bookstats.Constants;
 import com.hromovych.android.bookstats.DateHelper;
 import com.hromovych.android.bookstats.R;
+import com.hromovych.android.bookstats.database.ValueConvector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -175,12 +175,7 @@ public class ClipboardFragment extends Fragment {
                                     findViewById(R.id.import_item_choice_split_type_spinner)).getSelectedItem().toString()});
 
                 String status = ((Spinner) thirtyState.findViewById(R.id.import_status_spinner)).getSelectedItem().toString();
-                if (status.equals(getString(R.string.title_read_now)))
-                    status = Constants.Status.READ_NOW;
-                else if (status.equals(getString(R.string.title_read_yet)))
-                    status = Constants.Status.READ_YET;
-                else if (status.equals(getString(R.string.title_want_read)))
-                    status = Constants.Status.WANT_READ;
+                status = ValueConvector.ToConstant.toStatusConstant(getContext(), status);
 
                 List<String> list = new ArrayList<>(Arrays.asList(splitSplittedText.get(line_index)));
                 int author_index = -1, name_index = -1, description_index = -1;
@@ -219,7 +214,7 @@ public class ClipboardFragment extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                         continue;
                     }
-                    if (date != null && status.equals(Constants.Status.READ_YET)) {
+                    if (date != null && status.equals(ValueConvector.Constants.READ_YET)) {
                         book.setEndDate(new GregorianCalendar(Integer.parseInt(date), 0, 1).
                                 getTime());
                         book.setStartDate(DateHelper.unknownDate);

@@ -26,6 +26,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hromovych.android.bookstats.database.BookBaseHelper;
+import com.hromovych.android.bookstats.database.ValueConvector;
 import com.hromovych.android.bookstats.menuOption.Import.ImportDataActivity;
 import com.hromovych.android.bookstats.slider.IntroSlider;
 
@@ -173,12 +174,7 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
         if (status.equals("All")) {
             bookLab.deleteBooks();
         } else {
-            if (status.equals(getString(R.string.title_read_now)))
-                status = Constants.Status.READ_NOW;
-            else if (status.equals(getString(R.string.title_read_yet)))
-                status =  Constants.Status.READ_YET;
-            else if (status.equals(getString(R.string.title_want_read)))
-                status = Constants.Status.WANT_READ;
+            status = ValueConvector.ToConstant.toStatusConstant(getApplicationContext(), status);
             List<Book> books = bookLab.getBooksByStatus(status);
             for (Book book : books)
                 bookLab.deleteBook(book);

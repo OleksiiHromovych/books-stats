@@ -23,8 +23,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.hromovych.android.bookstats.database.BookDBSchema;
+import com.hromovych.android.bookstats.database.ValueConvector;
 import com.hromovych.android.bookstats.ui.readNow.BookNowFragment;
 import com.hromovych.android.bookstats.ui.readYet.BookYetFragment;
 import com.hromovych.android.bookstats.ui.wantRead.WantBookFragment;
@@ -33,7 +35,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-public class BookFragment extends SimpleFragment {
+public class BookFragment extends Fragment {
 
     private static final String ARG_BOOK_ID = "book_id";
     private static final String ARG_BOOK_LAYOUT = "book_layout";
@@ -194,13 +196,16 @@ public class BookFragment extends SimpleFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String[] choose = getResources().getStringArray(R.array.status_spinner_list);
                 if (mBook.getStatus() == null) {
-                    mBook.setStatus(getStatusConstant(choose[position]));
+                    mBook.setStatus(ValueConvector.ToConstant.toStatusConstant(getContext(),
+                            choose[position]));
                     return;
                 }
-                if (mBook.getStatus().equals(getStatusConstant(choose[position]))) {
+                if (mBook.getStatus().equals(ValueConvector.ToConstant.toStatusConstant(getContext(),
+                        choose[position]))) {
                     return;
                 }
-                mBook.setStatus(getStatusConstant(choose[position]));
+                mBook.setStatus(ValueConvector.ToConstant.toStatusConstant(getContext(),
+                        choose[position]));
                 int[] choose_id = {BookYetFragment.BOOK_FRAGMENT_ID,
                         BookNowFragment.BOOK_FRAGMENT_ID,
                         WantBookFragment.BOOK_FRAGMENT_ID};
@@ -215,7 +220,7 @@ public class BookFragment extends SimpleFragment {
             }
         });
 
-        mBookDescriptionField = (TextView) v.findViewById(R.id.book_description);
+        mBookDescriptionField = v.findViewById(R.id.book_description);
         mBookDescriptionField.setText(mBook.getDescription());
         mBookDescriptionField.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,8 +228,8 @@ public class BookFragment extends SimpleFragment {
 
                 final Dialog dialog = new Dialog(getActivity(), R.style.DatePickerDialog);
                 dialog.setContentView(R.layout.dialog_description);
-                Button okButton = (Button) dialog.findViewById(R.id.dialog_ok_button);
-                final EditText edit = (EditText) dialog.findViewById(R.id.description_edit_text);
+                Button okButton = dialog.findViewById(R.id.dialog_ok_button);
+                final EditText edit = dialog.findViewById(R.id.description_edit_text);
                 edit.setText(mBook.getDescription());
 
                 edit.setSelection(edit.getText().length());

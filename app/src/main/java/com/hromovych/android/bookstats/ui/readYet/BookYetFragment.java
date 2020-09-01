@@ -21,6 +21,7 @@ import com.hromovych.android.bookstats.BookFragment;
 import com.hromovych.android.bookstats.DateHelper;
 import com.hromovych.android.bookstats.DatePickerFragment;
 import com.hromovych.android.bookstats.R;
+import com.hromovych.android.bookstats.database.ValueConvector;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -133,15 +134,17 @@ public class BookYetFragment extends BookFragment {
         List<String> choose = Arrays.asList(getResources().getStringArray(
                 R.array.type_spinner_list));
 
-        if (!choose.contains(mBook.getType()))
-            mBook.setType(getTypeConstant(choose.get(0)));
+        if (!choose.contains(ValueConvector.FromConstant.fromTypeConstant(getContext(),
+                mBook.getType())))
+            mBook.setType(ValueConvector.ToConstant.toTypeConstant(getContext(), choose.get(0)));
 
-        typeSpinner.setSelection(choose.indexOf(mBook.getType()));
+        typeSpinner.setSelection(choose.indexOf(ValueConvector.FromConstant.fromTypeConstant(getContext(),
+                mBook.getType())));
         typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mBook.setType(getTypeConstant(getResources().getStringArray(
-                        R.array.type_spinner_list)[position]));
+                mBook.setType(ValueConvector.ToConstant.toTypeConstant(getContext(),
+                        getResources().getStringArray(R.array.type_spinner_list)[position]));
                 updateBook();
             }
 
