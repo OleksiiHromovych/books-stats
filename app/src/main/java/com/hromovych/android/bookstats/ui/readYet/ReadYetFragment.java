@@ -31,6 +31,7 @@ import com.hromovych.android.bookstats.SimpleFragment;
 import com.hromovych.android.bookstats.database.BookDBSchema;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -43,6 +44,7 @@ public class ReadYetFragment extends SimpleFragment {
     private Callbacks mCallbacks;
 
     private boolean showDate;
+    private boolean sortByDate;
 
     private static final String BOOK_CATEGORY_TEXT = "book_category_text";
     private static final int BOOK_VIEWTYPE = 0;
@@ -66,6 +68,9 @@ public class ReadYetFragment extends SimpleFragment {
 
         showDate = getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
                 Context.MODE_PRIVATE).getBoolean(MainActivity.SHOW_DATE_PREFERENCES, true);
+
+        sortByDate = getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
+                Context.MODE_PRIVATE).getBoolean(MainActivity.SORT_BY_DATE, true);
 
         return view;
     }
@@ -97,6 +102,7 @@ public class ReadYetFragment extends SimpleFragment {
                         return 0;
                     return super.getMovementFlags(recyclerView, viewHolder);
                 }
+
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     final BookLab bookLab = BookLab.get(getActivity());
@@ -163,29 +169,59 @@ public class ReadYetFragment extends SimpleFragment {
     }
 
     private List<Book> getBooks(BookLab bookLab) {
-        List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
-                        .getString(R.string.title_read_yet)),
-                BookDBSchema.BookTable.Cols.CATEGORY + " , " +
-                        BookDBSchema.BookTable.Cols.END_DATE + " , " +
-                        BookDBSchema.BookTable.Cols.START_DATE);
+        if (sortByDate) {
+            List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
+                            .getString(R.string.title_read_yet)),
+                            BookDBSchema.BookTable.Cols.END_DATE + " , " +
+                            BookDBSchema.BookTable.Cols.START_DATE);
 
 
-        List<Book> booksCategory = new ArrayList<>();
-        String lastCategory = "";
-        for (Book book : books) {
-            String category = book.getCategory();
-            if (category != null && !category.equals(lastCategory)) {
-                lastCategory = category;
-                Book bookCategory = new Book();
-                bookCategory.setCategory(book.getCategory());
-                bookCategory.setStatus(BOOK_CATEGORY_TEXT);
-                booksCategory.add(bookCategory);
+            List<Book> booksDate = new ArrayList<>();
+            int lastDate = 0;
+            for (Book book : books) {
+                int date = book.getEndDate().getYear();
+                if (date != lastDate &&
+                        date != DateHelper.undefinedDate.getYear() &&
+                        date != DateHelper.unknownDate.getYear()) {
+                    lastDate = date;
+                    Book bookDate = new Book();
+                    bookDate.setEndDate(new GregorianCalendar(date+1900, 0, 1).
+                            getTime());
+                    bookDate.setStatus(Holders.BOOK_DATE_TEXT);
+                    booksDate.add(bookDate);
+                }
+                booksDate.add(book);
+
             }
-            booksCategory.add(book);
+            return booksDate;
+
+        } else {
+            List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
+                            .getString(R.string.title_read_yet)),
+                    BookDBSchema.BookTable.Cols.CATEGORY + " , " +
+                            BookDBSchema.BookTable.Cols.END_DATE + " , " +
+                            BookDBSchema.BookTable.Cols.START_DATE);
+
+
+            List<Book> booksCategory = new ArrayList<>();
+            String lastCategory = "";
+            for (Book book : books) {
+                String category = book.getCategory();
+                if (category != null && !category.equals(lastCategory)) {
+                    lastCategory = category;
+                    Book bookCategory = new Book();
+                    bookCategory.setCategory(book.getCategory());
+                    bookCategory.setStatus(BOOK_CATEGORY_TEXT);
+                    booksCategory.add(bookCategory);
+                }
+                booksCategory.add(book);
+
+            }
+            return booksCategory;
 
         }
-        return booksCategory;
     }
+
 
     private class BookHolder extends BaseHolder implements View.OnClickListener {
 
@@ -276,6 +312,8 @@ public class ReadYetFragment extends SimpleFragment {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             if (viewType == CATEGORY_VIEWTYPE) {
                 return new Holders.CategoryHolder(layoutInflater, parent);
+            } else if (viewType == Holders.DATE_VIEWTYPE) {
+                return new Holders.DateHolder(layoutInflater, parent);
             } else {
                 return new ReadYetFragment.BookHolder(layoutInflater, parent);
             }
@@ -289,17 +327,19 @@ public class ReadYetFragment extends SimpleFragment {
 
         @Override
         public int getItemViewType(int position) {
-            return mBooks.get(position).getStatus().equals(BOOK_CATEGORY_TEXT) ? CATEGORY_VIEWTYPE
-                    : BOOK_VIEWTYPE;
+            switch (mBooks.get(position).getStatus()) {
+                case BOOK_CATEGORY_TEXT:
+                    return Holders.CATEGORY_VIEWTYPE;
+                case Holders.BOOK_DATE_TEXT:
+                    return Holders.DATE_VIEWTYPE;
+                default:
+                    return BOOK_VIEWTYPE;
+            }
         }
 
         @Override
         public int getItemCount() {
             return mBooks.size();
-        }
-
-        public List<Book> getBooks() {
-            return mBooks;
         }
 
         public void setBooks(List<Book> books) {

@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
     public static final int REQUEST_CODE_IMPORT = 2;
     public static final String GET_SHARED_PREFERENCES = "com.hromovych.android.bookstats";
     public static final String SHOW_DATE_PREFERENCES = "date_format";
+    public static final String SORT_BY_DATE = "sort_format";
     private BottomNavigationView navView;
     private SharedPreferences mSharedPreferences;
 
@@ -135,6 +136,11 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
             case R.id.menu_date_format:
                 mSharedPreferences.edit().putBoolean(SHOW_DATE_PREFERENCES,
                         !mSharedPreferences.getBoolean(SHOW_DATE_PREFERENCES, true)).apply();
+                this.recreate();
+                return true;
+            case R.id.menu_sort_format:
+                mSharedPreferences.edit().putBoolean(SORT_BY_DATE,
+                        !mSharedPreferences.getBoolean(SORT_BY_DATE, true)).apply();
                 this.recreate();
                 return true;
             case R.id.import_books:
