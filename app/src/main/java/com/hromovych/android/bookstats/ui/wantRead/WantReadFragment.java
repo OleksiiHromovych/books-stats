@@ -29,7 +29,6 @@ import com.hromovych.android.bookstats.SimpleFragment;
 import com.hromovych.android.bookstats.database.BookDBSchema;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -61,9 +60,9 @@ public class WantReadFragment extends SimpleFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
-        updateUI();
         sortByDate = getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
                 Context.MODE_PRIVATE).getBoolean(MainActivity.SORT_BY_DATE, true);
+        updateUI();
 
 
         return view;
@@ -168,29 +167,10 @@ public class WantReadFragment extends SimpleFragment {
     private List<Book> getBooks(BookLab bookLab) {
         if (sortByDate) {
             List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
-                            .getString(R.string.title_read_yet)),
-                    BookDBSchema.BookTable.Cols.END_DATE + " , " +
-                            BookDBSchema.BookTable.Cols.START_DATE);
+                            .getString(R.string.title_want_read)),
+                    BookDBSchema.BookTable.Cols.AUTHOR);
 
-
-            List<Book> booksDate = new ArrayList<>();
-            int lastDate = 0;
-            for (Book book : books) {
-                int date = book.getEndDate().getYear();
-                if (date != lastDate &&
-                        date != DateHelper.undefinedDate.getYear() &&
-                        date != DateHelper.unknownDate.getYear()) {
-                    lastDate = date;
-                    Book bookDate = new Book();
-                    bookDate.setEndDate(new GregorianCalendar(date + 1900, 0, 1).
-                            getTime());
-                    bookDate.setStatus(Holders.BOOK_DATE_TEXT);
-                    booksDate.add(bookDate);
-                }
-                booksDate.add(book);
-
-            }
-            return booksDate;
+            return books;
 
         } else {
             List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()

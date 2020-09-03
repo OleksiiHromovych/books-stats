@@ -187,8 +187,7 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
 
         }
 
-
-        MainActivity.this.recreate();
+        this.recreate();
     }
 
     @Override

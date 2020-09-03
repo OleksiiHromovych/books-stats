@@ -38,4 +38,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     implementation 'it.xabaras.android:recyclerview-swipedecorator:1.2.3'
+    compile 'com.bignerdranch.android:expandablerecyclerview:3.0.0-RC1'
 }
