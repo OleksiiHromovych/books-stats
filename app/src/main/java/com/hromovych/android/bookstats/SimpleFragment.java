@@ -16,6 +16,6 @@ public class SimpleFragment extends Fragment {
     }
 
     protected String getTypeConstant(String s) {
-        return ValueConvector.ToConstant.toPriorityConstant(getContext(), s);
+        return ValueConvector.ToConstant.toTypeConstant(getContext(), s);
     }
 }

@@ -83,7 +83,7 @@ public class ValueConvector {
             else if (s.equals(context.getString(R.string.title_want_read)))
                 return Constants.WANT_READ;
             else {
-                Toast.makeText(context, "Error to. Unknown status name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Error to. Unknown status name " + s, Toast.LENGTH_SHORT).show();
                 return s;
             }
         }
@@ -96,7 +96,7 @@ public class ValueConvector {
             else if (s.equals(context.getString(R.string.priority_book_3)))
                 return Constants.LOW;
             else {
-                Toast.makeText(context, "Error to. Unknown priority name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Error to. Unknown priority name " + s, Toast.LENGTH_SHORT).show();
                 return s;
             }
         }
