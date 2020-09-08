@@ -185,7 +185,6 @@ public class BookLab {
     }
 
     public void extendFromBase(SQLiteDatabase database){
-        List<Book> books = new ArrayList<>();
         BookCursorWrapper cursor = new BookCursorWrapper(database.query(
                 BookTable.NAME,
                 null,

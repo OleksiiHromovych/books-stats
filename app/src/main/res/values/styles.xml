@@ -7,15 +7,14 @@
         <item name="colorPrimaryDark">@color/backgroundFont</item>
         <item name="colorAccent">@color/backgroundItem</item>
 
+        <item name="android:textColor">@color/bookItemTextColor</item>
         <item name="android:windowBackground">@color/backgroundFont</item>
-        <item name="itemBackground">@color/backgroundItem</item>
+        <item name="android:itemBackground">@color/backgroundApp</item>
 
         <item name="editTextStyle">@style/InputFieldEditText</item>
         <item name="autoCompleteTextViewStyle">@style/InputFieldEditText</item>
         <item name="spinnerStyle">@style/SpinnerCustomStyle</item>
         <item name="buttonStyle">@style/ButtonStyle</item>
-
-
     </style>
 
     <style name="InputFieldEditText" parent="Widget.AppCompat.EditText">

@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -162,6 +163,9 @@ public class ReadNowFragment extends SimpleFragment {
             mAdapter.setBooks(books);
             mAdapter.notifyDataSetChanged();
         }
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("" +
+                bookLab.getBooksByStatus(getStatusConstant(getString(R.string.title_read_now))).size());
+
     }
 
     private class BookHolder extends RecyclerView.ViewHolder

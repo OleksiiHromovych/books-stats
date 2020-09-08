@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,9 +46,6 @@ public class ReadYetFragment extends SimpleFragment {
 
     private boolean showDate;
     private boolean sortByDate;
-    private static final String BOOK_CATEGORY_TEXT = "book_category_text";
-    private static final int BOOK_VIEWTYPE = 0;
-    private static final int CATEGORY_VIEWTYPE = 1;
 
     private Callbacks mCallbacks;
 
@@ -169,8 +167,10 @@ public class ReadYetFragment extends SimpleFragment {
         } else {
             mAdapter.setParentList(groups, true);
             mAdapter.notifyParentDataSetChanged(true);
-
         }
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("" +
+                bookLab.getBooksByStatus(getStatusConstant(getString(R.string.title_read_yet))).size());
     }
 
     private List<Group> getGroups(BookLab bookLab) {
@@ -193,6 +193,7 @@ public class ReadYetFragment extends SimpleFragment {
                     if (lastDate == 0) {
                         if (booksDate.isEmpty()) {
                             lastDate = date;
+                            booksDate.add(book);
                             continue;
                         }
                         group = new Group("Unknown date", booksDate);
@@ -226,6 +227,7 @@ public class ReadYetFragment extends SimpleFragment {
                     if (lastCategory.isEmpty()) {
                         if (booksCategory.isEmpty()) {
                             lastCategory = category;
+                            booksCategory.add(book);
                             continue;
                         }
                         group = new Group("Without category", booksCategory);  //#TODO: ru string
@@ -275,14 +277,17 @@ public class ReadYetFragment extends SimpleFragment {
     public class GroupViewHolder extends ParentViewHolder {
 
         private TextView mGroupTextView;
+        private TextView mGroupBookCount;
 
         public GroupViewHolder(@NonNull View itemView) {
             super(itemView);
             mGroupTextView = itemView.findViewById(R.id.group_book_category);
+            mGroupBookCount = itemView.findViewById(R.id.group_book_count_of_book);
         }
 
         public void bind(Group groupItem) {
             mGroupTextView.setText(groupItem.getTitle());
+            mGroupBookCount.setText("" + groupItem.getChildList().size());
         }
     }
 
@@ -362,10 +367,32 @@ public class ReadYetFragment extends SimpleFragment {
 
     public class GroupAdapter extends ExpandableRecyclerAdapter<Group, Book, GroupViewHolder, BookViewHolder> {
         private LayoutInflater mLayoutInflater;
+        private List<Boolean> expandableParentList;
 
         public GroupAdapter(Context context, @NonNull List<Group> parentList) {
             super(parentList);
             mLayoutInflater = LayoutInflater.from(context);
+            if (expandableParentList == null)
+                 expandableParentList = new ArrayList<>(Arrays.asList(new Boolean[parentList.size()+1]));
+
+
+            setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
+                                          @Override
+                                          public void onParentExpanded(int parentPosition) {
+//                                              expandableParentList.set(parentPosition, true);
+                                          }
+
+                                          @Override
+                                          public void onParentCollapsed(int parentPosition) {
+//                                              expandableParentList.set(parentPosition, false);
+                                          }
+                                      }
+            );
+        }
+
+        @Override
+        public void setParentList(@NonNull List<Group> parentList, boolean preserveExpansionState) {
+            super.setParentList(parentList, preserveExpansionState);
 
         }
 
@@ -389,7 +416,7 @@ public class ReadYetFragment extends SimpleFragment {
         @Override
         public void onBindParentViewHolder(@NonNull GroupViewHolder parentViewHolder, int parentPosition, @NonNull Group parent) {
             parentViewHolder.bind(parent);
-            parentViewHolder.setExpanded(expandableParentList.get(parentPosition));
+//            parentViewHolder.setExpanded(expandableParentList.get(parentPosition));
         }
 
         @Override

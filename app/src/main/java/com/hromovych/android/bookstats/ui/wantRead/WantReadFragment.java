@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -162,6 +163,10 @@ public class WantReadFragment extends SimpleFragment {
             mAdapter.setBooks(books);
             mAdapter.notifyDataSetChanged();
         }
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("" +
+                bookLab.getBooksByStatus(getStatusConstant(getString(R.string.title_want_read))).size());
+
     }
 
     private List<Book> getBooks(BookLab bookLab) {
