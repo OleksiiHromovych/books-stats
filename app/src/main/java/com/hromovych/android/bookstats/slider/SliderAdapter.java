@@ -23,8 +23,8 @@ public class SliderAdapter extends PagerAdapter {
     }
 
     public int[] slide_images = {
-            R.drawable.slider_book,
-            R.drawable.slider,
+            R.drawable.app_icon,
+            R.drawable.read_yet,
             R.drawable.edit,
             };
 
@@ -54,7 +54,7 @@ public class SliderAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        mLayoutInflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
+        mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = mLayoutInflater.inflate(R.layout.slide_layout, container, false);
 
         ImageView imageView = (ImageView) view.findViewById(R.id.imageView);

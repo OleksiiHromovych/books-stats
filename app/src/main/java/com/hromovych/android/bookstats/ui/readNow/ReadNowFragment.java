@@ -163,8 +163,10 @@ public class ReadNowFragment extends SimpleFragment {
             mAdapter.setBooks(books);
             mAdapter.notifyDataSetChanged();
         }
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("" +
-                bookLab.getBooksByStatus(getStatusConstant(getString(R.string.title_read_now))).size());
+        int count = bookLab.getBooksByStatus(getStatusConstant(getString(R.string.title_read_now))).size();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(
+                getResources().getQuantityString(R.plurals.fragment_count_books_subtitile,
+                        count, count));
 
     }
 

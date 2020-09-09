@@ -76,10 +76,14 @@ public class ClipboardFragment extends Fragment {
         clipBoardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                importText = ((ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE))
-                        .getText().toString();
+                try{importText = ((ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE))
+                        .getText().toString();}
+                catch (NullPointerException e){
+                    showMessage(e.toString());
+                    return;
+                }
                 firstState.setVisibility(View.VISIBLE);
-
+                showMessage("Success import from clip board");
             }
         });
 
@@ -92,6 +96,7 @@ public class ClipboardFragment extends Fragment {
                         .getText().toString());
                 splitted_line_view.setText(splittedText[line_index]);
                 secondState.setVisibility(View.VISIBLE);
+                showMessage("Success split text");
             }
         });
 
@@ -247,6 +252,9 @@ public class ClipboardFragment extends Fragment {
         spinner.setAdapter(arrayAdapter);
 
         return layout;
+    }
 
+    private void showMessage(String text){
+        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
     }
 }

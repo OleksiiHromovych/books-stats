@@ -164,8 +164,10 @@ public class WantReadFragment extends SimpleFragment {
             mAdapter.notifyDataSetChanged();
         }
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("" +
-                bookLab.getBooksByStatus(getStatusConstant(getString(R.string.title_want_read))).size());
+        int count = bookLab.getBooksByStatus(getStatusConstant(getString(R.string.title_want_read))).size();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(
+                getResources().getQuantityString(R.plurals.fragment_count_books_subtitile,
+                        count, count));
 
     }
 
@@ -174,9 +176,7 @@ public class WantReadFragment extends SimpleFragment {
             List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
                             .getString(R.string.title_want_read)),
                     BookDBSchema.BookTable.Cols.AUTHOR);
-
             return books;
-
         } else {
             List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
                             .getString(R.string.title_want_read)),
@@ -194,7 +194,6 @@ public class WantReadFragment extends SimpleFragment {
                     booksCategory.add(bookCategory);
                 }
                 booksCategory.add(book);
-
             }
             return booksCategory;
         }
@@ -275,7 +274,6 @@ public class WantReadFragment extends SimpleFragment {
             holder.bind(mBooks.get(position));
         }
 
-
         @Override
         public int getItemViewType(int position) {
             switch (mBooks.get(position).getStatus()) {
@@ -291,10 +289,6 @@ public class WantReadFragment extends SimpleFragment {
         @Override
         public int getItemCount() {
             return mBooks.size();
-        }
-
-        public List<Book> getBooks() {
-            return mBooks;
         }
 
         public void setBooks(List<Book> books) {

@@ -37,6 +37,12 @@
     <string name="slide_next_title">Дальше</string>
     <string name="slide_back_title">Назад</string>
     <string name="book_description_title">Описание</string>
-    <string name="book_description_hint">Enter book desctiption</string>
+    <string name="book_description_hint">Введите свое описание здесь</string>
 
+    <plurals name="fragment_count_books_subtitile">
+        <item quantity="one">%d книга</item>
+        <item quantity="few">%d книги</item>
+        <item quantity="many">%d книг</item>
+        <item quantity="other">%d книг</item>
+    </plurals>
 </resources>

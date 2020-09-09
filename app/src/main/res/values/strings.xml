@@ -68,4 +68,8 @@
     <string name="book_description_title">Description</string>
     <string name="book_description_hint">Enter your description here</string>
 
+    <plurals name="fragment_count_books_subtitile">
+        <item quantity="one">%d book</item>
+        <item quantity="other">%d books</item>
+    </plurals>
 </resources>
