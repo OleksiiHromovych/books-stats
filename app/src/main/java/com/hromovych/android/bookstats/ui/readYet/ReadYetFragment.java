@@ -14,41 +14,65 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bignerdranch.expandablerecyclerview.ChildViewHolder;
+import com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter;
+import com.bignerdranch.expandablerecyclerview.ParentViewHolder;
+import com.bignerdranch.expandablerecyclerview.model.Parent;
 import com.google.android.material.snackbar.Snackbar;
 import com.hromovych.android.bookstats.Book;
 import com.hromovych.android.bookstats.BookLab;
 import com.hromovych.android.bookstats.Callbacks;
 import com.hromovych.android.bookstats.DateHelper;
-import com.hromovych.android.bookstats.Holders;
-import com.hromovych.android.bookstats.Holders.BaseHolder;
 import com.hromovych.android.bookstats.MainActivity;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.SimpleFragment;
 import com.hromovych.android.bookstats.database.BookDBSchema;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
+import java.util.Arrays;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class ReadYetFragment extends SimpleFragment {
-
-
     private RecyclerView mRecyclerView;
-    private ReadYetFragment.BookAdapter mAdapter;
-    private Callbacks mCallbacks;
+    private GroupAdapter mAdapter;
 
     private boolean showDate;
     private boolean sortByDate;
 
-    private static final String BOOK_CATEGORY_TEXT = "book_category_text";
-    private static final int BOOK_VIEWTYPE = 0;
-    private static final int CATEGORY_VIEWTYPE = 1;
+    private Callbacks mCallbacks;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_read_yet, container, false);
+
+        mRecyclerView = view.findViewById(R.id.read_yet_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
+
+
+        showDate = getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
+                Context.MODE_PRIVATE).getBoolean(MainActivity.SHOW_DATE_PREFERENCES, true);
+        sortByDate = getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
+                Context.MODE_PRIVATE).getBoolean(MainActivity.SORT_BY_DATE, true);
+        updateUI();
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI();
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -56,23 +80,11 @@ public class ReadYetFragment extends SimpleFragment {
         mCallbacks = (Callbacks) context;
     }
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_read_yet, container, false);
-        mRecyclerView = view.findViewById(R.id.read_yet_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
-
-        updateUI();
-
-        showDate = getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
-                Context.MODE_PRIVATE).getBoolean(MainActivity.SHOW_DATE_PREFERENCES, true);
-
-        sortByDate = getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
-                Context.MODE_PRIVATE).getBoolean(MainActivity.SORT_BY_DATE, true);
-
-        return view;
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
     }
 
     private ItemTouchHelper.SimpleCallback mItemTouchHelperCallback =
@@ -98,7 +110,7 @@ public class ReadYetFragment extends SimpleFragment {
 
                 @Override
                 public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-                    if (!(viewHolder instanceof BookHolder))
+                    if (!(viewHolder instanceof BookViewHolder))
                         return 0;
                     return super.getMovementFlags(recyclerView, viewHolder);
                 }
@@ -106,8 +118,10 @@ public class ReadYetFragment extends SimpleFragment {
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     final BookLab bookLab = BookLab.get(getActivity());
-                    List<Book> books = getBooks(bookLab);
-                    final Book book = books.get(viewHolder.getAdapterPosition());
+                    List<Group> books = getGroups(bookLab);
+                    ChildViewHolder childViewHolder = (ChildViewHolder) viewHolder;
+                    final Book book = books.get(childViewHolder.getParentAdapterPosition())
+                            .getChildList().get(childViewHolder.getChildAdapterPosition());
                     final Book oldBook = bookLab.getBook(book.getId());
                     book.setStatus(getStatusConstant(getResources().getString(R.string.title_read_now)));
                     if (book.getStartDate().equals(DateHelper.undefinedDate))
@@ -127,7 +141,7 @@ public class ReadYetFragment extends SimpleFragment {
                 }
             };
 
-    public void displaySnackbar(String text, String actionName, View.OnClickListener action) {
+    private void displaySnackbar(String text, String actionName, View.OnClickListener action) {
         Snackbar snack = Snackbar.make(getActivity().findViewById(android.R.id.content), text, Snackbar.LENGTH_LONG)
                 .setAction(actionName, action);
 
@@ -142,39 +156,32 @@ public class ReadYetFragment extends SimpleFragment {
         snack.show();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateUI();
-    }
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mCallbacks = null;
-    }
 
     public void updateUI() {
         BookLab bookLab = BookLab.get(getActivity());
-        List<Book> books = getBooks(bookLab);
+        List<Group> groups = getGroups(bookLab);
+
         if (mAdapter == null) {
-            mAdapter = new ReadYetFragment.BookAdapter(books);
+            mAdapter = new GroupAdapter(getContext(), groups);
             mRecyclerView.setAdapter(mAdapter);
         } else {
-            mAdapter.setBooks(books);
-            mAdapter.notifyDataSetChanged();
-
+            mAdapter.setParentList(groups, true);
+            mAdapter.notifyParentDataSetChanged(true);
         }
+        int count = bookLab.getBooksByStatus(getStatusConstant(getString(R.string.title_read_yet))).size();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(
+                getResources().getQuantityString(R.plurals.fragment_count_books_subtitile,
+                        count, count));
     }
 
-    private List<Book> getBooks(BookLab bookLab) {
+    private List<Group> getGroups(BookLab bookLab) {
+        List<Group> groups = new ArrayList<>();
+
         if (sortByDate) {
             List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
                             .getString(R.string.title_read_yet)),
-                            BookDBSchema.BookTable.Cols.END_DATE + " , " +
+                    BookDBSchema.BookTable.Cols.END_DATE + " , " +
                             BookDBSchema.BookTable.Cols.START_DATE);
-
 
             List<Book> booksDate = new ArrayList<>();
             int lastDate = 0;
@@ -183,17 +190,26 @@ public class ReadYetFragment extends SimpleFragment {
                 if (date != lastDate &&
                         date != DateHelper.undefinedDate.getYear() &&
                         date != DateHelper.unknownDate.getYear()) {
+                    Group group;
+                    if (lastDate == 0) {
+                        if (booksDate.isEmpty()) {
+                            lastDate = date;
+                            booksDate.add(book);
+                            continue;
+                        }
+                        group = new Group("Unknown date", booksDate);
+                    } else
+                        group = new Group(Integer.toString(lastDate + 1900), booksDate);
+                    booksDate = new ArrayList<>();
                     lastDate = date;
-                    Book bookDate = new Book();
-                    bookDate.setEndDate(new GregorianCalendar(date+1900, 0, 1).
-                            getTime());
-                    bookDate.setStatus(Holders.BOOK_DATE_TEXT);
-                    booksDate.add(bookDate);
+                    groups.add(group);
                 }
                 booksDate.add(book);
-
             }
-            return booksDate;
+            if (!booksDate.isEmpty()) {
+                Group group = new Group(Integer.toString(lastDate + 1900), booksDate);
+                groups.add(group);
+            }
 
         } else {
             List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
@@ -208,23 +224,75 @@ public class ReadYetFragment extends SimpleFragment {
             for (Book book : books) {
                 String category = book.getCategory();
                 if (category != null && !category.equals(lastCategory)) {
+                    Group group;
+                    if (lastCategory.isEmpty()) {
+                        if (booksCategory.isEmpty()) {
+                            lastCategory = category;
+                            booksCategory.add(book);
+                            continue;
+                        }
+                        group = new Group("Without category", booksCategory);  //#TODO: ru string
+                    } else
+                        group = new Group(lastCategory, booksCategory);
+                    booksCategory = new ArrayList<>();
+                    groups.add(group);
                     lastCategory = category;
-                    Book bookCategory = new Book();
-                    bookCategory.setCategory(book.getCategory());
-                    bookCategory.setStatus(BOOK_CATEGORY_TEXT);
-                    booksCategory.add(bookCategory);
                 }
                 booksCategory.add(book);
 
             }
-            return booksCategory;
+            if (!booksCategory.isEmpty()) {
+                Group group = new Group(lastCategory, booksCategory);
+                groups.add(group);
+            }
 
+        }
+        return groups;
+    }
+
+    public class Group implements Parent<Book> {
+
+        private List<Book> groupItems;
+        private String title;
+
+        public Group(String title, List<Book> books) {
+            groupItems = books;
+            this.title = title;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        @Override
+        public List<Book> getChildList() {
+            return groupItems;
+        }
+
+        @Override
+        public boolean isInitiallyExpanded() {
+            return false;
         }
     }
 
+    public class GroupViewHolder extends ParentViewHolder {
 
-    private class BookHolder extends BaseHolder implements View.OnClickListener {
+        private TextView mGroupTextView;
+        private TextView mGroupBookCount;
 
+        public GroupViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mGroupTextView = itemView.findViewById(R.id.group_book_category);
+            mGroupBookCount = itemView.findViewById(R.id.group_book_count_of_book);
+        }
+
+        public void bind(Group groupItem) {
+            mGroupTextView.setText(groupItem.getTitle());
+            mGroupBookCount.setText("" + groupItem.getChildList().size());
+        }
+    }
+
+    public class BookViewHolder extends ChildViewHolder implements View.OnClickListener {
         private TextView count;
         private TextView bookName;
         private TextView author;
@@ -235,8 +303,8 @@ public class ReadYetFragment extends SimpleFragment {
 
         private Book mBook;
 
-        public BookHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.list_item_book, parent, false));
+        public BookViewHolder(View itemView) {
+            super(itemView);
             itemView.setBackgroundColor(getResources().getColor(R.color.bookPaperDark));
             count = itemView.findViewById(R.id.book_count);
             bookName = itemView.findViewById(R.id.book_name);
@@ -250,9 +318,9 @@ public class ReadYetFragment extends SimpleFragment {
             itemView.setOnClickListener(this);
         }
 
-        public void bind(Book book) {
+        public void bind(Book book, int childPosition) {
             mBook = book;
-            count.setText("" + 1);
+            count.setText("" + (childPosition + 1));
             bookName.setText(mBook.getBookName());
             author.setText(mBook.getAuthor());
 
@@ -298,52 +366,63 @@ public class ReadYetFragment extends SimpleFragment {
         }
     }
 
-    private class BookAdapter extends RecyclerView.Adapter<BaseHolder> {
+    public class GroupAdapter extends ExpandableRecyclerAdapter<Group, Book, GroupViewHolder, BookViewHolder> {
+        private LayoutInflater mLayoutInflater;
+        private List<Boolean> expandableParentList;
 
-        private List<Book> mBooks;
+        public GroupAdapter(Context context, @NonNull List<Group> parentList) {
+            super(parentList);
+            mLayoutInflater = LayoutInflater.from(context);
+            if (expandableParentList == null)
+                expandableParentList = new ArrayList<>(Arrays.asList(new Boolean[parentList.size() + 1]));
 
-        public BookAdapter(List<Book> books) {
-            mBooks = books;
+
+            setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
+                                          @Override
+                                          public void onParentExpanded(int parentPosition) {
+//                                              expandableParentList.set(parentPosition, true);
+                                          }
+
+                                          @Override
+                                          public void onParentCollapsed(int parentPosition) {
+//                                              expandableParentList.set(parentPosition, false);
+                                          }
+                                      }
+            );
+        }
+
+        @Override
+        public void setParentList(@NonNull List<Group> parentList, boolean preserveExpansionState) {
+            super.setParentList(parentList, preserveExpansionState);
+
         }
 
         @NonNull
         @Override
-        public BaseHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            if (viewType == CATEGORY_VIEWTYPE) {
-                return new Holders.CategoryHolder(layoutInflater, parent);
-            } else if (viewType == Holders.DATE_VIEWTYPE) {
-                return new Holders.DateHolder(layoutInflater, parent);
-            } else {
-                return new ReadYetFragment.BookHolder(layoutInflater, parent);
-            }
+        public GroupViewHolder onCreateParentViewHolder(@NonNull ViewGroup parentViewGroup, int viewType) {
+            View groupView = mLayoutInflater.inflate(R.layout.list_item_group, parentViewGroup,
+                    false);
+            return new GroupViewHolder(groupView);
+        }
+
+        @NonNull
+        @Override
+        public BookViewHolder onCreateChildViewHolder(@NonNull ViewGroup childViewGroup, int viewType) {
+            View groupView = mLayoutInflater.inflate(R.layout.list_item_book, childViewGroup,
+                    false);
+            return new BookViewHolder(groupView);
+        }
+
+
+        @Override
+        public void onBindParentViewHolder(@NonNull GroupViewHolder parentViewHolder, int parentPosition, @NonNull Group parent) {
+            parentViewHolder.bind(parent);
+//            parentViewHolder.setExpanded(expandableParentList.get(parentPosition));
         }
 
         @Override
-        public void onBindViewHolder(@NonNull BaseHolder holder, int position) {
-            holder.bind(mBooks.get(position));
-
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            switch (mBooks.get(position).getStatus()) {
-                case BOOK_CATEGORY_TEXT:
-                    return Holders.CATEGORY_VIEWTYPE;
-                case Holders.BOOK_DATE_TEXT:
-                    return Holders.DATE_VIEWTYPE;
-                default:
-                    return BOOK_VIEWTYPE;
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return mBooks.size();
-        }
-
-        public void setBooks(List<Book> books) {
-            mBooks = books;
+        public void onBindChildViewHolder(@NonNull BookViewHolder childViewHolder, int parentPosition, int childPosition, @NonNull Book child) {
+            childViewHolder.bind(child, childPosition);
         }
     }
 }
