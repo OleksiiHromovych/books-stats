@@ -35,7 +35,6 @@ import com.hromovych.android.bookstats.SimpleFragment;
 import com.hromovych.android.bookstats.database.BookDBSchema;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -167,6 +166,7 @@ public class ReadYetFragment extends SimpleFragment {
         } else {
             mAdapter.setParentList(groups, true);
             mAdapter.notifyParentDataSetChanged(true);
+
         }
         int count = bookLab.getBooksByStatus(getStatusConstant(getString(R.string.title_read_yet))).size();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(
@@ -368,14 +368,16 @@ public class ReadYetFragment extends SimpleFragment {
 
     public class GroupAdapter extends ExpandableRecyclerAdapter<Group, Book, GroupViewHolder, BookViewHolder> {
         private LayoutInflater mLayoutInflater;
-        private List<Boolean> expandableParentList;
+//        private List<Boolean> expandableParentList;
 
         public GroupAdapter(Context context, @NonNull List<Group> parentList) {
             super(parentList);
             mLayoutInflater = LayoutInflater.from(context);
-            if (expandableParentList == null)
-                expandableParentList = new ArrayList<>(Arrays.asList(new Boolean[parentList.size() + 1]));
+//            if (expandableParentList == null) {
+//                expandableParentList = new ArrayList<>(Collections.nCopies(parentList.size(), false));
+//                expandableParentList = new ArrayList<>(Arrays.asList(new Boolean[parentList.size() + 1]));
 
+//            }
 
             setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
                                           @Override

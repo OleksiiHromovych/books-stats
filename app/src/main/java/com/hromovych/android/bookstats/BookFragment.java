@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -116,8 +117,14 @@ public class BookFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mBook.setBookName(s.toString());
-                updateBook();
+                if (s.length() < 50) {
+                    mBook.setBookName(s.toString());
+                    updateBook();
+                } else {
+                    Toast.makeText(getContext(), "Error: Book name so long",
+                            Toast.LENGTH_SHORT).show();
+                    mBookNameField.setText(mBook.getBookName());
+                }
             }
 
             @Override
@@ -136,8 +143,14 @@ public class BookFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mBook.setAuthor(s.toString());
-                updateBook();
+                if (s.length() < 50) {
+                    mBook.setAuthor(s.toString());
+                    updateBook();
+                } else {
+                    Toast.makeText(getContext(), "Error: Author name so long",
+                            Toast.LENGTH_SHORT).show();
+                    mBookAuthorField.setText(mBook.getAuthor());
+                }
             }
 
             @Override
@@ -156,8 +169,14 @@ public class BookFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mBook.setPages(s.length() == 0 ? 0 : Integer.parseInt(s.toString()));
-                updateBook();
+                int pages = s.length() == 0 ? 0 : Integer.parseInt(s.toString());
+                if (pages < 10000) {
+                    mBook.setPages(pages);
+                    updateBook();
+                }else{
+                    Toast.makeText(getContext(), "Error: " + pages + " is so big", Toast.LENGTH_SHORT).show();
+                    mBookPagesField.setText("" + mBook.getPages());
+                }
             }
 
             @Override
@@ -176,8 +195,14 @@ public class BookFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mBook.setCategory(s.toString());
-                updateBook();
+                if (s.length() < 25) {
+                    mBook.setCategory(s.toString());
+                    updateBook();
+                } else {
+                    Toast.makeText(getContext(), "Error: Category length so long",
+                            Toast.LENGTH_SHORT).show();
+                    mBookCategoryField.setText(mBook.getCategory());
+                }
             }
 
             @Override

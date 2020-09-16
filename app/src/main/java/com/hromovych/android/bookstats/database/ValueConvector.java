@@ -1,7 +1,6 @@
 package com.hromovych.android.bookstats.database;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.hromovych.android.bookstats.R;
 
@@ -35,7 +34,6 @@ public class ValueConvector {
                 case Constants.WANT_READ:
                     return context.getString(R.string.title_want_read);
                 default:
-                    Toast.makeText(context, "Error from. Unknown status name", Toast.LENGTH_SHORT).show();
                     return s;
             }
         }
@@ -51,7 +49,6 @@ public class ValueConvector {
                 case Constants.LOW:
                     return context.getString(R.string.priority_book_3);
                 default:
-                    Toast.makeText(context, "Error from. Unknown priority name", Toast.LENGTH_SHORT).show();
                     return s;
             }
         }
@@ -67,7 +64,6 @@ public class ValueConvector {
                 case Constants.AUDIO:
                     return context.getString(R.string.type_book_3);
                 default:
-                    Toast.makeText(context, "Error from. Unknown status name", Toast.LENGTH_SHORT).show();
                     return s;
             }
         }
@@ -83,7 +79,6 @@ public class ValueConvector {
             else if (s.equals(context.getString(R.string.title_want_read)))
                 return Constants.WANT_READ;
             else {
-                Toast.makeText(context, "Error to. Unknown status name " + s, Toast.LENGTH_SHORT).show();
                 return s;
             }
         }
@@ -96,7 +91,6 @@ public class ValueConvector {
             else if (s.equals(context.getString(R.string.priority_book_3)))
                 return Constants.LOW;
             else {
-                Toast.makeText(context, "Error to. Unknown priority name " + s, Toast.LENGTH_SHORT).show();
                 return s;
             }
         }
@@ -109,7 +103,6 @@ public class ValueConvector {
             else if (s.equals(context.getString(R.string.type_book_3)))
                 return Constants.AUDIO;
             else {
-                Toast.makeText(context, "Error to. Unknown status name", Toast.LENGTH_SHORT).show();
                 return s;
             }
         }
