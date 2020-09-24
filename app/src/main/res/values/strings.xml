@@ -54,6 +54,12 @@
         <item>@string/book_name_title</item>
     </string-array>
 
+    <string-array name="label_yet_spinner_list">
+        <item>Reread</item>
+        <item>By paper</item>
+        <item>gold</item>
+    </string-array>
+
     <!--    Slider text-->
     <string name="slide1_heading">Hello</string>
     <string name="slide2_heading">Save</string>
@@ -72,4 +78,8 @@
         <item quantity="one">%d book</item>
         <item quantity="other">%d books</item>
     </plurals>
+
+    <!--    Labels text-->
+    <string name="buy_paper" translatable="false">Buy paper</string>
+    <string name="reread" translatable="false">Reread</string>
 </resources>

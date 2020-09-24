@@ -1,4 +1,4 @@
-package com.hromovych.android.bookstats;
+package com.hromovych.android.bookstats.HelpersItems;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -47,6 +47,7 @@ public class BookLab {
         values.put(BookTable.Cols.STATUS, book.getStatus());
         values.put(BookTable.Cols.TYPE, book.getType());
         values.put(BookTable.Cols.DESCRIPTION, book.getDescription());
+        values.put(BookTable.Cols.LABEL, book.getLabel());
         return values;
     }
 

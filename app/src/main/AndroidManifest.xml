@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".BookActivity"
+            android:name=".HelpersItems.BookActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".slider.IntroSlider" />
 

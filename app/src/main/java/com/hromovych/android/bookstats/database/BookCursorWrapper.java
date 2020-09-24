@@ -3,7 +3,7 @@ package com.hromovych.android.bookstats.database;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
-import com.hromovych.android.bookstats.Book;
+import com.hromovych.android.bookstats.HelpersItems.Book;
 
 import java.util.Date;
 import java.util.UUID;
@@ -27,6 +27,7 @@ public class BookCursorWrapper extends CursorWrapper {
         String status = getString(getColumnIndex(BookTable.Cols.STATUS));
         String type = getString(getColumnIndex(BookTable.Cols.TYPE));
         String description = getString(getColumnIndex(BookTable.Cols.DESCRIPTION));
+        String label = getString(getColumnIndex(BookTable.Cols.LABEL));
 
         Book book = new Book(UUID.fromString(uuidString));
         book.setAuthor(author);
@@ -38,6 +39,7 @@ public class BookCursorWrapper extends CursorWrapper {
         book.setEndDate(new Date(endDate));
         book.setType(type);
         book.setDescription(description);
+        book.setLabel(label);
 
         return book;
     }

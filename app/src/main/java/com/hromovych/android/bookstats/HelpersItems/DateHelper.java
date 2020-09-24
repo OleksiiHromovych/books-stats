@@ -1,4 +1,4 @@
-package com.hromovych.android.bookstats;
+package com.hromovych.android.bookstats.HelpersItems;
 
 import java.util.Date;
 

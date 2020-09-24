@@ -3,6 +3,7 @@ package com.hromovych.android.bookstats.ui.readYet;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.Gravity;
@@ -10,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,16 +22,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bignerdranch.expandablerecyclerview.ChildViewHolder;
 import com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter;
-import com.bignerdranch.expandablerecyclerview.ParentViewHolder;
-import com.bignerdranch.expandablerecyclerview.model.Parent;
 import com.google.android.material.snackbar.Snackbar;
-import com.hromovych.android.bookstats.Book;
-import com.hromovych.android.bookstats.BookLab;
-import com.hromovych.android.bookstats.Callbacks;
-import com.hromovych.android.bookstats.DateHelper;
+import com.hromovych.android.bookstats.HelpersItems.Book;
+import com.hromovych.android.bookstats.HelpersItems.BookLab;
+import com.hromovych.android.bookstats.HelpersItems.Callbacks;
+import com.hromovych.android.bookstats.HelpersItems.DateHelper;
+import com.hromovych.android.bookstats.HelpersItems.Holders;
+import com.hromovych.android.bookstats.HelpersItems.Holders.Group;
+import com.hromovych.android.bookstats.HelpersItems.Holders.GroupViewHolder;
+import com.hromovych.android.bookstats.HelpersItems.SimpleFragment;
 import com.hromovych.android.bookstats.MainActivity;
 import com.hromovych.android.bookstats.R;
-import com.hromovych.android.bookstats.SimpleFragment;
 import com.hromovych.android.bookstats.database.BookDBSchema;
 
 import java.util.ArrayList;
@@ -250,87 +251,22 @@ public class ReadYetFragment extends SimpleFragment {
         return groups;
     }
 
-    public class Group implements Parent<Book> {
-
-        private List<Book> groupItems;
-        private String title;
-
-        public Group(String title, List<Book> books) {
-            groupItems = books;
-            this.title = title;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        @Override
-        public List<Book> getChildList() {
-            return groupItems;
-        }
-
-        @Override
-        public boolean isInitiallyExpanded() {
-            return false;
-        }
-    }
-
-    public class GroupViewHolder extends ParentViewHolder {
-
-        private TextView mGroupTextView;
-        private TextView mGroupBookCount;
-
-        public GroupViewHolder(@NonNull View itemView) {
-            super(itemView);
-            mGroupTextView = itemView.findViewById(R.id.group_book_category);
-            mGroupBookCount = itemView.findViewById(R.id.group_book_count_of_book);
-        }
-
-        public void bind(Group groupItem) {
-            mGroupTextView.setText(groupItem.getTitle());
-            mGroupBookCount.setText("" + groupItem.getChildList().size());
-        }
-    }
-
-    public class BookViewHolder extends ChildViewHolder implements View.OnClickListener {
-        private TextView count;
-        private TextView bookName;
-        private TextView author;
-        private TextView pages;
+    public  class BookViewHolder extends Holders.BookHolder{
         private TextView startDate;
         private TextView endDate;
-        private LinearLayout pageLayout;
-
-        private Book mBook;
 
         public BookViewHolder(View itemView) {
             super(itemView);
             itemView.setBackgroundColor(getResources().getColor(R.color.bookPaperDark));
-            count = itemView.findViewById(R.id.book_count);
-            bookName = itemView.findViewById(R.id.book_name);
-            author = itemView.findViewById(R.id.author);
-            pages = itemView.findViewById(R.id.book_pages);
+
             startDate = itemView.findViewById(R.id.details_up);
             endDate = itemView.findViewById(R.id.details_down);
-            pageLayout = itemView.findViewById(R.id.page_layout);
             startDate.setVisibility(View.VISIBLE);
             endDate.setVisibility(View.VISIBLE);
-            itemView.setOnClickListener(this);
         }
 
         public void bind(Book book, int childPosition) {
-            mBook = book;
-            count.setText("" + (childPosition + 1));
-            bookName.setText(mBook.getBookName());
-            author.setText(mBook.getAuthor());
-
-            if (mBook.getPages() != 0) {
-                pages.setText("" + mBook.getPages());
-                pageLayout.setVisibility(View.VISIBLE);
-            } else {
-                pageLayout.setVisibility(View.GONE);
-            }
-
+            super.bind(book, childPosition);
             if (showDate) {
                 endDate.setVisibility(View.VISIBLE);
 
@@ -357,6 +293,11 @@ public class ReadYetFragment extends SimpleFragment {
                 endDate.setVisibility(View.GONE);
 
             }
+            GradientDrawable shape  = new GradientDrawable();
+            shape.setShape(GradientDrawable.RECTANGLE);
+            shape.setStroke(10, Color.RED);
+            shape.setColor(getResources().getColor(R.color.bookPaperDark));
+            itemView.setBackground(shape);
 
         }
 

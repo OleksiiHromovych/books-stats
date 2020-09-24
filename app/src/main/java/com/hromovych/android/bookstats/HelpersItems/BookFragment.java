@@ -1,4 +1,4 @@
-package com.hromovych.android.bookstats;
+package com.hromovych.android.bookstats.HelpersItems;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -26,6 +26,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookDBSchema;
 import com.hromovych.android.bookstats.database.ValueConvector;
 import com.hromovych.android.bookstats.ui.readNow.BookNowFragment;
@@ -48,6 +49,7 @@ public class BookFragment extends Fragment {
     private EditText mBookPagesField;
     private AutoCompleteTextView mBookCategoryField;
     private TextView mBookDescriptionField;
+    protected Spinner mBookLabelSpinner;
     private int book_layout;
     private Callbacks mCallbacks;
 
@@ -273,6 +275,8 @@ public class BookFragment extends Fragment {
                 dialog.show();
             }
         });
+
+        mBookLabelSpinner = (Spinner) v.findViewById(R.id.book_label);
         return v;
     }
 

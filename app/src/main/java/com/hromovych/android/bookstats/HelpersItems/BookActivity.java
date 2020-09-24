@@ -1,4 +1,4 @@
-package com.hromovych.android.bookstats;
+package com.hromovych.android.bookstats.HelpersItems;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.ui.readNow.BookNowFragment;
 import com.hromovych.android.bookstats.ui.readYet.BookYetFragment;
 import com.hromovych.android.bookstats.ui.wantRead.WantBookFragment;

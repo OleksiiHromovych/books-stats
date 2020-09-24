@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,13 +19,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.hromovych.android.bookstats.Book;
-import com.hromovych.android.bookstats.BookLab;
-import com.hromovych.android.bookstats.Callbacks;
-import com.hromovych.android.bookstats.DateHelper;
+import com.hromovych.android.bookstats.HelpersItems.Book;
+import com.hromovych.android.bookstats.HelpersItems.BookLab;
+import com.hromovych.android.bookstats.HelpersItems.Callbacks;
+import com.hromovych.android.bookstats.HelpersItems.DateHelper;
+import com.hromovych.android.bookstats.HelpersItems.Holders;
+import com.hromovych.android.bookstats.HelpersItems.SimpleFragment;
 import com.hromovych.android.bookstats.MainActivity;
 import com.hromovych.android.bookstats.R;
-import com.hromovych.android.bookstats.SimpleFragment;
 
 import java.util.List;
 
@@ -170,45 +170,21 @@ public class ReadNowFragment extends SimpleFragment {
 
     }
 
-    private class BookHolder extends RecyclerView.ViewHolder
+    private class BookHolder extends Holders.BookHolder
             implements View.OnClickListener {
 
-        private TextView count;
-        private TextView bookName;
-        private TextView author;
-        private TextView pages;
         private TextView startDate;
-
-        private LinearLayout pageLayout;
-
-        private Book mBook;
 
         public BookHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_book, parent, false));
 
-            count = itemView.findViewById(R.id.book_count);
-            bookName = itemView.findViewById(R.id.book_name);
-            author = itemView.findViewById(R.id.author);
-            pages = itemView.findViewById(R.id.book_pages);
             startDate = itemView.findViewById(R.id.details_up);
 
-            pageLayout = itemView.findViewById(R.id.page_layout);
-
             startDate.setVisibility(View.VISIBLE);
-            itemView.setOnClickListener(this);
         }
 
         public void bind(Book book, int pos) {
-            mBook = book;
-            count.setText("" + (pos + 1));
-            bookName.setText(mBook.getBookName());
-            author.setText(mBook.getAuthor());
-
-            if (mBook.getPages() != 0) {
-                pages.setText("" + mBook.getPages());
-                pageLayout.setVisibility(View.VISIBLE);
-            } else
-                pageLayout.setVisibility(View.GONE);
+            super.bind(book, pos);
 
             if (!mBook.getStartDate().equals(DateHelper.unknownDate)
                     && !mBook.getStartDate().equals(DateHelper.undefinedDate)) {

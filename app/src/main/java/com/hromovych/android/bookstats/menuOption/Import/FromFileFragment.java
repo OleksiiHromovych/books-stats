@@ -10,7 +10,7 @@ import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 
-import com.hromovych.android.bookstats.BookLab;
+import com.hromovych.android.bookstats.HelpersItems.BookLab;
 import com.hromovych.android.bookstats.R;
 
 import java.io.File;

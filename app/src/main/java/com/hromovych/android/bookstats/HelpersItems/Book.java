@@ -1,4 +1,4 @@
-package com.hromovych.android.bookstats;
+package com.hromovych.android.bookstats.HelpersItems;
 
 import java.util.Date;
 import java.util.UUID;
@@ -14,6 +14,7 @@ public class Book {
     private String status;
     private String type;
     private String description;
+    private String label;
 
     public Book() {
         this(UUID.randomUUID());
@@ -103,6 +104,14 @@ public class Book {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }
 

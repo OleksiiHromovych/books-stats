@@ -17,9 +17,9 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.hromovych.android.bookstats.Book;
-import com.hromovych.android.bookstats.BookLab;
-import com.hromovych.android.bookstats.DateHelper;
+import com.hromovych.android.bookstats.HelpersItems.Book;
+import com.hromovych.android.bookstats.HelpersItems.BookLab;
+import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.ValueConvector;
 

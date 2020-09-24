@@ -1,33 +1,16 @@
 package com.hromovych.android.bookstats.menuOption.Import;
 
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.hromovych.android.bookstats.Book;
-import com.hromovych.android.bookstats.BookLab;
-import com.hromovych.android.bookstats.DateHelper;
 import com.hromovych.android.bookstats.R;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.GregorianCalendar;
-import java.util.List;
 
 public class ImportDataActivity extends AppCompatActivity {
 
