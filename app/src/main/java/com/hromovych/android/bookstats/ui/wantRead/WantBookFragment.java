@@ -64,5 +64,10 @@ public class WantBookFragment extends BookFragment {
         return v;
     }
 
+    @Override
+    protected String getConstant() {
+        return ValueConvector.Constants.WANT_READ;
+    }
+
 }
 

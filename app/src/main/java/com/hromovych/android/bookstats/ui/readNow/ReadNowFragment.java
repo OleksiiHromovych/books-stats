@@ -3,6 +3,7 @@ package com.hromovych.android.bookstats.ui.readNow;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.Gravity;
@@ -24,9 +25,11 @@ import com.hromovych.android.bookstats.HelpersItems.BookLab;
 import com.hromovych.android.bookstats.HelpersItems.Callbacks;
 import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.HelpersItems.Holders;
+import com.hromovych.android.bookstats.HelpersItems.Labels;
 import com.hromovych.android.bookstats.HelpersItems.SimpleFragment;
 import com.hromovych.android.bookstats.MainActivity;
 import com.hromovych.android.bookstats.R;
+import com.hromovych.android.bookstats.database.ValueConvector;
 
 import java.util.List;
 
@@ -109,6 +112,7 @@ public class ReadNowFragment extends SimpleFragment {
                         book.setStartDate(DateHelper.undefinedDate);
                         book.setEndDate(DateHelper.undefinedDate);
                     }
+                    book.setLabel(Labels.NONE_VALUE);
                     bookLab.updateBook(book);
                     updateUI();
 
@@ -196,6 +200,16 @@ public class ReadNowFragment extends SimpleFragment {
                     long days = (DateHelper.today.getTime() - mBook.getStartDate().getTime()) / 1000 / 60 / 60 / 24;
                     startDate.setText("" + days);
                 }
+            }
+            if (mBook.getLabel() != null) {
+                GradientDrawable shape = new GradientDrawable();
+                shape.setShape(GradientDrawable.RECTANGLE);
+                shape.setStroke(10, new Labels(getContext(), ValueConvector.Constants.READ_NOW).getLabelColor(
+                        mBook.getLabel()));
+                shape.setColor(getResources().getColor(R.color.bookPaper));
+                itemView.setBackground(shape);
+            } else {
+                itemView.setBackgroundColor(getResources().getColor(R.color.bookPaper));
             }
         }
 

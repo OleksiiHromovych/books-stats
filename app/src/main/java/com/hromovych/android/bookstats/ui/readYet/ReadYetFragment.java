@@ -30,10 +30,12 @@ import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.HelpersItems.Holders;
 import com.hromovych.android.bookstats.HelpersItems.Holders.Group;
 import com.hromovych.android.bookstats.HelpersItems.Holders.GroupViewHolder;
+import com.hromovych.android.bookstats.HelpersItems.Labels;
 import com.hromovych.android.bookstats.HelpersItems.SimpleFragment;
 import com.hromovych.android.bookstats.MainActivity;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookDBSchema;
+import com.hromovych.android.bookstats.database.ValueConvector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,6 +129,7 @@ public class ReadYetFragment extends SimpleFragment {
                     if (book.getStartDate().equals(DateHelper.undefinedDate))
                         book.setStartDate(DateHelper.today);
                     book.setEndDate(DateHelper.undefinedDate);
+                    book.setLabel(Labels.NONE_VALUE);
                     bookLab.updateBook(book);
                     updateUI();
 
@@ -251,7 +254,7 @@ public class ReadYetFragment extends SimpleFragment {
         return groups;
     }
 
-    public  class BookViewHolder extends Holders.BookHolder{
+    public class BookViewHolder extends Holders.BookHolder {
         private TextView startDate;
         private TextView endDate;
 
@@ -293,11 +296,16 @@ public class ReadYetFragment extends SimpleFragment {
                 endDate.setVisibility(View.GONE);
 
             }
-            GradientDrawable shape  = new GradientDrawable();
-            shape.setShape(GradientDrawable.RECTANGLE);
-            shape.setStroke(10, Color.RED);
-            shape.setColor(getResources().getColor(R.color.bookPaperDark));
-            itemView.setBackground(shape);
+            if (mBook.getLabel() != null) {
+                GradientDrawable shape = new GradientDrawable();
+                shape.setShape(GradientDrawable.RECTANGLE);
+                shape.setStroke(10, new Labels(getContext(), ValueConvector.Constants.READ_YET).getLabelColor(
+                        mBook.getLabel()));
+                shape.setColor(getResources().getColor(R.color.bookPaperDark));
+                itemView.setBackground(shape);
+            } else {
+                itemView.setBackgroundColor(getResources().getColor(R.color.bookPaperDark));
+            }
 
         }
 

@@ -80,6 +80,11 @@
     </plurals>
 
     <!--    Labels text-->
-    <string name="buy_paper" translatable="false">Buy paper</string>
-    <string name="reread" translatable="false">Reread</string>
+    <string name="none">None</string>
+    <string name="buy_paper">Buy paper</string>
+    <string name="reread">Reread</string>
+
+    <string name="bronze">Bronze</string>
+    <string name="silver">Silver</string>
+    <string name="gold">Gold</string>
 </resources>

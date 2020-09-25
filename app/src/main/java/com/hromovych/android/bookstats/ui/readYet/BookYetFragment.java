@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -21,7 +20,6 @@ import androidx.annotation.Nullable;
 import com.hromovych.android.bookstats.HelpersItems.BookFragment;
 import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.HelpersItems.DatePickerFragment;
-import com.hromovych.android.bookstats.HelpersItems.Labels;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.ValueConvector;
 
@@ -155,26 +153,13 @@ public class BookYetFragment extends BookFragment {
 
             }
         });
-        final List<String> list =
-                new Labels(getContext()).getLabelsNames(ValueConvector.Constants.READ_YET);
 
-        mBookLabelSpinner.setAdapter(new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_dropdown_item_1line,
-                list
-                ));
-        mBookLabelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mBook.setLabel(new Labels(getContext()).getLabelConstantName(
-                        ValueConvector.Constants.READ_YET, list.get(position)));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
         return v;
+    }
+
+    @Override
+    protected String getConstant() {
+        return ValueConvector.Constants.READ_YET;
     }
 
     private void updateStartDate() {

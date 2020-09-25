@@ -277,6 +277,32 @@ public class BookFragment extends Fragment {
         });
 
         mBookLabelSpinner = (Spinner) v.findViewById(R.id.book_label);
+
+        final Labels labels = new Labels(getContext(),
+                getConstant());
+
+        final List<String> list =
+                labels.getLabelsNames();
+
+        mBookLabelSpinner.setAdapter(new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line,
+                list
+        ));
+
+        mBookLabelSpinner.setSelection(mBook.getLabel() != null && list.contains(labels.getLabelName(mBook.getLabel()))?
+                list.indexOf(labels.getLabelName(mBook.getLabel())) : 0);
+
+        mBookLabelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mBook.setLabel(labels.getLabelConstantName(list.get(position)));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         return v;
     }
 
@@ -316,6 +342,10 @@ public class BookFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    protected String getConstant(){
+        return "Error";
     }
 
     interface Callbacks {

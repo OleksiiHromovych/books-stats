@@ -119,6 +119,11 @@ public class BookNowFragment extends BookFragment {
         return v;
     }
 
+    @Override
+    protected String getConstant() {
+        return ValueConvector.Constants.READ_NOW;
+    }
+
 
     private void updateDate() {
         if (mBook.getStartDate().equals(mUnknownDate))

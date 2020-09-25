@@ -3,6 +3,7 @@ package com.hromovych.android.bookstats.ui.wantRead;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bignerdranch.expandablerecyclerview.ChildViewHolder;
 import com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter;
 import com.google.android.material.snackbar.Snackbar;
 import com.hromovych.android.bookstats.HelpersItems.Book;
@@ -24,10 +26,12 @@ import com.hromovych.android.bookstats.HelpersItems.BookLab;
 import com.hromovych.android.bookstats.HelpersItems.Callbacks;
 import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.HelpersItems.Holders;
+import com.hromovych.android.bookstats.HelpersItems.Labels;
 import com.hromovych.android.bookstats.HelpersItems.SimpleFragment;
 import com.hromovych.android.bookstats.MainActivity;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookDBSchema;
+import com.hromovych.android.bookstats.database.ValueConvector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,15 +101,18 @@ public class WantReadFragment extends SimpleFragment {
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     final BookLab bookLab = BookLab.get(getActivity());
-                    List<Book> books = getBooks(bookLab);
+                    List<Holders.Group> books = getGroups(bookLab);
+                    ChildViewHolder childViewHolder = (ChildViewHolder) viewHolder;
+                    final Book book = books.get(childViewHolder.getParentAdapterPosition())
+                            .getChildList().get(childViewHolder.getChildAdapterPosition());
 
-                    final Book book = books.get(viewHolder.getAdapterPosition());
                     final Book oldBook = bookLab.getBook(book.getId());
                     book.setStatus(getStatusConstant(getResources().getString(R.string.title_read_now)));
                     if (book.getStartDate().equals(DateHelper.undefinedDate))
                         book.setStartDate(DateHelper.today);
                     book.setEndDate(DateHelper.undefinedDate);
                     book.setType(getTypeConstant(getResources().getStringArray(R.array.type_spinner_list)[0]));
+                    book.setLabel(Labels.NONE_VALUE);
                     bookLab.updateBook(book);
                     updateUI();
 
@@ -119,7 +126,6 @@ public class WantReadFragment extends SimpleFragment {
 
                 }
             };
-
 
     public void displaySnackbar(String text, String actionName, View.OnClickListener action) {
         Snackbar snack = Snackbar.make(getActivity().findViewById(android.R.id.content), text, Snackbar.LENGTH_LONG)
@@ -163,15 +169,6 @@ public class WantReadFragment extends SimpleFragment {
             mAdapter.notifyParentDataSetChanged(true);
 
         }
-//
-//        List<Book> books = getBooks(bookLab);
-//        if (mAdapter == null) {
-//            mAdapter = new WantReadFragment.BookAdapter(books);
-//            mRecyclerView.setAdapter(mAdapter);
-//        } else {
-//            mAdapter.setBooks(books);
-//            mAdapter.notifyDataSetChanged();
-//        }
 
         int count = bookLab.getBooksByStatus(getStatusConstant(getString(R.string.title_want_read))).size();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(
@@ -268,6 +265,17 @@ public class WantReadFragment extends SimpleFragment {
             super.bind(book, pos);
             priority.setText(mBook.getType());
 
+            if (mBook.getLabel() != null) {
+                GradientDrawable shape = new GradientDrawable();
+                shape.setShape(GradientDrawable.RECTANGLE);
+                shape.setStroke(10, new Labels(getContext(), ValueConvector.Constants.WANT_READ).getLabelColor(
+                        mBook.getLabel()));
+                shape.setColor(getResources().getColor(R.color.bookPaperLight));
+                itemView.setBackground(shape);
+            } else {
+                itemView.setBackgroundColor(getResources().getColor(R.color.bookPaperLight));
+            }
+
         }
 
         @Override
@@ -275,56 +283,6 @@ public class WantReadFragment extends SimpleFragment {
             mCallbacks.onBookSelected(mBook);
         }
     }
-//
-//    private class BookAdapter extends RecyclerView.Adapter<Holders.BaseHolder> {
-//
-//        private List<Book> mBooks;
-//
-//        public BookAdapter(List<Book> books) {
-//            mBooks = books;
-//        }
-//
-//        @NonNull
-//        @Override
-//        public Holders.BaseHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-//            if (viewType == CATEGORY_VIEWTYPE) {
-//                return new Holders.CategoryHolder(layoutInflater, parent);
-//            } else if (viewType == Holders.DATE_VIEWTYPE) {
-//                return new Holders.DateHolder(layoutInflater, parent);
-//
-//            } else {
-//                return new WantReadFragment.BookHolder(layoutInflater, parent);
-//            }
-//        }
-//
-//        @Override
-//        public void onBindViewHolder(@NonNull Holders.BaseHolder holder, int position) {
-//            holder.bind(mBooks.get(position));
-//        }
-//
-//        @Override
-//        public int getItemViewType(int position) {
-//            switch (mBooks.get(position).getStatus()) {
-//                case BOOK_CATEGORY_TEXT:
-//                    return Holders.CATEGORY_VIEWTYPE;
-//                case Holders.BOOK_DATE_TEXT:
-//                    return Holders.DATE_VIEWTYPE;
-//                default:
-//                    return BOOK_VIEWTYPE;
-//            }
-//        }
-//
-//        @Override
-//        public int getItemCount() {
-//            return mBooks.size();
-//        }
-//
-//        public void setBooks(List<Book> books) {
-//            mBooks = books;
-//        }
-//    }
-
     public class GroupAdapter extends ExpandableRecyclerAdapter<Holders.Group, Book, Holders.GroupViewHolder, BookViewHolder> {
         private LayoutInflater mLayoutInflater;
 

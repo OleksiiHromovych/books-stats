@@ -18,9 +18,10 @@
     <color name="colorTransparentWhite">#cccccc</color>
 
     <!--    Colors for labels-->
+    <color name="transparent">#00000000</color>
+
     <color name="reread">#69f054</color>
     <color name="buyPaper">#d15411</color>
-
 
     <color name="gold">#FFD700</color>
     <color name="silver">#C0C0C0</color>
