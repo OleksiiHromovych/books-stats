@@ -237,7 +237,6 @@ public class BookFragment extends Fragment {
                         BookNowFragment.BOOK_FRAGMENT_ID,
                         WantBookFragment.BOOK_FRAGMENT_ID};
                 mCallbacks.changeFragmentByStatus(choose_id[position]);
-                updateBook();
 
             }
 

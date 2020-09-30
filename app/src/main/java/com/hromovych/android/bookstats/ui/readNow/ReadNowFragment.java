@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -116,11 +118,16 @@ public class ReadNowFragment extends SimpleFragment {
                     bookLab.updateBook(book);
                     updateUI();
 
+                    final NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                    final int id = navController.getCurrentDestination().getId();
+
                     displaySnackbar("Swipe element", "Undo", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             bookLab.updateBook(oldBook);
-                            updateUI();
+
+                            navController.navigate(id);
+
                         }
                     });
                 }
