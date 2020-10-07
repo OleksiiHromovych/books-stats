@@ -1,10 +1,12 @@
-package com.hromovych.android.bookstats;
+package com.hromovych.android.bookstats.ui.splash;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.hromovych.android.bookstats.MainActivity;
 
 public class SplashActivity extends AppCompatActivity {
     @Override
