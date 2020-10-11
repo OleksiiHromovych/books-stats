@@ -18,6 +18,7 @@
             android:name=".HelpersItems.BookActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".slider.IntroSlider" />
+        <activity android:name=".menuOption.Export.ExportDataActivity" />
 
         <activity android:name=".menuOption.Import.ImportDataActivity" />
         <activity

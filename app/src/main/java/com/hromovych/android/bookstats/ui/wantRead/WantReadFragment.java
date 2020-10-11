@@ -227,34 +227,6 @@ public class WantReadFragment extends SimpleFragment {
         return groups;
     }
 
-    private List<Book> getBooks(BookLab bookLab) {
-        if (sortByDate) {
-            List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
-                            .getString(R.string.title_want_read)),
-                    BookDBSchema.BookTable.Cols.AUTHOR);
-            return books;
-        } else {
-            List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
-                            .getString(R.string.title_want_read)),
-                    BookDBSchema.BookTable.Cols.CATEGORY + " , " +
-                            BookDBSchema.BookTable.Cols.AUTHOR);
-            List<Book> booksCategory = new ArrayList<>();
-            String lastCategory = "";
-            for (Book book : books) {
-                String category = book.getCategory();
-                if (category != null && !category.equals(lastCategory)) {
-                    lastCategory = category;
-                    Book bookCategory = new Book();
-                    bookCategory.setCategory(book.getCategory());
-                    bookCategory.setStatus(BOOK_CATEGORY_TEXT);
-                    booksCategory.add(bookCategory);
-                }
-                booksCategory.add(book);
-            }
-            return booksCategory;
-        }
-    }
-
     private class BookViewHolder extends Holders.BookHolder implements View.OnClickListener {
 
         private TextView priority;

@@ -20,13 +20,16 @@ public class ExportDataActivity extends AppCompatActivity implements View.OnClic
         return intent;
     }
 
+    private Button exportText;
+    private Button exportBD;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_export);
 
-        Button exportText = (Button) findViewById(R.id.export_as_text_btn);
-        Button exportBD = (Button) findViewById(R.id.export_as_bd_btn);
+        exportText = findViewById(R.id.export_as_text_btn);
+        exportBD = findViewById(R.id.export_as_bd_btn);
 
         exportText.setOnClickListener(this);
         exportBD.setOnClickListener(this);
@@ -40,13 +43,17 @@ public class ExportDataActivity extends AppCompatActivity implements View.OnClic
                 fragment = ClipboardFragment.newInstance();
                 break;
             case R.id.export_as_bd_btn:
-                return;
+                fragment = ToFileFragment.newInstance();
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());
         }
+        exportBD.setVisibility(View.GONE);
+        exportText.setVisibility(View.GONE);
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction()
-                .add(R.id.import_activity_container, fragment)
+                .replace(R.id.import_activity_container, fragment)
                 .commit();
+
     }
 }

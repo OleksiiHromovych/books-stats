@@ -6,14 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,16 +28,11 @@ import com.hromovych.android.bookstats.HelpersItems.BookActivity;
 import com.hromovych.android.bookstats.HelpersItems.BookLab;
 import com.hromovych.android.bookstats.HelpersItems.Callbacks;
 import com.hromovych.android.bookstats.HelpersItems.FileUtils;
-import com.hromovych.android.bookstats.database.BookBaseHelper;
 import com.hromovych.android.bookstats.database.ValueConvector;
+import com.hromovych.android.bookstats.menuOption.Export.ExportDataActivity;
 import com.hromovych.android.bookstats.menuOption.Import.ImportDataActivity;
 import com.hromovych.android.bookstats.slider.IntroSlider;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -154,26 +147,8 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
 
                 return true;
             case R.id.export_books:
-                File sd = Environment.getExternalStorageDirectory();
-                File data = Environment.getDataDirectory();
-                FileChannel source = null;
-                FileChannel destination = null;
-                String currentDBPath = "/data/" + "com.hromovych.android.bookstats" + "/databases/" +
-                        BookBaseHelper.DATABASE_NAME;
-                String backupDBPath = BookBaseHelper.DATABASE_NAME;
-                File currentDB = new File(data, currentDBPath);
-                File backupDB = new File(sd, backupDBPath);
-                try {
-                    source = new FileInputStream(currentDB).getChannel();
-                    destination = new FileOutputStream(backupDB).getChannel();
-                    destination.transferFrom(source, 0, source.size());
-                    source.close();
-                    destination.close();
-                    Toast.makeText(this, "DB Exported! " + sd.getAbsolutePath() +
-                            backupDBPath, Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                startActivity(ExportDataActivity.newIntent(this));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -87,4 +87,6 @@
     <string name="bronze">Bronze</string>
     <string name="silver">Silver</string>
     <string name="gold">Gold</string>
+
+    <string name="export_to_clipboard">%s - %s  %F</string>
 </resources>

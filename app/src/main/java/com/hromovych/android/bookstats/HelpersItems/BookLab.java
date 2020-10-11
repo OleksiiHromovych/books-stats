@@ -79,6 +79,23 @@ public class BookLab {
         }
         return books;
     }
+    public List<Book> getBooksByStatus(String[] status) {
+        List<Book> books = new ArrayList<>();
+
+        BookCursorWrapper cursor = queryBooks(
+                BookTable.Cols.STATUS + " = ?",
+                status);
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                books.add(cursor.getBook());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return books;
+    }
 
     public List<Book> getBooksByStatus(String s, String orderBy) {
         List<Book> books = new ArrayList<>();
