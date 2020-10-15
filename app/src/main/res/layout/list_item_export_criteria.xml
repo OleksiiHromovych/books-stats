@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/backgroundItem">
+
+    <TextView
+        android:id="@+id/export_criteria_item_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:gravity="center"
+        android:padding="10dp" />
+
+    <AutoCompleteTextView
+        android:id="@+id/export_criteria_item_editText"
+        android:paddingStart="10dp"
+        android:layout_width="0dp"
+        android:theme="@style/Autocomplete"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/export_criteria_item_textView" />
+</RelativeLayout>
