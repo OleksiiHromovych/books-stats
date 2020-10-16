@@ -10,7 +10,7 @@ import static com.hromovych.android.bookstats.database.BookDBSchema.BookTable;
 
 public class BookBaseHelper extends SQLiteOpenHelper {
 
-    private static final int VERSION = 4;
+    private static final int VERSION = 7;
     public static final String DATABASE_NAME = "bookBase.db";
 
     public BookBaseHelper(@Nullable Context context) {
@@ -23,11 +23,11 @@ public class BookBaseHelper extends SQLiteOpenHelper {
                 " _id integer primary key autoincrement, " +
                 BookTable.Cols.UUID + ", " +
                 BookTable.Cols.NAME + "," +
-                BookTable.Cols.START_DATE + ", " +
-                BookTable.Cols.END_DATE + ", " +
+                BookTable.Cols.START_DATE + " integer, " +
+                BookTable.Cols.END_DATE + " integer, " +
                 BookTable.Cols.AUTHOR + ", " +
                 BookTable.Cols.CATEGORY + ", " +
-                BookTable.Cols.PAGE + ", " +
+                BookTable.Cols.PAGE + " integer, " +
                 BookTable.Cols.TYPE + ", " +
                 BookTable.Cols.DESCRIPTION + ", " +
                 BookTable.Cols.LABEL + ", " +
@@ -37,17 +37,63 @@ public class BookBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < 2){
+        if (oldVersion < 2) {
 
             db.execSQL("ALTER TABLE " + BookTable.NAME + " ADD COLUMN " + BookTable.Cols.TYPE +
                     " TEXT");
         }
         if (oldVersion < 3)
             db.execSQL("ALTER TABLE " + BookTable.NAME + " ADD COLUMN " + BookTable.Cols.DESCRIPTION
-            + " TEXT");
+                    + " TEXT");
         if (oldVersion < 4)
             db.execSQL("ALTER TABLE " + BookTable.NAME + " ADD COLUMN " + BookTable.Cols.LABEL +
                     " TEXT");
+
+        if (oldVersion < 6) {
+            db.execSQL("create table templateBase (" +
+                    " _id integer primary key autoincrement, " +
+                    BookTable.Cols.UUID + ", " +
+                    BookTable.Cols.NAME + "," +
+                    BookTable.Cols.START_DATE + " integer, " +
+                    BookTable.Cols.END_DATE + " integer, " +
+                    BookTable.Cols.AUTHOR + ", " +
+                    BookTable.Cols.CATEGORY + ", " +
+                    BookTable.Cols.PAGE + " integer, " +
+                    BookTable.Cols.TYPE + ", " +
+                    BookTable.Cols.DESCRIPTION + ", " +
+                    BookTable.Cols.LABEL + ", " +
+                    BookTable.Cols.STATUS +
+                    ")");
+            db.execSQL("insert into templateBase (" +
+                    BookTable.Cols.UUID + ", " +
+                    BookTable.Cols.NAME + "," +
+                    BookTable.Cols.START_DATE + ", " +
+                    BookTable.Cols.END_DATE + ", " +
+                    BookTable.Cols.AUTHOR + ", " +
+                    BookTable.Cols.CATEGORY + ", " +
+                    BookTable.Cols.PAGE + ", " +
+                    BookTable.Cols.TYPE + ", " +
+                    BookTable.Cols.DESCRIPTION + ", " +
+                    BookTable.Cols.LABEL + ", " +
+                    BookTable.Cols.STATUS +
+                    ") select " +
+                    BookTable.Cols.UUID + ", " +
+                    BookTable.Cols.NAME + "," +
+                    BookTable.Cols.START_DATE + ", " +
+                    BookTable.Cols.END_DATE + ", " +
+                    BookTable.Cols.AUTHOR + ", " +
+                    BookTable.Cols.CATEGORY + ", " +
+                    BookTable.Cols.PAGE + ", " +
+                    BookTable.Cols.TYPE + ", " +
+                    BookTable.Cols.DESCRIPTION + ", " +
+                    BookTable.Cols.LABEL + ", " +
+                    BookTable.Cols.STATUS + "" +
+                    " from " + BookTable.NAME);
+        }
+        if (oldVersion < 7) {
+            db.execSQL("DROP TABLE " + BookTable.NAME);
+            db.execSQL("Alter table templateBase RENAME TO " + BookTable.NAME);
+        }
     }
 
 }

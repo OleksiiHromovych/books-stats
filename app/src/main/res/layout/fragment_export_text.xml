@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/backgroundApp">
 
     <LinearLayout
         android:id="@+id/linearLayout4"
@@ -64,14 +65,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
         android:background="@color/backgroundItem"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-        android:layout_marginBottom="15dp">
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3">
 
         <Button
             android:id="@+id/export_add_criteria_btn"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_margin="5dp"
             android:background="@drawable/ic_add_criteria_btn"
 
@@ -82,8 +83,8 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="Add Criteria"
             android:gravity="center_vertical|start"
+            android:text="Add Criteria"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/export_criteria_layout"
             app:layout_constraintEnd_toEndOf="parent"

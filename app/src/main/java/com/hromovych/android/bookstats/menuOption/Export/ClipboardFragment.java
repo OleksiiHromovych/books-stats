@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -30,10 +31,14 @@ import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookDBSchema;
 import com.hromovych.android.bookstats.database.ValueConvector;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 
@@ -59,7 +64,7 @@ public class ClipboardFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_export_clipboard, container, false);
+        View v = inflater.inflate(R.layout.fragment_export_text, container, false);
 
         sendDataBtn = v.findViewById(R.id.export_send_btn);
         copyDataBtn = v.findViewById(R.id.export_copy_to_clipboard_btn);
@@ -121,7 +126,7 @@ public class ClipboardFragment extends Fragment {
 
     }
 
-    private int extractYearFromDate(Date date) {
+    private int getDateFormatString(Date date) {
         return Integer.parseInt(DateFormat.format("yyyy", date).toString());
     }
 
@@ -167,27 +172,65 @@ public class ClipboardFragment extends Fragment {
     private String getBooksData() {
         StringBuilder data = new StringBuilder();
         BookLab bookLab = BookLab.get(getContext());
-        List<Book> books = new ArrayList<>();
-        for (String s : getStatusRequestString().split(" OR "))
-            books.addAll(bookLab.getBooksByStatus(s));
-        for (Book book : books)
-            data.append(bookToText(book));
+
+        for (String s : getCheckedCheckboxesTitle()) {
+            data.append(s).append("\n");
+
+            Map<String, String> whereClause = getWhereClauseArgsMap(s);
+            for (Book book : bookLab.getBooksByWhereArgsMap(whereClause))
+                data.append(bookToText(book));
+
+            data.append("\n");
+        }
+
         return data.toString();
     }
 
-    private String getStatusRequestString() {
-        StringBuilder result = new StringBuilder();
+    private Map<String, String> getWhereClauseArgsMap(String s) {
+        Map<String, String> map = getCriteriaValues();
+        Map<String, String> whereClause = new LinkedHashMap<>();
+        whereClause.put(BookDBSchema.BookTable.Cols.STATUS + " = ?",
+                ValueConvector.ToConstant.toStatusConstant(getContext(), s));
+        for (String key : map.keySet()) {
+            if (key.equals(getString(R.string.book_end_date_title))) {
+                whereClause.put(BookDBSchema.BookTable.Cols.END_DATE + " BETWEEN ?",
+                        Long.toString(getSecondFromDate(Integer.parseInt(map.get(key)), 0, 1)));
+                whereClause.put("?",
+                        Long.toString(getSecondFromDate(Integer.parseInt(map.get(key)), 11, 31)));
+            } else if (key.equals(getString(R.string.book_category_title))) {
+                whereClause.put(BookDBSchema.BookTable.Cols.CATEGORY + " = ?", map.get(key));
+            }
+        }
+        return whereClause;
+    }
+
+    private List<String> getCheckedCheckboxesTitle() {
+        List<String> checkedCheckboxesText = new ArrayList<>();
         for (CheckBox cb : new CheckBox[]{yetCheckBox, nowCheckBox, wantCheckBox})
             if (cb.isChecked()) {
-                if (result.length() > 0)
-                    result.append(" OR ");
-                result.append(ValueConvector.ToConstant.toStatusConstant(getContext(), cb.getText().toString()));
+                checkedCheckboxesText.add(cb.getText().toString());
             }
-        return result.toString();
+        return checkedCheckboxesText;
+    }
+
+    private Map<String, String> getCriteriaValues() {
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < criteriaLayout.getChildCount(); i++) {
+            View v = criteriaLayout.getChildAt(i);
+            TextView textView = v.findViewById(R.id.export_criteria_item_textView);
+            EditText editText = v.findViewById(R.id.export_criteria_item_editText);
+            map.put(textView.getText().toString(), editText.getText().toString());
+        }
+        return map;
+    }
+
+    private long getSecondFromDate(int year, int month, int day) {
+        return new GregorianCalendar(year, month, day).
+                getTimeInMillis();
     }
 
     private String bookToText(Book book) {
-        return book.getAuthor() + " - " + book.getBookName() + "  " + (book.getEndDate().getYear() + 1900) + "\n";
+        return book.getAuthor() + " - " + book.getBookName() + "  " + getDateFormatString(book.getEndDate()) + "\n";
 //        return getContext().getString(R.string.export_to_clipboard, book.getAuthor(), book.getBookName(), book.getEndDate().getYear());
     }
 }

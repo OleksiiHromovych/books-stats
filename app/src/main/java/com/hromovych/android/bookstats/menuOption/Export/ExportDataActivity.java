@@ -9,7 +9,6 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.hromovych.android.bookstats.R;
 
@@ -48,11 +47,11 @@ public class ExportDataActivity extends AppCompatActivity implements View.OnClic
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());
         }
-        exportBD.setVisibility(View.GONE);
         exportText.setVisibility(View.GONE);
-        FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction()
-                .replace(R.id.import_activity_container, fragment)
+        exportBD.setVisibility(View.GONE);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.export_activity_container, fragment)
                 .commit();
 
     }

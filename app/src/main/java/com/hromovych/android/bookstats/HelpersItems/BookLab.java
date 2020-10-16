@@ -12,6 +12,7 @@ import com.hromovych.android.bookstats.database.BookDBSchema.BookTable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -79,12 +80,17 @@ public class BookLab {
         }
         return books;
     }
-    public List<Book> getBooksByStatus(String[] status) {
-        List<Book> books = new ArrayList<>();
 
+    public List<Book> getBooksByWhereArgsMap(Map<String, String> map) {
+        List<Book> books = new ArrayList<>();
+        StringBuilder whereClause = new StringBuilder();
+        for (String key : map.keySet()) {
+            whereClause.append(key).append(" AND ");
+        }
+        whereClause.delete(whereClause.length() - 5, whereClause.length());
         BookCursorWrapper cursor = queryBooks(
-                BookTable.Cols.STATUS + " = ?",
-                status);
+                whereClause.toString(),
+                (String[]) map.values().toArray(new String[0]));
         try {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -141,7 +147,8 @@ public class BookLab {
                 new String[]{uuidString});
     }
 
-    private BookCursorWrapper queryBooks(String whereClause, String[] whereArgs) {
+    private BookCursorWrapper
+    queryBooks(String whereClause, String[] whereArgs) {
         Cursor cursor = mDatabase.query(
                 BookTable.NAME,
                 null,
@@ -202,7 +209,7 @@ public class BookLab {
 
     }
 
-    public void extendFromBase(SQLiteDatabase database){
+    public void extendFromBase(SQLiteDatabase database) {
         BookCursorWrapper cursor = new BookCursorWrapper(database.query(
                 BookTable.NAME,
                 null,
