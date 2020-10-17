@@ -42,7 +42,9 @@ import java.util.Map;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 
-public class ClipboardFragment extends Fragment {
+public class ToTextFragment extends Fragment {
+
+    public static final String BUNDLE_FIELDS_LIST_KEY = "bundle fields list key";
 
     private ImageButton sendDataBtn;
     private ImageButton copyDataBtn;
@@ -51,20 +53,41 @@ public class ClipboardFragment extends Fragment {
     private CheckBox nowCheckBox;
     private CheckBox wantCheckBox;
 
-    private Button addCriteriaButton;
     private LinearLayout criteriaLayout;
 
+    public TextView fieldListTextView;
+    private Button fieldChangeButton;
+
     private List<String> popupMenuElements;
+    private ArrayList<String> fieldsList;
 
-    public static ClipboardFragment newInstance() {
+    public static ToTextFragment newInstance() {
 
-        return new ClipboardFragment();
+        return new ToTextFragment();
+    }
+
+    public static ToTextFragment newInstance(ArrayList<String> strings) {
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(BUNDLE_FIELDS_LIST_KEY, strings);
+        ToTextFragment fragment = new ToTextFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_export_text, container, false);
+
+        if (getArguments() != null)
+            fieldsList = getArguments().getStringArrayList(BUNDLE_FIELDS_LIST_KEY);
+        if (fieldsList == null)
+            fieldsList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.export_fields_list)).subList(0, 4));
 
         sendDataBtn = v.findViewById(R.id.export_send_btn);
         copyDataBtn = v.findViewById(R.id.export_copy_to_clipboard_btn);
@@ -77,12 +100,27 @@ public class ClipboardFragment extends Fragment {
         wantCheckBox = v.findViewById(R.id.want_checkbox);
 
         criteriaLayout = v.findViewById(R.id.export_criteria_layout);
-        addCriteriaButton = v.findViewById(R.id.export_add_criteria_btn);
+        Button addCriteriaButton = v.findViewById(R.id.export_add_criteria_btn);
 
         addCriteriaButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPopupMenu(v);
+            }
+        });
+
+        fieldListTextView = v.findViewById(R.id.exported_fields_textView);
+        fieldListTextView.setText(fieldsList.toString());
+        fieldChangeButton = v.findViewById(R.id.export_fields_change_btn);
+
+        fieldChangeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.export_activity_container,
+                                ExportedFieldsFragment.newInstance(fieldsList))
+                        .commit();
             }
         });
 

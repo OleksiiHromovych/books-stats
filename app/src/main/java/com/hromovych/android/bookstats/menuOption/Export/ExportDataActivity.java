@@ -39,7 +39,7 @@ public class ExportDataActivity extends AppCompatActivity implements View.OnClic
         Fragment fragment;
         switch (v.getId()){
             case R.id.export_as_text_btn:
-                fragment = ClipboardFragment.newInstance();
+                fragment = ToTextFragment.newInstance();
                 break;
             case R.id.export_as_bd_btn:
                 fragment = ToFileFragment.newInstance();

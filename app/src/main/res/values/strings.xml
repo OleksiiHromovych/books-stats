@@ -13,6 +13,7 @@
     <string name="book_category_title">Category</string>
     <string name="book_category_hint">Enter book category</string>
     <string name="book_status_title">Status:</string>
+    <string name="book_label_title">Label</string>
     <string name="delete_book">delete</string>
     <string name="book_start_date_title">Start date</string>
 
@@ -89,8 +90,19 @@
     <string name="gold">Gold</string>
 
     <string name="export_to_clipboard">%s - %s  %F</string>
+
     <string-array name="export_criteria_elements">
         <item>@string/book_category_title</item>
         <item>@string/book_end_date_title</item>
+    </string-array>
+
+    <string-array name="export_fields_list">
+        <item>@string/book_name_title</item>
+        <item>@string/book_author_title</item>
+        <item>@string/book_end_date_title</item>
+        <item>@string/book_pages_title</item>
+        <item>@string/book_category_title</item>
+        <item>@string/book_description_title</item>
+        <item>@string/book_label_title</item>
     </string-array>
 </resources>

@@ -60,7 +60,6 @@ public class ReadNowFragment extends SimpleFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
-        updateUI();
 
         showDate = getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
                 Context.MODE_PRIVATE).getBoolean(MainActivity.SHOW_DATE_PREFERENCES, true);
