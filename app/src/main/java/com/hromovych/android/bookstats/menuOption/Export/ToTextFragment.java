@@ -2,6 +2,7 @@ package com.hromovych.android.bookstats.menuOption.Export;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.format.DateFormat;
@@ -192,6 +193,7 @@ public class ToTextFragment extends Fragment {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.export_send_btn:
+                    sendByIntent();
                     break;
                 case R.id.export_copy_to_clipboard_btn:
                     copyToClipboard();
@@ -199,6 +201,15 @@ public class ToTextFragment extends Fragment {
             }
         }
     };
+
+    private void sendByIntent() {
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_TEXT, getBooksData());
+        i.putExtra(Intent.EXTRA_SUBJECT,
+                "Exported books data");
+        startActivity(i);
+    }
 
 
     private void copyToClipboard() {
