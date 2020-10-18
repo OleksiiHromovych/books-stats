@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,8 @@ import com.hromovych.android.bookstats.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ExportedFieldsFragment extends Fragment {
@@ -27,6 +30,8 @@ public class ExportedFieldsFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private FieldAdapter mAdapter;
     private List<String> fields;
+    private ArrayList<String> activeFields;
+    private LinkedHashMap<String, Boolean> fieldActive;
 
     public static ExportedFieldsFragment newInstance(ArrayList<String> strings) {
         Bundle bundle = new Bundle();
@@ -39,14 +44,26 @@ public class ExportedFieldsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_read_yet, container, false);
+        View view = inflater.inflate(R.layout.fragment_export_text_change_fields, container, false);
 
-        ArrayList<String> activeFields = getArguments().getStringArrayList(BUNDLE_FIELDS_LIST_KEY);
+        activeFields = getArguments().getStringArrayList(BUNDLE_FIELDS_LIST_KEY);
 
-        mRecyclerView = view.findViewById(R.id.read_yet_recycler_view);
+        mRecyclerView = view.findViewById(R.id.exported_fields_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        Button cancelButton = view.findViewById(R.id.exported_fields_cancel_btn);
+        cancelButton.setOnClickListener(buttonOnClickListener);
+        Button okButton = view.findViewById(R.id.exported_fields_ok_btn);
+        okButton.setOnClickListener(buttonOnClickListener);
+
         new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
         fields = Arrays.asList(getResources().getStringArray(R.array.export_fields_list));
+        fieldActive = new LinkedHashMap<>();
+        for (String s : activeFields)
+            fieldActive.put(s, true);
+        for (String s : fields)
+            if (!fieldActive.containsKey(s))
+                fieldActive.put(s, false);
         updateUI();
         return view;
     }
@@ -57,12 +74,12 @@ public class ExportedFieldsFragment extends Fragment {
                 public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 
-
                 }
 
                 @Override
                 public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                    return false;
+                    mAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                    return true;
                 }
 
                 @Override
@@ -73,19 +90,53 @@ public class ExportedFieldsFragment extends Fragment {
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 }
+
+                @Override
+                public boolean isItemViewSwipeEnabled() {
+                    return false;
+                }
             };
+
+    private View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Fragment fragment = null;
+
+            if (v.getId() == R.id.exported_fields_cancel_btn) {
+
+                fragment = ToTextFragment.newInstance(activeFields);
+
+            } else if (v.getId() == R.id.exported_fields_ok_btn) {
+
+                ArrayList<String> fields = new ArrayList<>();
+                for (String key : mAdapter.getFields()) {
+                    if (fieldActive.get(key))
+                        fields.add(key);
+
+                }
+                fragment = ToTextFragment.newInstance(fields);
+            }
+            if (fragment != null)
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.export_activity_container,
+                                fragment)
+                        .commit();
+        }
+    };
 
     public void updateUI() {
 
         if (mAdapter == null) {
-            mAdapter = new FieldAdapter(fields);
+            mAdapter = new FieldAdapter(new ArrayList<String>(fieldActive.keySet()));
             mRecyclerView.setAdapter(mAdapter);
         } else {
-            mAdapter.setFields(fields);
+            mAdapter.setFields(new ArrayList<String>(fieldActive.keySet()));
             mAdapter.notifyDataSetChanged();
         }
 
     }
+
 
     private class FieldHolder extends Holders.BookHolder
             implements View.OnClickListener {
@@ -93,21 +144,30 @@ public class ExportedFieldsFragment extends Fragment {
         private TextView fieldView;
 
         public FieldHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(android.R.layout.simple_list_item_1, parent, false));
-
-            fieldView = itemView.findViewById(android.R.id.text1);
-            fieldView.setBackgroundColor(getResources().getColor(R.color.backgroundFont));
-            fieldView.setTextColor(getResources().getColor(R.color.activeIcon));
-            fieldView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            fieldView.setPadding(20, 15, 20, 0);
+            super(inflater.inflate(R.layout.list_item_export_change_field, parent, false));
+            fieldView = itemView.findViewById(R.id.exported_fields_item_textView);
         }
 
         public void bind(String fieldText) {
             fieldView.setText(fieldText);
+            customFieldView(fieldActive.get(fieldText));
         }
 
         @Override
         public void onClick(View v) {
+            boolean isActive = !fieldActive.get(fieldView.getText().toString());
+            fieldActive.put(fieldView.getText().toString(), isActive);
+            customFieldView(isActive);
+        }
+
+        private void customFieldView(Boolean isActive) {
+            if (isActive) {
+                fieldView.setTextColor(getResources().getColor(R.color.activeIcon));
+                fieldView.setBackgroundColor(getResources().getColor(R.color.backgroundFont));
+            } else {
+                fieldView.setTextColor(getResources().getColor(R.color.backgroundFont));
+                fieldView.setBackgroundColor(getResources().getColor(R.color.backgroundItem));
+            }
         }
     }
 
@@ -142,6 +202,20 @@ public class ExportedFieldsFragment extends Fragment {
 
         public void setFields(List<String> fields) {
             this.fields = fields;
+        }
+
+        public boolean onItemMove(int fromPosition, int toPosition) {
+            if (fromPosition < toPosition) {
+                for (int i = fromPosition; i < toPosition; i++) {
+                    Collections.swap(fields, i, i + 1);
+                }
+            } else {
+                for (int i = fromPosition; i > toPosition; i--) {
+                    Collections.swap(fields, i, i - 1);
+                }
+            }
+            notifyItemMoved(fromPosition, toPosition);
+            return true;
         }
     }
 }

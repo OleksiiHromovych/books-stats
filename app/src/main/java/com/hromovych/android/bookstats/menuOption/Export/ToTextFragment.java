@@ -87,7 +87,7 @@ public class ToTextFragment extends Fragment {
         if (getArguments() != null)
             fieldsList = getArguments().getStringArrayList(BUNDLE_FIELDS_LIST_KEY);
         if (fieldsList == null)
-            fieldsList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.export_fields_list)).subList(0, 4));
+            fieldsList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.export_fields_list)).subList(0, 3));
 
         sendDataBtn = v.findViewById(R.id.export_send_btn);
         copyDataBtn = v.findViewById(R.id.export_copy_to_clipboard_btn);
@@ -110,7 +110,7 @@ public class ToTextFragment extends Fragment {
         });
 
         fieldListTextView = v.findViewById(R.id.exported_fields_textView);
-        fieldListTextView.setText(fieldsList.toString());
+        fieldListTextView.setText(join(" - ", fieldsList));
         fieldChangeButton = v.findViewById(R.id.export_fields_change_btn);
 
         fieldChangeButton.setOnClickListener(new View.OnClickListener() {
@@ -271,4 +271,15 @@ public class ToTextFragment extends Fragment {
         return book.getAuthor() + " - " + book.getBookName() + "  " + getDateFormatString(book.getEndDate()) + "\n";
 //        return getContext().getString(R.string.export_to_clipboard, book.getAuthor(), book.getBookName(), book.getEndDate().getYear());
     }
+
+    public String join(String joinText, Iterable<String> iterable) {
+        StringBuilder result = new StringBuilder();
+        for (String s : iterable) {
+            result.append(s).append(joinText);
+        }
+        if (result.length() > 0)
+            result.delete(result.length() - joinText.length(), result.length());
+        return result.toString();
+    }
+
 }
