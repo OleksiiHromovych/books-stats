@@ -18,12 +18,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.hromovych.android.bookstats.HelpersItems.Book;
@@ -141,12 +141,19 @@ public class ToTextFragment extends Fragment {
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                String itemName = item.getTitle().toString();
+                final String itemName = item.getTitle().toString();
+                View.OnClickListener deleteFromLayoutOnClickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        criteriaLayout.removeView((View) v.getParent());
+                        popupMenuElements.add(itemName);
+                    }
+                };
                 if (itemName.equals(getString(R.string.book_end_date_title))) {
 
                     criteriaLayout.addView(createCriteriaView(item.getTitle().toString(),
                             "Enter Date", InputType.TYPE_CLASS_NUMBER,
-                            null));
+                            null, deleteFromLayoutOnClickListener));
                 } else if (itemName.equals(getString(R.string.book_category_title))) {
                     List<String> items = BookLab.get(getActivity())
                             .getColumnItems(BookDBSchema.BookTable.Cols.CATEGORY);
@@ -155,7 +162,8 @@ public class ToTextFragment extends Fragment {
                             getString(R.string.book_category_hint),
                             InputType.TYPE_TEXT_FLAG_CAP_SENTENCES,
                             new ArrayAdapter<>(getActivity(),
-                                    android.R.layout.simple_dropdown_item_1line, items)));
+                                    android.R.layout.simple_dropdown_item_1line, items),
+                            deleteFromLayoutOnClickListener));
                 }
                 popupMenuElements.remove(itemName);
 
@@ -171,9 +179,9 @@ public class ToTextFragment extends Fragment {
     }
 
     private View createCriteriaView(String title, String hint, Integer inputType,
-                                    ArrayAdapter<String> arrayAdapter) {
-        RelativeLayout layout =
-                (RelativeLayout) getLayoutInflater().inflate(R.layout.list_item_export_criteria,
+                                    ArrayAdapter<String> arrayAdapter, View.OnClickListener deleteFromLayoutOnClickListener) {
+        final ConstraintLayout layout =
+                (ConstraintLayout) getLayoutInflater().inflate(R.layout.list_item_export_criteria,
                         criteriaLayout, false);
 
         TextView view = layout.findViewById(R.id.export_criteria_item_textView);
@@ -183,6 +191,9 @@ public class ToTextFragment extends Fragment {
         autoCompleteTextView.setInputType(inputType != null ? inputType : InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         if (arrayAdapter != null)
             autoCompleteTextView.setAdapter(arrayAdapter);
+
+        ImageButton deleteButton = layout.findViewById(R.id.export_criteria_delete_btn);
+        deleteButton.setOnClickListener(deleteFromLayoutOnClickListener);
 
         return layout;
     }
