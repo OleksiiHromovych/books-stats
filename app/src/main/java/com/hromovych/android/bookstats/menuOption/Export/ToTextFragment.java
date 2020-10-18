@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 
 import com.hromovych.android.bookstats.HelpersItems.Book;
 import com.hromovych.android.bookstats.HelpersItems.BookLab;
+import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookDBSchema;
 import com.hromovych.android.bookstats.database.ValueConvector;
@@ -216,7 +217,7 @@ public class ToTextFragment extends Fragment {
 
             Map<String, String> whereClause = getWhereClauseArgsMap(s);
             for (Book book : bookLab.getBooksByWhereArgsMap(whereClause))
-                data.append(bookToText(book));
+                data.append(bookToText(book, " - "));
 
             data.append("\n");
         }
@@ -267,9 +268,61 @@ public class ToTextFragment extends Fragment {
                 getTimeInMillis();
     }
 
-    private String bookToText(Book book) {
-        return book.getAuthor() + " - " + book.getBookName() + "  " + getDateFormatString(book.getEndDate()) + "\n";
-//        return getContext().getString(R.string.export_to_clipboard, book.getAuthor(), book.getBookName(), book.getEndDate().getYear());
+    private String bookToText(Book book, String joinText) {
+        StringBuilder result = new StringBuilder();
+        for (String s : fieldsList) {
+            result.append(getFieldValueFromBook(s, book)).append(joinText);
+        }
+        result.delete(result.length() - joinText.length(), result.length()).append("\n");
+        return result.toString();
+    }
+
+    private String getFieldValueFromBook(String field, Book book) {
+        if (field.equals(getString(R.string.book_name_title))) {
+            String value = book.getBookName();
+            if (value == null || value.isEmpty())
+                value = "Unknown";
+            return value;
+        } else if (field.equals(getString(R.string.book_author_title))) {
+            String value = book.getAuthor();
+            if (value == null || value.isEmpty())
+                value = "Unknown";
+            return value;
+        } else if (field.equals(getString(R.string.book_end_date_title))) {
+            Date date = book.getEndDate();
+            String value;
+            if (date.equals(DateHelper.unknownDate))
+                value = "Unknown Date";
+            else if (date.equals(DateHelper.undefinedDate))
+                value = "Undefined Date";
+            else
+                value = Integer.toString(getDateFormatString(date));
+            return value;
+
+        } else if (field.equals(getString(R.string.book_pages_title))) {
+            return Integer.toString(book.getPages());
+
+        } else if (field.equals(getString(R.string.book_category_title))) {
+            String value = book.getCategory();
+            if (value == null || value.isEmpty())
+                value = "Without category";
+            return value;
+
+        } else if (field.equals(getString(R.string.book_description_title))) {
+            String value = book.getDescription();
+            if (value == null || value.isEmpty())
+                value = "Empty description";
+            return value;
+
+        } else if (field.equals(getString(R.string.book_label_title))) {
+            String value = book.getLabel();
+            if (value == null || value.isEmpty())
+                value = "No label";
+            return value;
+        } else {
+            Toast.makeText(getContext(), "Unknown field " + field, Toast.LENGTH_SHORT).show();
+            return "Unknown field " + field;
+        }
     }
 
     public String join(String joinText, Iterable<String> iterable) {
