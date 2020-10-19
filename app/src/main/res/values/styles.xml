@@ -15,6 +15,7 @@
         <item name="autoCompleteTextViewStyle">@style/InputFieldEditText</item>
         <item name="spinnerStyle">@style/SpinnerCustomStyle</item>
         <item name="buttonStyle">@style/ButtonStyle</item>
+        <item name="alertDialogTheme">@style/AlertDialogCustom</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
@@ -66,5 +67,14 @@
         <item name="android:textColor">@color/bookPaper</item>
     </style>
 
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:textColorPrimary">@color/activeIcon</item>
+        <item name="android:windowBackground">@color/backgroundItem</item>
+        <item name="buttonBarPositiveButtonStyle">@style/AlertDialogPositiveButton</item>
+    </style>
+
+    <style name="AlertDialogPositiveButton" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/bookPaperLight</item>
+    </style>
 
 </resources>

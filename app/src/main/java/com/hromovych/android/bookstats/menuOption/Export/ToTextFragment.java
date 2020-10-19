@@ -1,7 +1,9 @@
 package com.hromovych.android.bookstats.menuOption.Export;
 
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -14,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -35,12 +36,15 @@ import com.hromovych.android.bookstats.database.ValueConvector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 
@@ -57,8 +61,9 @@ public class ToTextFragment extends Fragment {
 
     private LinearLayout criteriaLayout;
 
-    public TextView fieldListTextView;
+    private TextView fieldListTextView;
     private Button fieldChangeButton;
+    private TextView checkboxesLabel;
 
     private List<String> popupMenuElements;
     private ArrayList<String> fieldsList;
@@ -97,9 +102,13 @@ public class ToTextFragment extends Fragment {
         sendDataBtn.setOnClickListener(exportDataOnCLickListener);
         copyDataBtn.setOnClickListener(exportDataOnCLickListener);
 
+        checkboxesLabel = v.findViewById(R.id.export_text_checkboxes_label);
         yetCheckBox = v.findViewById(R.id.yet_checkbox);
         nowCheckBox = v.findViewById(R.id.now_checkbox);
         wantCheckBox = v.findViewById(R.id.want_checkbox);
+        yetCheckBox.setOnClickListener(checkboxesListener);
+        nowCheckBox.setOnClickListener(checkboxesListener);
+        yetCheckBox.setOnClickListener(checkboxesListener);
 
         criteriaLayout = v.findViewById(R.id.export_criteria_layout);
         Button addCriteriaButton = v.findViewById(R.id.export_add_criteria_btn);
@@ -122,6 +131,7 @@ public class ToTextFragment extends Fragment {
                         .beginTransaction()
                         .replace(R.id.export_activity_container,
                                 ExportedFieldsFragment.newInstance(fieldsList))
+                        .addToBackStack(null)
                         .commit();
             }
         });
@@ -150,10 +160,14 @@ public class ToTextFragment extends Fragment {
                     }
                 };
                 if (itemName.equals(getString(R.string.book_end_date_title))) {
+                    List<Integer> items = getYearListFromMilliseconds(BookLab.get(getActivity())
+                            .getColumnItems(BookDBSchema.BookTable.Cols.END_DATE));
 
                     criteriaLayout.addView(createCriteriaView(item.getTitle().toString(),
                             "Enter Date", InputType.TYPE_CLASS_NUMBER,
-                            null, deleteFromLayoutOnClickListener));
+                            new ArrayAdapter<>(getActivity(),
+                                    android.R.layout.simple_dropdown_item_1line, items),
+                            deleteFromLayoutOnClickListener));
                 } else if (itemName.equals(getString(R.string.book_category_title))) {
                     List<String> items = BookLab.get(getActivity())
                             .getColumnItems(BookDBSchema.BookTable.Cols.CATEGORY);
@@ -174,12 +188,25 @@ public class ToTextFragment extends Fragment {
 
     }
 
+    private List<Integer> getYearListFromMilliseconds(List<String> list) {
+        Set<Integer> items = new HashSet<>();
+        for (String s : list) {
+            Date date = new Date(Long.parseLong(s));
+            if (date.equals(DateHelper.undefinedDate) || date.equals(DateHelper.unknownDate))
+                continue;
+            items.add(getDateFormatString(date));
+        }
+        List<Integer> integerList = new ArrayList<>(items);
+        Collections.sort(integerList);
+        return integerList;
+    }
+
     private int getDateFormatString(Date date) {
         return Integer.parseInt(DateFormat.format("yyyy", date).toString());
     }
 
-    private View createCriteriaView(String title, String hint, Integer inputType,
-                                    ArrayAdapter<String> arrayAdapter, View.OnClickListener deleteFromLayoutOnClickListener) {
+    private <T> View createCriteriaView(String title, String hint, Integer inputType,
+                                        ArrayAdapter<T> arrayAdapter, View.OnClickListener deleteFromLayoutOnClickListener) {
         final ConstraintLayout layout =
                 (ConstraintLayout) getLayoutInflater().inflate(R.layout.list_item_export_criteria,
                         criteriaLayout, false);
@@ -198,7 +225,7 @@ public class ToTextFragment extends Fragment {
         return layout;
     }
 
-    View.OnClickListener exportDataOnCLickListener = new View.OnClickListener() {
+    private View.OnClickListener exportDataOnCLickListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
@@ -212,11 +239,22 @@ public class ToTextFragment extends Fragment {
             }
         }
     };
+    private View.OnClickListener checkboxesListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            checkboxesLabel.setError(null);
+        }
+    };
 
     private void sendByIntent() {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_TEXT, getBooksData());
+        try {
+            i.putExtra(Intent.EXTRA_TEXT, getBooksData());
+        } catch (EmptyFieldException e) {
+            showAlertMessage(e.getMessage(), e.getDescription());
+            return;
+        }
         i.putExtra(Intent.EXTRA_SUBJECT,
                 "Exported books data");
         startActivity(i);
@@ -225,12 +263,31 @@ public class ToTextFragment extends Fragment {
 
     private void copyToClipboard() {
         ClipboardManager clipboardManager = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
-        ClipData clipData = ClipData.newPlainText("Export books", getBooksData());
+        ClipData clipData = null;
+        try {
+            clipData = ClipData.newPlainText("Export books", getBooksData());
+        } catch (EmptyFieldException e) {
+            showAlertMessage(e.getMessage(), e.getDescription());
+            return;
+        }
         clipboardManager.setPrimaryClip(clipData);
         Toast.makeText(getContext(), "Copy to clipboard", Toast.LENGTH_SHORT).show();
     }
 
-    private String getBooksData() {
+    public void showAlertMessage(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        builder.show();
+    }
+
+    private String getBooksData() throws EmptyFieldException {
         StringBuilder data = new StringBuilder();
         BookLab bookLab = BookLab.get(getContext());
 
@@ -247,7 +304,7 @@ public class ToTextFragment extends Fragment {
         return data.toString();
     }
 
-    private Map<String, String> getWhereClauseArgsMap(String s) {
+    private Map<String, String> getWhereClauseArgsMap(String s) throws EmptyFieldException {
         Map<String, String> map = getCriteriaValues();
         Map<String, String> whereClause = new LinkedHashMap<>();
         whereClause.put(BookDBSchema.BookTable.Cols.STATUS + " = ?",
@@ -265,22 +322,43 @@ public class ToTextFragment extends Fragment {
         return whereClause;
     }
 
-    private List<String> getCheckedCheckboxesTitle() {
+    private List<String> getCheckedCheckboxesTitle() throws EmptyFieldException {
         List<String> checkedCheckboxesText = new ArrayList<>();
         for (CheckBox cb : new CheckBox[]{yetCheckBox, nowCheckBox, wantCheckBox})
             if (cb.isChecked()) {
                 checkedCheckboxesText.add(cb.getText().toString());
             }
+        if (checkedCheckboxesText.isEmpty()) {
+            checkboxesLabel.setError("Choice although one");
+            throw new EmptyFieldException("Value Exception", "All checkboxes are unchecked");
+        }
         return checkedCheckboxesText;
     }
 
-    private Map<String, String> getCriteriaValues() {
+    private Map<String, String> getCriteriaValues() throws EmptyFieldException {
         Map<String, String> map = new HashMap<>();
         for (int i = 0; i < criteriaLayout.getChildCount(); i++) {
             View v = criteriaLayout.getChildAt(i);
             TextView textView = v.findViewById(R.id.export_criteria_item_textView);
-            EditText editText = v.findViewById(R.id.export_criteria_item_editText);
-            map.put(textView.getText().toString(), editText.getText().toString());
+            AutoCompleteTextView editText = v.findViewById(R.id.export_criteria_item_editText);
+            String criteriaText = editText.getText().toString();
+            String criteriaTitle = textView.getText().toString();
+            if (criteriaText.isEmpty()) {
+                editText.setError("Empty field");
+                throw new EmptyFieldException("Value Exception", criteriaTitle + " field are empty");
+            }
+            boolean presentInData = false;
+            for (int j = 0; j < editText.getAdapter().getCount(); j++)
+                if (editText.getAdapter().getItem(j).equals(criteriaText)) {
+                    presentInData = true;
+                    break;
+                }
+            if (!presentInData) {
+                editText.setError("Incorrect data");
+                throw new EmptyFieldException("Value Exception", "Value such -  " + criteriaText + " is not in books data");
+            }
+
+            map.put(criteriaTitle, criteriaText);
         }
         return map;
     }
@@ -355,6 +433,24 @@ public class ToTextFragment extends Fragment {
         if (result.length() > 0)
             result.delete(result.length() - joinText.length(), result.length());
         return result.toString();
+    }
+
+    public static class EmptyFieldException extends Exception {
+
+        private String description;
+
+        public EmptyFieldException(String message) {
+            super(message);
+        }
+
+        public EmptyFieldException(String message, String description) {
+            super(message);
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
     }
 
 }

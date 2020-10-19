@@ -90,7 +90,7 @@ public class BookLab {
         whereClause.delete(whereClause.length() - 5, whereClause.length());
         BookCursorWrapper cursor = queryBooks(
                 whereClause.toString(),
-                (String[]) map.values().toArray(new String[0]));
+                map.values().toArray(new String[0]));
         try {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -180,12 +180,12 @@ public class BookLab {
                 new String[]{uuidString});
     }
 
-    public List<String> getColumnItems(String name) {
+    public List<String> getColumnItems(String column) {
         List<String> columnItems = new ArrayList<>();
 
         Cursor cursor = mDatabase.query(
                 BookTable.NAME,
-                new String[]{name},
+                new String[]{column},
                 null,
                 null,
                 null,

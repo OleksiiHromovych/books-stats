@@ -1,5 +1,7 @@
 package com.hromovych.android.bookstats.menuOption.Export;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -103,8 +105,7 @@ public class ExportedFieldsFragment extends Fragment {
             Fragment fragment = null;
 
             if (v.getId() == R.id.exported_fields_cancel_btn) {
-
-                fragment = ToTextFragment.newInstance(activeFields);
+                getActivity().getSupportFragmentManager().popBackStack();
 
             } else if (v.getId() == R.id.exported_fields_ok_btn) {
 
@@ -114,6 +115,11 @@ public class ExportedFieldsFragment extends Fragment {
                         fields.add(key);
 
                 }
+                if (fields.isEmpty()) {
+                    showAlertMessage("Must be active at least one field!");
+                    return;
+                }
+
                 fragment = ToTextFragment.newInstance(fields);
             }
             if (fragment != null)
@@ -124,6 +130,21 @@ public class ExportedFieldsFragment extends Fragment {
                         .commit();
         }
     };
+
+    public void showAlertMessage(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        builder.setTitle(message);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        builder.show();
+    }
+
 
     public void updateUI() {
 
