@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -57,6 +58,14 @@ public class ExportedFieldsFragment extends Fragment {
         cancelButton.setOnClickListener(buttonOnClickListener);
         Button okButton = view.findViewById(R.id.exported_fields_ok_btn);
         okButton.setOnClickListener(buttonOnClickListener);
+
+        ImageButton helpButton = view.findViewById(R.id.exported_fields_help_button);
+        helpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAlertMessage(R.string.exportCriteriaHelpTitle, R.string.exportedFieldsHelpText);
+            }
+        });
 
         new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
         fields = Arrays.asList(getResources().getStringArray(R.array.export_fields_list));
@@ -116,7 +125,8 @@ public class ExportedFieldsFragment extends Fragment {
 
                 }
                 if (fields.isEmpty()) {
-                    showAlertMessage("Must be active at least one field!");
+                    showAlertMessage(R.string.valueExceptionTitle,
+                            R.string.exportedFieldsEmptyFieldsException);
                     return;
                 }
 
@@ -131,12 +141,12 @@ public class ExportedFieldsFragment extends Fragment {
         }
     };
 
-    public void showAlertMessage(String message) {
+    public void showAlertMessage(int titleId, int messageId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-        builder.setTitle(message);
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setTitle(titleId);
+        builder.setMessage(messageId);
+        builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }

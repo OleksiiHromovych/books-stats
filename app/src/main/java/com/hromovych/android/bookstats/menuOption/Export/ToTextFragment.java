@@ -136,6 +136,15 @@ public class ToTextFragment extends Fragment {
             }
         });
 
+        ImageButton criteriaHelpButton = v.findViewById(R.id.export_text_criteria_help_button);
+        criteriaHelpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAlertMessage(getString(R.string.exportCriteriaHelpTitle),
+                        getString(R.string.exportCriteriaHelpText));
+            }
+        });
+
         popupMenuElements = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.export_criteria_elements)));
 
 
@@ -349,7 +358,7 @@ public class ToTextFragment extends Fragment {
             }
             boolean presentInData = false;
             for (int j = 0; j < editText.getAdapter().getCount(); j++)
-                if (editText.getAdapter().getItem(j).equals(criteriaText)) {
+                if (editText.getAdapter().getItem(j).toString().equals(criteriaText)) {
                     presentInData = true;
                     break;
                 }

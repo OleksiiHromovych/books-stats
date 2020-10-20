@@ -89,12 +89,30 @@
     <string name="silver">Silver</string>
     <string name="gold">Gold</string>
 
-    <string name="export_to_clipboard">%s - %s  %F</string>
+    <string name="button_ok">OK</string>
+
+    <string name="valueExceptionTitle">Value Exception</string>
+    <string name="exportedFieldsEmptyFieldsException">Must be active at least one field!</string>
+    <string name="exportCriteriaHelpTitle">Quick Look</string>
+    <string name="exportCriteriaHelpText">Use this if you want to export your books data with
+        particular fields.\n\nFor example: Choice Date and write 2020 to get only books
+        that have end date - 2020 </string>
+
+    <string name="exportedFieldsHelpText">
+        Press on item to activate/deactivate;\n
+        Long press and move up/down to change item position;\n
+        \n
+        Will be exported only active fields;\n
+        Fields will be exported depending on the order of the elements. From top to bottom;\n
+        At least one field must be active.
+
+    </string>
 
     <string-array name="export_criteria_elements">
         <item>@string/book_category_title</item>
         <item>@string/book_end_date_title</item>
     </string-array>
+
 
     <string-array name="export_fields_list">
         <item>@string/book_name_title</item>

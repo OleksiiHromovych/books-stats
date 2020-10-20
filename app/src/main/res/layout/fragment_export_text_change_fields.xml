@@ -28,11 +28,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:clickable="true"
             android:background="@color/backgroundFont"
+            android:clickable="true"
+            android:focusable="true"
             android:text="Cancel"
-            android:textColor="@color/activeIcon"
-            android:focusable="true" />
+            android:textColor="@color/activeIcon" />
+
+        <ImageButton
+            android:id="@+id/exported_fields_help_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@color/transparent"
+            android:src="@drawable/ic_help_outline" />
 
         <Button
             android:id="@+id/exported_fields_ok_btn"
