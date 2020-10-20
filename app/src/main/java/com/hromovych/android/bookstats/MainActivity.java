@@ -25,9 +25,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hromovych.android.bookstats.HelpersItems.Book;
 import com.hromovych.android.bookstats.HelpersItems.BookActivity;
-import com.hromovych.android.bookstats.HelpersItems.BookLab;
 import com.hromovych.android.bookstats.HelpersItems.Callbacks;
 import com.hromovych.android.bookstats.HelpersItems.FileUtils;
+import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
 import com.hromovych.android.bookstats.menuOption.Export.ExportDataActivity;
 import com.hromovych.android.bookstats.menuOption.Import.ImportDataActivity;
@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
     public static final int REQUEST_CODE_IMPORT = 2;
     public static final String GET_SHARED_PREFERENCES = "com.hromovych.android.bookstats";
     public static final String SHOW_DATE_PREFERENCES = "date_format";
+    private static final String FIRST_RUN_PREFERENCES = "first_run";
     public static final String SORT_BY_DATE = "sort_format";
     private BottomNavigationView navView;
     private SharedPreferences mSharedPreferences;
@@ -53,9 +54,9 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
         setContentView(R.layout.activity_main);
         mSharedPreferences = getSharedPreferences(GET_SHARED_PREFERENCES,
                 MODE_PRIVATE);
-        if (mSharedPreferences.getBoolean("first_run", true)) {
+        if (mSharedPreferences.getBoolean(FIRST_RUN_PREFERENCES, true)) {
             startActivity(new Intent(this, IntroSlider.class));
-            mSharedPreferences.edit().putBoolean("first_run", false).apply();
+            mSharedPreferences.edit().putBoolean(FIRST_RUN_PREFERENCES, false).apply();
         }
 
         if (getIntent().getData() != null) {
@@ -102,10 +103,10 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
             case R.id.delete_book:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-                builder.setTitle("What book category you want to delete?");
+                builder.setTitle(R.string.delete_books_alert_dialog_title);
                 List<String> list = new ArrayList<>(Arrays.asList(getResources()
                         .getStringArray(R.array.status_spinner_list)));
-                list.add("All");
+                list.add(getString(R.string.all_title));
                 final ArrayAdapter<String> adp = new ArrayAdapter<String>(this,
                         android.R.layout.simple_spinner_item, list);
                 final Spinner sp = new Spinner(this);
@@ -116,13 +117,13 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
                 sp.setPadding(5, 15, 5, 10);
 
                 builder.setView(sp);
-                builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNeutralButton(R.string.cancel_title, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
                 });
-                builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.delete_book, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deleteBooks(sp.getSelectedItem().toString());
@@ -157,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
 
     private void deleteBooks(String status) {
         BookLab bookLab = BookLab.get(MainActivity.this);
-        if (status.equals("All")) {
+        if (status.equals(getString(R.string.all_title))) {
             bookLab.deleteBooks();
         } else {
             status = ValueConvector.ToConstant.toStatusConstant(getApplicationContext(), status);

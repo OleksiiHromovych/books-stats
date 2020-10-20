@@ -28,7 +28,7 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="10dp"
         android:background="@null"
-        android:text="OK"
+        android:text="@string/button_ok"
         android:textColor="@color/bookItemTextColor" />
 
 </RelativeLayout>

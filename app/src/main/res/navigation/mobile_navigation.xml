@@ -12,7 +12,6 @@
 
         android:label="@string/title_read_yet"
         tools:layout="@layout/fragment_read_yet" />
-<!--    android:name="com.hromovych.android.bookstats.ui.readYet.ReadYetFragment"-->
 
     <fragment
         android:id="@+id/read_now"

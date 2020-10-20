@@ -41,12 +41,12 @@ public class Holders {
 
         public void bind(Book book, int pos) {
             mBook = book;
-            count.setText("" + (pos + 1));
+            count.setText(String.valueOf(pos + 1));
             bookName.setText(mBook.getBookName());
             author.setText(mBook.getAuthor());
 
             if (mBook.getPages() != 0) {
-                pages.setText("" + mBook.getPages());
+                pages.setText(String.valueOf(mBook.getPages()));
                 pageLayout.setVisibility(View.VISIBLE);
             } else
                 pageLayout.setVisibility(View.GONE);
@@ -81,7 +81,7 @@ public class Holders {
 
         @Override
         public boolean isInitiallyExpanded() {
-            return true;
+            return false;
         }
     }
 
@@ -98,7 +98,7 @@ public class Holders {
 
         public void bind(Group groupItem) {
             mGroupTextView.setText(groupItem.getTitle());
-            mGroupBookCount.setText("" + groupItem.getChildList().size());
+            mGroupBookCount.setText(String.valueOf(groupItem.getChildList().size()));
         }
     }
 

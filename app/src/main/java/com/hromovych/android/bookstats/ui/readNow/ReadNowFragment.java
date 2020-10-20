@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.hromovych.android.bookstats.HelpersItems.Book;
-import com.hromovych.android.bookstats.HelpersItems.BookLab;
 import com.hromovych.android.bookstats.HelpersItems.Callbacks;
 import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.HelpersItems.Holders;
@@ -31,6 +30,7 @@ import com.hromovych.android.bookstats.HelpersItems.Labels;
 import com.hromovych.android.bookstats.HelpersItems.SimpleFragment;
 import com.hromovych.android.bookstats.MainActivity;
 import com.hromovych.android.bookstats.R;
+import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
 
 import java.util.List;
@@ -120,7 +120,7 @@ public class ReadNowFragment extends SimpleFragment {
                     final NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
                     final int id = navController.getCurrentDestination().getId();
 
-                    displaySnackbar("Swipe element", "Undo", new View.OnClickListener() {
+                    displaySnackbar(getString(R.string.swipe_element_text), getString(R.string.undo_title), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             bookLab.updateBook(oldBook);
@@ -200,11 +200,11 @@ public class ReadNowFragment extends SimpleFragment {
                     && !mBook.getStartDate().equals(DateHelper.undefinedDate)) {
 
                 if (showDate) {
-                    startDate.setText("+ " + DateFormat.format("MMM dd, yyyy", mBook.getStartDate()));
+                    startDate.setText(String.format("+ %s", DateFormat.format("MMM dd, yyyy", mBook.getStartDate()).toString()));
 
                 } else {
                     long days = (DateHelper.today.getTime() - mBook.getStartDate().getTime()) / 1000 / 60 / 60 / 24;
-                    startDate.setText("" + days);
+                    startDate.setText(String.valueOf(days));
                 }
             }
             if (mBook.getLabel() != null) {
@@ -250,10 +250,6 @@ public class ReadNowFragment extends SimpleFragment {
         @Override
         public int getItemCount() {
             return mBooks.size();
-        }
-
-        public List<Book> getBooks() {
-            return mBooks;
         }
 
         public void setBooks(List<Book> books) {

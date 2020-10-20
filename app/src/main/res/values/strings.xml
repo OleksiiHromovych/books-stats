@@ -14,7 +14,7 @@
     <string name="book_category_hint">Enter book category</string>
     <string name="book_status_title">Status:</string>
     <string name="book_label_title">Label</string>
-    <string name="delete_book">delete</string>
+    <string name="delete_book">Delete</string>
     <string name="book_start_date_title">Start date</string>
 
     <string name="book_activity_title">Custom book</string>
@@ -89,24 +89,74 @@
     <string name="silver">Silver</string>
     <string name="gold">Gold</string>
 
-    <string name="button_ok">OK</string>
+    <string name="button_ok" translatable="false">OK</string>
 
     <string name="valueExceptionTitle">Value Exception</string>
     <string name="exportedFieldsEmptyFieldsException">Must be active at least one field!</string>
-    <string name="exportCriteriaHelpTitle">Quick Look</string>
-    <string name="exportCriteriaHelpText">Use this if you want to export your books data with
-        particular fields.\n\nFor example: Choice Date and write 2020 to get only books
-        that have end date - 2020 </string>
+    <string name="exportCriteriaHelpTitle">Quick Guide</string>
+    <string name="exportCriteriaHelpText">"Use this if you want to export your books data with particular fields.\n\n\nFor example: Choice Date and write 2020 to get only books that have end date - 2020 "</string>
 
-    <string name="exportedFieldsHelpText">
-        Press on item to activate/deactivate;\n
-        Long press and move up/down to change item position;\n
-        \n
-        Will be exported only active fields;\n
-        Fields will be exported depending on the order of the elements. From top to bottom;\n
-        At least one field must be active.
+    <string name="exportedFieldsHelpText">"Press on item to activate/deactivate;\nLong press and move up/down to change item position;\n\n\nWill be exported only active fields;\nFields will be exported depending on the order of the elements. From top to bottom;\nAt least one field must be active.\n    "</string>
 
-    </string>
+    <!-- For delete alert dialog -->
+    <string name="delete_dialog_title">Confirm book delete!</string>
+    <string name="delete_dialog_message">You are about to delete all book info. Do you really want to proceed ?</string>
+    <string name="yes_button">Yes</string>
+    <string name="no_button">No</string>
+    <string name="db_exported">DataBase Exported! %s</string>
+    <string name="enter_date_hint">Enter Date</string>
+    <string name="enter_criteria_hint">Enter criteria</string>
+    <string name="send_books_data_extra_subject">Export books data</string>
+    <string name="clipboard_data_label">Export books</string>
+    <string name="copy_to_clipboard">Copied to clipboard</string>
+    <string name="ckeckboxes_empty_exception">Choose one though</string>
+    <string name="checkboxes_exception_message">All checkboxes are unchecked</string>
+    <string name="empty_field_exeption_title">Empty field</string>
+    <string name="criteria_title_empty_exception">%s field are empty</string>
+    <string name="incorrect_data_exception_title">Incorrect data</string>
+    <string name="criteria_inccorect_value">Value such - %s is not in books data</string>
+    <string name="unknown_value">Unknown</string>
+    <string name="unknown_date">Unknown Date</string>
+    <string name="undefined_date">Undefined Date</string>
+    <string name="without_category_book">Without category</string>
+    <string name="empty_description_book">Empty description</string>
+    <string name="no_label_book">No label</string>
+    <string name="unknown_field">Unknown field %s</string>
+    <string name="success_import_from_clipboard">Successful import from clipboard</string>
+    <string name="success_split_text">Successful split text</string>
+    <string name="error_title">Error</string>
+    <string name="swipe_element_text">Element swiped</string>
+    <string name="undo_title">Undo</string>
+    <string name="date_request_exception_title">Date problem</string>
+    <string name="date_start_request_exception_text">Books start date more than end date</string>
+    <string name="back">Back</string>
+    <string name="date_end_request_exception_text">Books end date less than start date</string>
+    <string name="delete_books_alert_dialog_title">What book category you want to delete?</string>
+    <string name="all_title">All</string>
+    <string name="cancel_title">Cancel</string>
+    <string name="export_as_text">Export as text</string>
+    <string name="export_as_bd">Export as database</string>
+    <string name="import_from_clipboard">Import from clipboard</string>
+    <string name="import_from_file">Import from file</string>
+    <string name="next">Next</string>
+    <string name="export_to_text_status_checkboxes_title">Choose status of which books you want to export</string>
+    <string name="exported_fields_title">Exported fields:</string>
+    <string name="change">Change</string>
+    <string name="export_text_add_criteria">Add Criteria</string>
+    <string name="import_title">Import</string>
+    <string name="import_get_from_clipboard">Get from clipboard</string>
+    <string name="import_items_split_by">Items split by</string>
+    <string name="import_enter_you_split_symbol">Enter you split symbol</string>
+    <string name="import_split_items">Split items</string>
+    <string name="prev_button_text"><![CDATA[<]]></string>
+    <string name="next_button_text"><![CDATA[>]]></string>
+    <string name="import_split_item_by">Split item by</string>
+    <string name="import_add_item">Add item</string>
+    <string name="import_to">import to</string>
+    <string name="menu_show_date">Show date</string>
+    <string name="menu_change_sort_format">Change sort format</string>
+    <string name="menu_stats">Stats</string>
+    <string name="menu_export">Export</string>
 
     <string-array name="export_criteria_elements">
         <item>@string/book_category_title</item>
@@ -122,5 +172,11 @@
         <item>@string/book_category_title</item>
         <item>@string/book_description_title</item>
         <item>@string/book_label_title</item>
+    </string-array>
+
+    <string-array name="import_popup_menu_elements">
+        <item>@string/book_author_title</item>
+        <item>@string/book_name_title</item>
+        <item>@string/book_description_title</item>
     </string-array>
 </resources>

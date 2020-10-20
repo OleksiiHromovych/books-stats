@@ -180,7 +180,7 @@ public class BookYetFragment extends BookFragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != Activity.RESULT_OK) {
-            Toast.makeText(getContext(), "error", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.error_title, Toast.LENGTH_LONG).show();
             return;
         }
         switch (requestCode) {
@@ -195,10 +195,10 @@ public class BookYetFragment extends BookFragment {
                         && !checkEndDate.equals(DateHelper.undefinedDate)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-                    builder.setTitle("Date problem");
-                    builder.setMessage("Book start date more then end date");
+                    builder.setTitle(R.string.date_request_exception_title);
+                    builder.setMessage(R.string.date_start_request_exception_text);
                     builder.setCancelable(false);
-                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mBook.setStartDate(date);
@@ -207,7 +207,7 @@ public class BookYetFragment extends BookFragment {
                         }
                     });
 
-                    builder.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                         }
@@ -232,10 +232,10 @@ public class BookYetFragment extends BookFragment {
                         && !checkStartDate.equals(DateHelper.undefinedDate)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-                    builder.setTitle("Date problem");
-                    builder.setMessage("Book end date less then start date");
+                    builder.setTitle(R.string.date_request_exception_title);
+                    builder.setMessage(R.string.date_end_request_exception_text);
                     builder.setCancelable(false);
-                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mBook.setEndDate(endDate);
@@ -244,7 +244,7 @@ public class BookYetFragment extends BookFragment {
                         }
                     });
 
-                    builder.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                         }

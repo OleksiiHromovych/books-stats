@@ -32,7 +32,7 @@
         android:layout_alignParentBottom="true"
         android:background="@android:color/transparent"
         android:visibility="invisible"
-        android:text="Back" />
+        android:text="@string/back" />
 
     <Button
         android:id="@+id/button2"
@@ -41,6 +41,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:background="@android:color/transparent"
-        android:text="Next" />
+        android:text="@string/next" />
 
 </RelativeLayout>

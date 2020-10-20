@@ -1,12 +1,11 @@
-package com.hromovych.android.bookstats.HelpersItems;
+package com.hromovych.android.bookstats.database;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.hromovych.android.bookstats.database.BookBaseHelper;
-import com.hromovych.android.bookstats.database.BookCursorWrapper;
+import com.hromovych.android.bookstats.HelpersItems.Book;
 import com.hromovych.android.bookstats.database.BookDBSchema.BookTable;
 
 import java.util.ArrayList;

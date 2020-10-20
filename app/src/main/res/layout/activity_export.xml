@@ -20,14 +20,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Export as text" />
+            android:text="@string/export_as_text" />
 
         <Button
             android:id="@+id/export_as_bd_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Export as BD" />
+            android:text="@string/export_as_bd" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

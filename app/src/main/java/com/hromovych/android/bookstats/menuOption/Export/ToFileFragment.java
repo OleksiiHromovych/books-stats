@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookBaseHelper;
 
 import java.io.File;
@@ -45,8 +46,8 @@ public class ToFileFragment extends Fragment {
             destination.transferFrom(source, 0, source.size());
             source.close();
             destination.close();
-            Toast.makeText(getContext(), "DB Exported! " + sd.getAbsolutePath() +
-                    backupDBPath, Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getString(R.string.db_exported, sd.getAbsolutePath() +
+                    backupDBPath), Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             e.printStackTrace();
         }

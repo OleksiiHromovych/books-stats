@@ -11,7 +11,7 @@
         android:id="@+id/import_clipboard_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Get from clipboard"
+        android:text="@string/import_get_from_clipboard"
 
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,21 +38,21 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Items split by " />
+                    android:text="@string/import_items_split_by" />
 
                 <EditText
                     android:id="@+id/import_split_symbol"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Enter you split symbol" />
+                    android:hint="@string/import_enter_you_split_symbol" />
             </LinearLayout>
 
             <Button
                 android:id="@+id/import_split_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Split items" />
+                android:text="@string/import_split_items" />
         </LinearLayout>
 
         <LinearLayout
@@ -60,7 +60,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <!--            android:visibility="gone"-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -71,21 +70,20 @@
                     android:id="@+id/import_splitted_line_prev_btn"
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
-                    android:text="&lt;" />
+                    android:text="@string/prev_button_text" />
 
                 <TextView
                     android:id="@+id/import_splitted_line_view"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="You line"
                     android:textAlignment="center" />
 
                 <Button
                     android:id="@+id/import_splitted_line_next_btn"
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
-                    android:text="&gt;" />
+                    android:text="@string/next_button_text" />
 
             </LinearLayout>
 
@@ -97,21 +95,21 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Split item by " />
+                    android:text="@string/import_split_item_by" />
 
                 <EditText
                     android:id="@+id/import_split_splitted_symbol"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Enter you split symbol ( ~ )" />
+                    android:hint="@string/import_enter_you_split_symbol" />
             </LinearLayout>
 
             <Button
                 android:id="@+id/import_split_splitted_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Split item" />
+                android:text="@string/import_split_items" />
         </LinearLayout>
 
         <LinearLayout
@@ -126,10 +124,10 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Add item"
+                    android:text="@string/import_add_item"
                     android:textAlignment="textEnd" />
 
                 <Button
@@ -155,7 +153,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="import to" />
+                    android:text="@string/import_to" />
 
 
                 <Spinner
@@ -173,7 +171,7 @@
             android:id="@+id/import_finish_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Import" />
+            android:text="@string/import_title" />
 
 
     </LinearLayout>

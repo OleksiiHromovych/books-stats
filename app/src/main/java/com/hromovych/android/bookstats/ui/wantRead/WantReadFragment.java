@@ -24,7 +24,6 @@ import com.bignerdranch.expandablerecyclerview.ChildViewHolder;
 import com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter;
 import com.google.android.material.snackbar.Snackbar;
 import com.hromovych.android.bookstats.HelpersItems.Book;
-import com.hromovych.android.bookstats.HelpersItems.BookLab;
 import com.hromovych.android.bookstats.HelpersItems.Callbacks;
 import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.HelpersItems.Holders;
@@ -33,6 +32,7 @@ import com.hromovych.android.bookstats.HelpersItems.SimpleFragment;
 import com.hromovych.android.bookstats.MainActivity;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookDBSchema;
+import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
 
 import java.util.ArrayList;
@@ -121,7 +121,7 @@ public class WantReadFragment extends SimpleFragment {
                     final NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
                     final int id = navController.getCurrentDestination().getId();
 
-                    displaySnackbar("Swipe element", "Undo", new View.OnClickListener() {
+                    displaySnackbar(R.string.swipe_element_text, R.string.undo_title, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             bookLab.updateBook(oldBook);
@@ -132,7 +132,7 @@ public class WantReadFragment extends SimpleFragment {
                 }
             };
 
-    public void displaySnackbar(String text, String actionName, View.OnClickListener action) {
+    public void displaySnackbar(int text, int actionName, View.OnClickListener action) {
         Snackbar snack = Snackbar.make(getActivity().findViewById(android.R.id.content), text, Snackbar.LENGTH_LONG)
                 .setAction(actionName, action);
 
@@ -184,13 +184,14 @@ public class WantReadFragment extends SimpleFragment {
     private List<Holders.Group> getGroups(BookLab bookLab) {
         List<Holders.Group> groups = new ArrayList<>();
 
-        if (sortByDate) {
-            List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
-                            .getString(R.string.title_want_read)),
-                    BookDBSchema.BookTable.Cols.AUTHOR);
-            groups.add(new Holders.Group("Date", books));
+//        if (sortByDate) {
+//            List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
+//                            .getString(R.string.title_want_read)),
+//                    BookDBSchema.BookTable.Cols.AUTHOR);
+//            groups.add(new Holders.Group(getString(R.string.button_ok), books));    TODO
 
-        } else {
+//        } else {
+        {
             List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
                             .getString(R.string.title_want_read)),
                     BookDBSchema.BookTable.Cols.CATEGORY + " , " +
@@ -208,7 +209,7 @@ public class WantReadFragment extends SimpleFragment {
                             booksCategory.add(book);
                             continue;
                         }
-                        group = new Holders.Group("Without category", booksCategory);  //#TODO: ru string
+                        group = new Holders.Group(getString(R.string.without_category_book), booksCategory);
                     } else
                         group = new Holders.Group(lastCategory, booksCategory);
                     booksCategory = new ArrayList<>();

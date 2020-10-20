@@ -2,7 +2,6 @@ package com.hromovych.android.bookstats.menuOption.Import;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +9,8 @@ import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 
-import com.hromovych.android.bookstats.HelpersItems.BookLab;
 import com.hromovych.android.bookstats.R;
-
-import java.io.File;
+import com.hromovych.android.bookstats.database.BookLab;
 
 public class FromFileFragment extends Fragment {
     public static final String ARG_PATH = "arg_path";
@@ -57,9 +54,6 @@ public class FromFileFragment extends Fragment {
     }
 
     private void exportFromFile(String path) {
-        Log.d("TAG", "exportFromFile: " +
-                new File(path).exists());
-        Log.d("TAG", "exportFromFile: " + path);
         SQLiteDatabase db =
                 SQLiteDatabase.openDatabase(path,null, SQLiteDatabase.OPEN_READONLY);
         BookLab.get(getActivity()).extendFromBase(db);

@@ -136,7 +136,7 @@ public class BookNowFragment extends BookFragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != Activity.RESULT_OK) {
-            Toast.makeText(getContext(), "error", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.error_title, Toast.LENGTH_LONG).show();
             return;
         }
         switch (requestCode) {

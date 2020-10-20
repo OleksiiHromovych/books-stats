@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/backgroundItem">
 
     <TextView
@@ -11,7 +12,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:padding="10dp"
-        android:text="Date"
+        tools:text="Date"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:layout_marginEnd="16dp"
-        android:text="Book name"
+        tools:text="Book name"
         android:textAlignment="textStart"
         android:textColor="@color/bookItemTextColor"
 
@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:layout_marginEnd="16dp"
-        android:text="Author"
+        tools:text="Author"
         android:textAlignment="textStart"
         android:textColor="@color/bookItemTextColor"
 

@@ -22,7 +22,7 @@
             android:layout_weight="0.6"
             android:padding="5dp"
             android:gravity="center"
-            android:text="Choice books of which status you want to export"
+            android:text="@string/export_to_text_status_checkboxes_title"
             android:textAlignment="center" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -75,7 +75,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="Exported fields:"
+            android:text="@string/exported_fields_title"
             android:gravity="center"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/export_fields_change_btn"
@@ -86,7 +86,7 @@
             android:id="@+id/export_fields_change_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Change"
+            android:text="@string/change"
             app:layout_constraintBottom_toTopOf="@id/exported_fields_textView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -96,7 +96,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:text="Book Author Date"
             android:textAlignment="center" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -123,7 +122,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center_vertical|start"
-            android:text="Add Criteria"
+            android:text="@string/export_text_add_criteria"
             android:layout_marginStart="15dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/export_criteria_layout"

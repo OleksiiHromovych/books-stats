@@ -26,7 +26,6 @@ import com.bignerdranch.expandablerecyclerview.ChildViewHolder;
 import com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter;
 import com.google.android.material.snackbar.Snackbar;
 import com.hromovych.android.bookstats.HelpersItems.Book;
-import com.hromovych.android.bookstats.HelpersItems.BookLab;
 import com.hromovych.android.bookstats.HelpersItems.Callbacks;
 import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.HelpersItems.Holders;
@@ -37,6 +36,7 @@ import com.hromovych.android.bookstats.HelpersItems.SimpleFragment;
 import com.hromovych.android.bookstats.MainActivity;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookDBSchema;
+import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
 
 import java.util.ArrayList;
@@ -138,7 +138,7 @@ public class ReadYetFragment extends SimpleFragment {
                     final NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
                     final int id = navController.getCurrentDestination().getId();
 
-                    displaySnackbar("Swipe element", "Undo", new View.OnClickListener() {
+                    displaySnackbar(R.string.swipe_element_text, R.string.undo_title, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             bookLab.updateBook(oldBook);
@@ -150,7 +150,7 @@ public class ReadYetFragment extends SimpleFragment {
                 }
             };
 
-    private void displaySnackbar(String text, String actionName, View.OnClickListener action) {
+    private void displaySnackbar(int text, int actionName, View.OnClickListener action) {
         Snackbar snack = Snackbar.make(getActivity().findViewById(android.R.id.content), text, Snackbar.LENGTH_LONG)
                 .setAction(actionName, action);
 
@@ -207,7 +207,7 @@ public class ReadYetFragment extends SimpleFragment {
                             booksDate.add(book);
                             continue;
                         }
-                        group = new Group("Unknown date", booksDate);
+                        group = new Group(getString(R.string.unknown_date), booksDate);
                     } else
                         group = new Group(Integer.toString(lastDate + 1900), booksDate);
                     booksDate = new ArrayList<>();
@@ -241,7 +241,7 @@ public class ReadYetFragment extends SimpleFragment {
                             booksCategory.add(book);
                             continue;
                         }
-                        group = new Group("Without category", booksCategory);  //#TODO: ru string
+                        group = new Group(getString(R.string.without_category_book), booksCategory);
                     } else
                         group = new Group(lastCategory, booksCategory);
                     booksCategory = new ArrayList<>();
@@ -281,11 +281,11 @@ public class ReadYetFragment extends SimpleFragment {
 
                 if (!mBook.getStartDate().equals(DateHelper.unknownDate)
                         && !mBook.getStartDate().equals(DateHelper.undefinedDate))
-                    startDate.setText("+ " + DateFormat.format("MMM dd, yyyy", mBook.getStartDate()));
+                    startDate.setText(String.format("+ %s", DateFormat.format("MMM dd, yyyy", mBook.getStartDate())));
                 if (!mBook.getEndDate().equals(DateHelper.unknownDate)
                         && !mBook.getEndDate().equals(DateHelper.undefinedDate))
 
-                    endDate.setText("- " + DateFormat.format("MMM dd, yyyy", mBook.getEndDate()));
+                    endDate.setText(String.format("- %s", DateFormat.format("MMM dd, yyyy", mBook.getEndDate())));
 
             } else {
                 startDate.setText("");
@@ -297,7 +297,7 @@ public class ReadYetFragment extends SimpleFragment {
                     long days = (mBook.getEndDate().getTime() - mBook.getStartDate().getTime())
                             / 1000 / 60 / 60 / 24;
                     if (days != 0)
-                        startDate.setText("" + days);
+                        startDate.setText(String.valueOf(days));
                 }
                 endDate.setVisibility(View.GONE);
 
@@ -323,29 +323,11 @@ public class ReadYetFragment extends SimpleFragment {
 
     public class GroupAdapter extends ExpandableRecyclerAdapter<Group, Book, GroupViewHolder, BookViewHolder> {
         private LayoutInflater mLayoutInflater;
-//        private List<Boolean> expandableParentList;
 
         public GroupAdapter(Context context, @NonNull List<Group> parentList) {
             super(parentList);
             mLayoutInflater = LayoutInflater.from(context);
-//            if (expandableParentList == null) {
-//                expandableParentList = new ArrayList<>(Collections.nCopies(parentList.size(), false));
-//                expandableParentList = new ArrayList<>(Arrays.asList(new Boolean[parentList.size() + 1]));
 
-//            }
-
-            setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
-                                          @Override
-                                          public void onParentExpanded(int parentPosition) {
-//                                              expandableParentList.set(parentPosition, true);
-                                          }
-
-                                          @Override
-                                          public void onParentCollapsed(int parentPosition) {
-//                                              expandableParentList.set(parentPosition, false);
-                                          }
-                                      }
-            );
         }
 
         @Override
@@ -374,7 +356,6 @@ public class ReadYetFragment extends SimpleFragment {
         @Override
         public void onBindParentViewHolder(@NonNull GroupViewHolder parentViewHolder, int parentPosition, @NonNull Group parent) {
             parentViewHolder.bind(parent);
-//            parentViewHolder.setExpanded(expandableParentList.get(parentPosition));
         }
 
         @Override

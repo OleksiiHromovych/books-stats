@@ -18,9 +18,9 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.hromovych.android.bookstats.HelpersItems.Book;
-import com.hromovych.android.bookstats.HelpersItems.BookLab;
 import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.R;
+import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
 
 import java.util.ArrayList;
@@ -76,14 +76,15 @@ public class ClipboardFragment extends Fragment {
         clipBoardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{importText = ((ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE))
-                        .getText().toString();}
-                catch (NullPointerException e){
+                try {
+                    importText = ((ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE))
+                            .getText().toString();
+                } catch (NullPointerException e) {
                     showMessage(e.toString());
                     return;
                 }
                 firstState.setVisibility(View.VISIBLE);
-                showMessage("Success import from clip board");
+                showMessage(getString(R.string.success_import_from_clipboard));
             }
         });
 
@@ -96,7 +97,7 @@ public class ClipboardFragment extends Fragment {
                         .getText().toString());
                 splitted_line_view.setText(splittedText[line_index]);
                 secondState.setVisibility(View.VISIBLE);
-                showMessage("Success split text");
+                showMessage(getString(R.string.success_split_text));
             }
         });
 
@@ -137,14 +138,14 @@ public class ClipboardFragment extends Fragment {
         });
 
         final List<String> popupMenuElement =
-                new ArrayList<String>(Arrays.asList("Author", "Name", "Description"));
+                new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.import_popup_menu_elements)));
         thirtyState.findViewById(R.id.import_add_item_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(getActivity(), v);
                 if (((Spinner) thirtyState.findViewById(R.id.import_status_spinner)).getSelectedItem().toString()
                         .equals(getString(R.string.title_read_yet)) && !dateSet) {
-                    popupMenuElement.add("Date");
+                    popupMenuElement.add(getString(R.string.book_end_date_title));
                     dateSet = true;
                 }
                 for (String s : popupMenuElement)
@@ -153,9 +154,9 @@ public class ClipboardFragment extends Fragment {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         String item_text = item.getTitle().toString();
-                        if (item_text.equals("Date"))
-                            appropriateFieldLayout.addView(createItemLayout("Date",
-                                    new String[]{"2017", "2018", "2019", "2020"}));
+                        if (item_text.equals(getString(R.string.book_end_date_title)))
+                            appropriateFieldLayout.addView(createItemLayout(getString(R.string.book_end_date_title),
+                                    new String[]{"2017", "2018", "2019", "2020"})); //TODO norm date picker
                         else
                             appropriateFieldLayout.addView(createItemLayout(item_text,
                                     splitSplittedText.get(line_index)));
@@ -188,19 +189,14 @@ public class ClipboardFragment extends Fragment {
 
                 for (int i = 0; i < spinnersChoices.size(); i++) {
                     String[] strings = spinnersChoices.get(i);
-                    switch (strings[0]) {
-                        case "Author":
-                            author_index = list.indexOf(strings[1]);
-                            break;
-                        case "Name":
-                            name_index = list.indexOf(strings[1]);
-                            break;
-                        case "Description":
-                            description_index = list.indexOf(strings[1]);
-                            break;
-                        case "Date":
-                            date = strings[1];
-                            break;
+                    if (getString(R.string.book_author_title).equals(strings[0])) {
+                        author_index = list.indexOf(strings[1]);
+                    } else if (getString(R.string.book_name_title).equals(strings[0])) {
+                        name_index = list.indexOf(strings[1]);
+                    } else if (getString(R.string.book_description_title).equals(strings[0])) {
+                        description_index = list.indexOf(strings[1]);
+                    } else if (getString(R.string.book_end_date_title).equals(strings[0])) {
+                        date = strings[1];
                     }
                 }
 
@@ -254,7 +250,7 @@ public class ClipboardFragment extends Fragment {
         return layout;
     }
 
-    private void showMessage(String text){
+    private void showMessage(String text) {
         Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
     }
 }

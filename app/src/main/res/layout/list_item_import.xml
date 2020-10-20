@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/backgroundItem"
     android:orientation="horizontal">
 
@@ -10,7 +11,7 @@
         android:id="@+id/import_item_choice_split_type_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="item1 text" />
+        tools:text="item1 text" />
 
     <Spinner
         android:id="@+id/import_item_choice_split_type_spinner"

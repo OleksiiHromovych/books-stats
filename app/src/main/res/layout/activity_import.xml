@@ -20,14 +20,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="from clipboard" />
+            android:text="@string/import_from_clipboard" />
 
         <Button
             android:id="@+id/import_from_file_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="from file" />
+            android:text="@string/import_from_file" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

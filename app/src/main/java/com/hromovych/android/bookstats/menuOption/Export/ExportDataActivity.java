@@ -15,8 +15,7 @@ import com.hromovych.android.bookstats.R;
 public class ExportDataActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static Intent newIntent(Context context) {
-        Intent intent = new Intent(context, ExportDataActivity.class);
-        return intent;
+        return new Intent(context, ExportDataActivity.class);
     }
 
     private Button exportText;

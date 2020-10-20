@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookDBSchema;
+import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
 import com.hromovych.android.bookstats.ui.readNow.BookNowFragment;
 import com.hromovych.android.bookstats.ui.readYet.BookYetFragment;
@@ -43,10 +44,6 @@ public class BookFragment extends Fragment {
 
     protected Book mBook;
     protected Spinner mBookStatusSpinner;
-    private EditText mBookNameField;
-    private EditText mBookAuthorField;
-    private EditText mBookPagesField;
-    private AutoCompleteTextView mBookCategoryField;
     private TextView mBookDescriptionField;
     protected Spinner mBookLabelSpinner;
     private int book_layout;
@@ -108,9 +105,9 @@ public class BookFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(book_layout, container, false);
 
-        mBookNameField = v.findViewById(R.id.book_name);
-        mBookNameField.setText(mBook.getBookName());
-        mBookNameField.addTextChangedListener(new TextWatcher() {
+        EditText bookNameField = v.findViewById(R.id.book_name);
+        bookNameField.setText(mBook.getBookName());
+        bookNameField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -128,9 +125,9 @@ public class BookFragment extends Fragment {
             }
         });
 
-        mBookAuthorField = v.findViewById(R.id.book_author);
-        mBookAuthorField.setText(mBook.getAuthor());
-        mBookAuthorField.addTextChangedListener(new TextWatcher() {
+        EditText bookAuthorField = v.findViewById(R.id.book_author);
+        bookAuthorField.setText(mBook.getAuthor());
+        bookAuthorField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -149,9 +146,9 @@ public class BookFragment extends Fragment {
             }
         });
 
-        mBookPagesField = v.findViewById(R.id.book_pages);
-        mBookPagesField.setText("" + mBook.getPages());
-        mBookPagesField.addTextChangedListener(new TextWatcher() {
+        EditText bookPagesField = v.findViewById(R.id.book_pages);
+        bookPagesField.setText(String.valueOf(mBook.getPages()));
+        bookPagesField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -170,9 +167,9 @@ public class BookFragment extends Fragment {
             }
         });
 
-        mBookCategoryField = v.findViewById(R.id.book_category);
-        mBookCategoryField.setText(mBook.getCategory());
-        mBookCategoryField.addTextChangedListener(new TextWatcher() {
+        AutoCompleteTextView bookCategoryField = v.findViewById(R.id.book_category);
+        bookCategoryField.setText(mBook.getCategory());
+        bookCategoryField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -180,8 +177,8 @@ public class BookFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    mBook.setCategory(s.toString());
-                    updateBook();
+                mBook.setCategory(s.toString());
+                updateBook();
             }
 
             @Override
@@ -192,7 +189,7 @@ public class BookFragment extends Fragment {
         List<String> items = BookLab.get(getActivity())
                 .getColumnItems(BookDBSchema.BookTable.Cols.CATEGORY);
 
-        mBookCategoryField.setAdapter(new ArrayAdapter<>(getActivity(),
+        bookCategoryField.setAdapter(new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, items));
         mBookStatusSpinner = v.findViewById(R.id.book_status);
         mBookStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -294,10 +291,10 @@ public class BookFragment extends Fragment {
             case R.id.delete_book:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-                builder.setTitle("Confirm book delete !");
-                builder.setMessage("You are about to delete all book info. Do you really want to proceed ?");
+                builder.setTitle(R.string.delete_dialog_title);
+                builder.setMessage(R.string.delete_dialog_message);
                 builder.setCancelable(false);
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.yes_button, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         BookLab.get(getActivity()).deleteBook(mBook);
@@ -306,7 +303,7 @@ public class BookFragment extends Fragment {
                     }
                 });
 
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.no_button, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }

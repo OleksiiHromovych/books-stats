@@ -58,13 +58,10 @@ public class FileUtils {
             while ((read = inputStream.read(buffers)) != -1) {
                 outputStream.write(buffers, 0, read);
             }
-            Log.e("File Size", "Size " + file.length());
             inputStream.close();
             outputStream.close();
-            Log.e("File Path", "Path " + file.getPath());
-            Log.e("File Size", "Size " + file.length());
         } catch (Exception e) {
-            Log.e("Exception", e.getMessage());
+
         }
         return file.getPath();
 

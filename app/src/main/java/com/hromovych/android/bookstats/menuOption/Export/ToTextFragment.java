@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,10 +27,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.hromovych.android.bookstats.HelpersItems.Book;
-import com.hromovych.android.bookstats.HelpersItems.BookLab;
 import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookDBSchema;
+import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
 
 import java.util.ArrayList;
@@ -47,6 +46,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
+import static com.hromovych.android.bookstats.HelpersItems.DateHelper.getDateFormatString;
 
 public class ToTextFragment extends Fragment {
 
@@ -173,7 +173,7 @@ public class ToTextFragment extends Fragment {
                             .getColumnItems(BookDBSchema.BookTable.Cols.END_DATE));
 
                     criteriaLayout.addView(createCriteriaView(item.getTitle().toString(),
-                            "Enter Date", InputType.TYPE_CLASS_NUMBER,
+                            getString(R.string.enter_date_hint), InputType.TYPE_CLASS_NUMBER,
                             new ArrayAdapter<>(getActivity(),
                                     android.R.layout.simple_dropdown_item_1line, items),
                             deleteFromLayoutOnClickListener));
@@ -210,9 +210,6 @@ public class ToTextFragment extends Fragment {
         return integerList;
     }
 
-    private int getDateFormatString(Date date) {
-        return Integer.parseInt(DateFormat.format("yyyy", date).toString());
-    }
 
     private <T> View createCriteriaView(String title, String hint, Integer inputType,
                                         ArrayAdapter<T> arrayAdapter, View.OnClickListener deleteFromLayoutOnClickListener) {
@@ -223,7 +220,7 @@ public class ToTextFragment extends Fragment {
         TextView view = layout.findViewById(R.id.export_criteria_item_textView);
         view.setText(title);
         AutoCompleteTextView autoCompleteTextView = layout.findViewById(R.id.export_criteria_item_editText);
-        autoCompleteTextView.setHint(hint != null ? hint : "Enter criteria");
+        autoCompleteTextView.setHint(hint != null ? hint : getString(R.string.enter_criteria_hint));
         autoCompleteTextView.setInputType(inputType != null ? inputType : InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         if (arrayAdapter != null)
             autoCompleteTextView.setAdapter(arrayAdapter);
@@ -265,7 +262,7 @@ public class ToTextFragment extends Fragment {
             return;
         }
         i.putExtra(Intent.EXTRA_SUBJECT,
-                "Exported books data");
+                getString(R.string.send_books_data_extra_subject));
         startActivity(i);
     }
 
@@ -274,13 +271,13 @@ public class ToTextFragment extends Fragment {
         ClipboardManager clipboardManager = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
         ClipData clipData = null;
         try {
-            clipData = ClipData.newPlainText("Export books", getBooksData());
+            clipData = ClipData.newPlainText(getString(R.string.clipboard_data_label), getBooksData());
         } catch (EmptyFieldException e) {
             showAlertMessage(e.getMessage(), e.getDescription());
             return;
         }
         clipboardManager.setPrimaryClip(clipData);
-        Toast.makeText(getContext(), "Copy to clipboard", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.copy_to_clipboard, Toast.LENGTH_SHORT).show();
     }
 
     public void showAlertMessage(String title, String message) {
@@ -288,7 +285,7 @@ public class ToTextFragment extends Fragment {
 
         builder.setTitle(title);
         builder.setMessage(message);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }
@@ -338,8 +335,8 @@ public class ToTextFragment extends Fragment {
                 checkedCheckboxesText.add(cb.getText().toString());
             }
         if (checkedCheckboxesText.isEmpty()) {
-            checkboxesLabel.setError("Choice although one");
-            throw new EmptyFieldException("Value Exception", "All checkboxes are unchecked");
+            checkboxesLabel.setError(getString(R.string.ckeckboxes_empty_exception));
+            throw new EmptyFieldException(getString(R.string.valueExceptionTitle), getString(R.string.checkboxes_exception_message));
         }
         return checkedCheckboxesText;
     }
@@ -353,8 +350,8 @@ public class ToTextFragment extends Fragment {
             String criteriaText = editText.getText().toString();
             String criteriaTitle = textView.getText().toString();
             if (criteriaText.isEmpty()) {
-                editText.setError("Empty field");
-                throw new EmptyFieldException("Value Exception", criteriaTitle + " field are empty");
+                editText.setError(getString(R.string.empty_field_exeption_title));
+                throw new EmptyFieldException(getString(R.string.valueExceptionTitle), criteriaTitle + getString(R.string.criteria_title_empty_exception));
             }
             boolean presentInData = false;
             for (int j = 0; j < editText.getAdapter().getCount(); j++)
@@ -363,8 +360,8 @@ public class ToTextFragment extends Fragment {
                     break;
                 }
             if (!presentInData) {
-                editText.setError("Incorrect data");
-                throw new EmptyFieldException("Value Exception", "Value such -  " + criteriaText + " is not in books data");
+                editText.setError(getString(R.string.incorrect_data_exception_title));
+                throw new EmptyFieldException(getString(R.string.valueExceptionTitle), getString(R.string.criteria_inccorect_value, criteriaText));
             }
 
             map.put(criteriaTitle, criteriaText);
@@ -390,20 +387,20 @@ public class ToTextFragment extends Fragment {
         if (field.equals(getString(R.string.book_name_title))) {
             String value = book.getBookName();
             if (value == null || value.isEmpty())
-                value = "Unknown";
+                value = getString(R.string.unknown_value);
             return value;
         } else if (field.equals(getString(R.string.book_author_title))) {
             String value = book.getAuthor();
             if (value == null || value.isEmpty())
-                value = "Unknown";
+                value = getString(R.string.unknown_value);
             return value;
         } else if (field.equals(getString(R.string.book_end_date_title))) {
             Date date = book.getEndDate();
             String value;
             if (date.equals(DateHelper.unknownDate))
-                value = "Unknown Date";
+                value = getString(R.string.unknown_date);
             else if (date.equals(DateHelper.undefinedDate))
-                value = "Undefined Date";
+                value = getString(R.string.undefined_date);
             else
                 value = Integer.toString(getDateFormatString(date));
             return value;
@@ -414,23 +411,23 @@ public class ToTextFragment extends Fragment {
         } else if (field.equals(getString(R.string.book_category_title))) {
             String value = book.getCategory();
             if (value == null || value.isEmpty())
-                value = "Without category";
+                value = getString(R.string.without_category_book);
             return value;
 
         } else if (field.equals(getString(R.string.book_description_title))) {
             String value = book.getDescription();
             if (value == null || value.isEmpty())
-                value = "Empty description";
+                value = getString(R.string.empty_description_book);
             return value;
 
         } else if (field.equals(getString(R.string.book_label_title))) {
             String value = book.getLabel();
             if (value == null || value.isEmpty())
-                value = "No label";
+                value = getString(R.string.no_label_book);
             return value;
         } else {
-            Toast.makeText(getContext(), "Unknown field " + field, Toast.LENGTH_SHORT).show();
-            return "Unknown field " + field;
+            Toast.makeText(getContext(), getString(R.string.unknown_field, field), Toast.LENGTH_SHORT).show();
+            return getString(R.string.unknown_field, field);
         }
     }
 
