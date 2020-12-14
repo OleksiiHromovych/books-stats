@@ -48,7 +48,7 @@ public class ReadYetFragment extends SimpleFragment {
     private RecyclerView mRecyclerView;
     private GroupAdapter mAdapter;
 
-    private boolean showDate;
+    private boolean isFullDateFormat;
     private boolean sortByYear;
 
     private Callbacks mCallbacks;
@@ -64,7 +64,7 @@ public class ReadYetFragment extends SimpleFragment {
 
 
         PreferencesManager pm = new PreferencesManager(getContext());
-        showDate = pm.isFullDateFormat();
+        isFullDateFormat = pm.isFullDateFormat();
         sortByYear = pm.isSortByYear();
         updateUI();
 
@@ -275,16 +275,22 @@ public class ReadYetFragment extends SimpleFragment {
 
         public void bind(Book book, int childPosition) {
             super.bind(book, childPosition);
-            if (showDate) {
-                endDate.setVisibility(View.VISIBLE);
+
+            if (isFullDateFormat) {
 
                 if (!mBook.getStartDate().equals(DateHelper.unknownDate)
-                        && !mBook.getStartDate().equals(DateHelper.undefinedDate))
+                        && !mBook.getStartDate().equals(DateHelper.undefinedDate)) {
+                    startDate.setVisibility(View.VISIBLE);
                     startDate.setText(String.format("+ %s", DateFormat.format("MMM dd, yyyy", mBook.getStartDate())));
-                if (!mBook.getEndDate().equals(DateHelper.unknownDate)
-                        && !mBook.getEndDate().equals(DateHelper.undefinedDate))
+                } else
+                    startDate.setVisibility(View.INVISIBLE);
 
+                if (!mBook.getEndDate().equals(DateHelper.unknownDate)
+                        && !mBook.getEndDate().equals(DateHelper.undefinedDate)) {
                     endDate.setText(String.format("- %s", DateFormat.format("MMM dd, yyyy", mBook.getEndDate())));
+                    endDate.setVisibility(View.VISIBLE);
+                } else
+                    endDate.setVisibility(View.INVISIBLE);
 
             } else {
                 startDate.setText("");
@@ -297,6 +303,8 @@ public class ReadYetFragment extends SimpleFragment {
                             / 1000 / 60 / 60 / 24;
                     if (days != 0)
                         startDate.setText(String.valueOf(days));
+                    else
+                        startDate.setText("1");
                 }
                 endDate.setVisibility(View.GONE);
 
