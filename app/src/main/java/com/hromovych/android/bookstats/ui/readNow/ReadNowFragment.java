@@ -28,10 +28,10 @@ import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.HelpersItems.Holders;
 import com.hromovych.android.bookstats.HelpersItems.Labels;
 import com.hromovych.android.bookstats.HelpersItems.SimpleFragment;
-import com.hromovych.android.bookstats.MainActivity;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
+import com.hromovych.android.bookstats.settings.PreferencesManager;
 
 import java.util.List;
 
@@ -61,13 +61,12 @@ public class ReadNowFragment extends SimpleFragment {
 
         new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
-        showDate = getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
-                Context.MODE_PRIVATE).getBoolean(MainActivity.SHOW_DATE_PREFERENCES, true);
+        showDate = new PreferencesManager(getContext()).isFullDateFormat();
 
         return view;
     }
 
-    private ItemTouchHelper.SimpleCallback mItemTouchHelperCallback =
+    private final ItemTouchHelper.SimpleCallback mItemTouchHelperCallback =
             new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
                 @Override
                 public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
@@ -183,7 +182,7 @@ public class ReadNowFragment extends SimpleFragment {
     private class BookHolder extends Holders.BookHolder
             implements View.OnClickListener {
 
-        private TextView startDate;
+        private final TextView startDate;
 
         public BookHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_book, parent, false));

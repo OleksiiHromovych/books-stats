@@ -153,10 +153,21 @@
     <string name="import_split_item_by">Split item by</string>
     <string name="import_add_item">Add item</string>
     <string name="import_to">import to</string>
-    <string name="menu_show_date">Show date</string>
     <string name="menu_change_sort_format">Change sort format</string>
     <string name="menu_stats">Stats</string>
     <string name="menu_export">Export</string>
+
+    <string name="menu_settings">Settings</string>
+    <string name="preferences_read_yet_category_title">Read yet</string>
+    <string name="preferences_global_category_title">Global</string>
+
+    <string name="preferences_list_item_date_spend">Spend Date</string>
+    <string name="preferences_list_item_date_full">Full Date</string>
+    <string name="preferences_list_date_format_title">Show date as:</string>
+
+    <string name="preferences_list_item_sort_by_category">category</string>
+    <string name="preferences_list_item_sort_by_year">year</string>
+    <string name="preferences_list_sort_format_title">Sort books by..</string>
 
     <string-array name="export_criteria_elements">
         <item>@string/book_category_title</item>
@@ -178,5 +189,15 @@
         <item>@string/book_author_title</item>
         <item>@string/book_name_title</item>
         <item>@string/book_description_title</item>
+    </string-array>
+
+    <string-array name="preferences_date_format">
+        <item>@string/preferences_list_item_date_full</item>
+        <item>@string/preferences_list_item_date_spend</item>
+    </string-array>
+
+    <string-array name="preferences_sort_format">
+        <item>@string/preferences_list_item_sort_by_category</item>
+        <item>@string/preferences_list_item_sort_by_year</item>
     </string-array>
 </resources>

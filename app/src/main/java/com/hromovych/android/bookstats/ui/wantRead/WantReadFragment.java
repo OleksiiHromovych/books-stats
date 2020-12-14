@@ -29,7 +29,6 @@ import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.HelpersItems.Holders;
 import com.hromovych.android.bookstats.HelpersItems.Labels;
 import com.hromovych.android.bookstats.HelpersItems.SimpleFragment;
-import com.hromovych.android.bookstats.MainActivity;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookDBSchema;
 import com.hromovych.android.bookstats.database.BookLab;
@@ -47,11 +46,6 @@ public class WantReadFragment extends SimpleFragment {
     private GroupAdapter mAdapter;
     private Callbacks mCallbacks;
 
-    private boolean sortByDate;
-
-    private static final String BOOK_CATEGORY_TEXT = "book_category_text";
-
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -65,8 +59,6 @@ public class WantReadFragment extends SimpleFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
-        sortByDate = getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
-                Context.MODE_PRIVATE).getBoolean(MainActivity.SORT_BY_DATE, true);
         updateUI();
 
 
@@ -74,7 +66,7 @@ public class WantReadFragment extends SimpleFragment {
     }
 
 
-    private ItemTouchHelper.SimpleCallback mItemTouchHelperCallback =
+    private final ItemTouchHelper.SimpleCallback mItemTouchHelperCallback =
             new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
                 @Override
                 public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
@@ -230,7 +222,7 @@ public class WantReadFragment extends SimpleFragment {
 
     private class BookViewHolder extends Holders.BookHolder implements View.OnClickListener {
 
-        private TextView priority;
+        private final TextView priority;
 
         public BookViewHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_book, parent, false));
@@ -262,7 +254,7 @@ public class WantReadFragment extends SimpleFragment {
         }
     }
     public class GroupAdapter extends ExpandableRecyclerAdapter<Holders.Group, Book, Holders.GroupViewHolder, BookViewHolder> {
-        private LayoutInflater mLayoutInflater;
+        private final LayoutInflater mLayoutInflater;
 
         public GroupAdapter(Context context, @NonNull List<Holders.Group> parentList) {
             super(parentList);

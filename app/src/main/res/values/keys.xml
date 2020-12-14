@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string translatable="false" name="key_list_date_format">list date format</string>
+    <string translatable="false" name="key_list_sort_format">list sort format</string>
+
+    <string translatable="false" name="key_read_yet_category">read yet category</string>
+    <string translatable="false" name="key_global_category">global category</string>
+</resources>

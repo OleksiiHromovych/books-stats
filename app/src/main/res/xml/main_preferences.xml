@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <PreferenceCategory
+        android:key="@string/key_global_category"
+        android:title="@string/preferences_global_category_title">
+        <DropDownPreference
+            android:defaultValue="@string/preferences_list_item_date_full"
+            android:entries="@array/preferences_date_format"
+            android:entryValues="@array/preferences_date_format"
+            android:icon="@mipmap/ic_launcher"
+            android:key="@string/key_list_date_format"
+            android:title="@string/preferences_list_date_format_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="@string/key_read_yet_category"
+        android:title="@string/preferences_read_yet_category_title">
+        <DropDownPreference
+            android:defaultValue="@string/preferences_list_item_sort_by_category"
+            android:entries="@array/preferences_sort_format"
+            android:entryValues="@array/preferences_sort_format"
+            android:icon="@mipmap/ic_launcher"
+            android:key="@string/key_list_sort_format"
+            android:title="@string/preferences_list_sort_format_title" />
+    </PreferenceCategory>
+</androidx.preference.PreferenceScreen>

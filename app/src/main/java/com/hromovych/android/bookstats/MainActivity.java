@@ -1,5 +1,6 @@
 package com.hromovych.android.bookstats;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
 import com.hromovych.android.bookstats.menuOption.Export.ExportDataActivity;
 import com.hromovych.android.bookstats.menuOption.Import.ImportDataActivity;
+import com.hromovych.android.bookstats.settings.SettingsActivity;
 import com.hromovych.android.bookstats.slider.IntroSlider;
 
 import java.util.ArrayList;
@@ -42,9 +44,7 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
     public static final int REQUEST_CODE_BOOK = 1;
     public static final int REQUEST_CODE_IMPORT = 2;
     public static final String GET_SHARED_PREFERENCES = "com.hromovych.android.bookstats";
-    public static final String SHOW_DATE_PREFERENCES = "date_format";
     private static final String FIRST_RUN_PREFERENCES = "first_run";
-    public static final String SORT_BY_DATE = "sort_format";
     private BottomNavigationView navView;
     private SharedPreferences mSharedPreferences;
 
@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -132,20 +133,14 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
 
                 builder.show();
                 return true;
-            case R.id.menu_date_format:
-                mSharedPreferences.edit().putBoolean(SHOW_DATE_PREFERENCES,
-                        !mSharedPreferences.getBoolean(SHOW_DATE_PREFERENCES, true)).apply();
-                this.recreate();
-                return true;
-            case R.id.menu_sort_format:
-                mSharedPreferences.edit().putBoolean(SORT_BY_DATE,
-                        !mSharedPreferences.getBoolean(SORT_BY_DATE, true)).apply();
+
+            case R.id.menu_settings:
+                startActivityForResult(new Intent(this, SettingsActivity.class), 0);
                 this.recreate();
                 return true;
             case R.id.import_books:
                 startActivityForResult(ImportDataActivity.newIntent(MainActivity.this),
                         REQUEST_CODE_IMPORT);
-
                 return true;
             case R.id.export_books:
                 startActivity(ExportDataActivity.newIntent(this));
@@ -187,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        this.recreate();
     }
-
-
 }

@@ -111,7 +111,6 @@
     <string name="import_split_item_by">Разделить элемент по</string>
     <string name="import_add_item">Добавить элемент</string>
     <string name="import_to">импортировать в</string>
-    <string name="menu_show_date">Показать дату</string>
     <string name="menu_change_sort_format">Изменить формат сортировки</string>
     <string name="menu_stats">Статистика</string>
     <string name="menu_export">Экспорт</string>

@@ -33,11 +33,11 @@ import com.hromovych.android.bookstats.HelpersItems.Holders.Group;
 import com.hromovych.android.bookstats.HelpersItems.Holders.GroupViewHolder;
 import com.hromovych.android.bookstats.HelpersItems.Labels;
 import com.hromovych.android.bookstats.HelpersItems.SimpleFragment;
-import com.hromovych.android.bookstats.MainActivity;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookDBSchema;
 import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
+import com.hromovych.android.bookstats.settings.PreferencesManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class ReadYetFragment extends SimpleFragment {
     private GroupAdapter mAdapter;
 
     private boolean showDate;
-    private boolean sortByDate;
+    private boolean sortByYear;
 
     private Callbacks mCallbacks;
 
@@ -63,10 +63,9 @@ public class ReadYetFragment extends SimpleFragment {
         new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
 
-        showDate = getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
-                Context.MODE_PRIVATE).getBoolean(MainActivity.SHOW_DATE_PREFERENCES, true);
-        sortByDate = getActivity().getSharedPreferences(MainActivity.GET_SHARED_PREFERENCES,
-                Context.MODE_PRIVATE).getBoolean(MainActivity.SORT_BY_DATE, true);
+        PreferencesManager pm = new PreferencesManager(getContext());
+        showDate = pm.isFullDateFormat();
+        sortByYear = pm.isSortByYear();
         updateUI();
 
         return view;
@@ -91,7 +90,7 @@ public class ReadYetFragment extends SimpleFragment {
         mCallbacks = null;
     }
 
-    private ItemTouchHelper.SimpleCallback mItemTouchHelperCallback =
+    private final ItemTouchHelper.SimpleCallback mItemTouchHelperCallback =
             new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
                 @Override
                 public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
@@ -187,7 +186,7 @@ public class ReadYetFragment extends SimpleFragment {
     private List<Group> getGroups(BookLab bookLab) {
         List<Group> groups = new ArrayList<>();
 
-        if (sortByDate) {
+        if (sortByYear) {
             List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
                             .getString(R.string.title_read_yet)),
                     BookDBSchema.BookTable.Cols.END_DATE + " , " +
@@ -261,8 +260,8 @@ public class ReadYetFragment extends SimpleFragment {
     }
 
     public class BookViewHolder extends Holders.BookHolder {
-        private TextView startDate;
-        private TextView endDate;
+        private final TextView startDate;
+        private final TextView endDate;
 
         public BookViewHolder(View itemView) {
             super(itemView);
@@ -322,7 +321,7 @@ public class ReadYetFragment extends SimpleFragment {
     }
 
     public class GroupAdapter extends ExpandableRecyclerAdapter<Group, Book, GroupViewHolder, BookViewHolder> {
-        private LayoutInflater mLayoutInflater;
+        private final LayoutInflater mLayoutInflater;
 
         public GroupAdapter(Context context, @NonNull List<Group> parentList) {
             super(parentList);
