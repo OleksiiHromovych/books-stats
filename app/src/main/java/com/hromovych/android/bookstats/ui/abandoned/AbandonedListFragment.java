@@ -1,34 +1,38 @@
 package com.hromovych.android.bookstats.ui.abandoned;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.hromovych.android.bookstats.HelpersItems.Book;
 import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.HelpersItems.Holders;
+import com.hromovych.android.bookstats.HelpersItems.Labels;
 import com.hromovych.android.bookstats.HelpersItems.SimpleFragment;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookLab;
-import com.hromovych.android.bookstats.menuOption.settings.PreferencesManager;
 
 import java.util.List;
+
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class AbandonedListFragment extends SimpleFragment {
 
     private RecyclerView mRecyclerView;
     private BookAdapter mAdapter;
-    private boolean isFullDateFormat;
 
     @Nullable
     @Override
@@ -38,9 +42,9 @@ public class AbandonedListFragment extends SimpleFragment {
         mRecyclerView = v.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        isFullDateFormat = new PreferencesManager(getContext()).isFullDateFormat();
-
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.title_abandoned);
+
+        new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
         return v;
     }
@@ -69,64 +73,103 @@ public class AbandonedListFragment extends SimpleFragment {
                         count, count));
     }
 
-    private class BookHolder extends Holders.BookHolder
-            implements View.OnClickListener {
+    private final ItemTouchHelper.SimpleCallback mItemTouchHelperCallback =
+            new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+                @Override
+                public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                    new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                            .addBackgroundColor(R.color.backgroundFont)
+                            .addSwipeLeftActionIcon(R.drawable.ic_menu_del)
+                            .addSwipeRightActionIcon(R.drawable.ic_read_now)
+                            .addSwipeLeftLabel(getString(R.string.delete_book))
+                            .addSwipeRightLabel(getString(R.string.title_read_now))
+                            .create()
+                            .decorate();
+
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
+
+                }
+
+                @Override
+                public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                    return false;
+                }
+
+                private boolean isBookDeleted = false;
+
+                @Override
+                public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                    final BookLab bookLab = BookLab.get(getActivity());
+                    List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getString(R.string.title_abandoned)));
+
+                    final Book book = books.get(viewHolder.getAdapterPosition());
+                    final Book oldBook = bookLab.getBook(book.getId());
+                    if (direction == ItemTouchHelper.LEFT) {  //delete
+                        isBookDeleted = true;
+                        bookLab.deleteBook(book);
+
+                    } else if (direction == ItemTouchHelper.RIGHT) { //to read now
+                        isBookDeleted = false;
+                        book.setStatus(getStatusConstant(getString(R.string.title_read_now)));
+                        book.setStartDate(DateHelper.today);
+                        book.setEndDate(DateHelper.undefinedDate);
+                        book.setLabel(Labels.NONE_VALUE);
+                        bookLab.updateBook(book);
+                    }
+                    updateUi();
+
+                    displaySnackbar(getString(R.string.swipe_element_text), getString(R.string.undo_title), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (isBookDeleted) {
+                                bookLab.addBook(oldBook);
+                            } else {
+                                bookLab.updateBook(oldBook);
+                            }
+                            updateUi();
+                        }
+                    });
+                }
+            };
+
+    public void displaySnackbar(String text, String actionName, View.OnClickListener action) {
+        Snackbar snack = Snackbar.make(getActivity().findViewById(android.R.id.content), text, Snackbar.LENGTH_SHORT)
+                .setAction(actionName, action);
+
+        View v = snack.getView();
+        v.setBackgroundColor(getResources().getColor(R.color.backgroundItem));
+
+        ((TextView) v.findViewById(R.id.snackbar_text)).setTextColor(Color.WHITE);
+        ((TextView) v.findViewById(R.id.snackbar_action)).setTextColor(Color.BLACK);
+
+        snack.show();
+    }
+
+
+    private static class BookHolder extends Holders.BookHolder {
 
         private final TextView startDate;
-        private final TextView endDate;
 
         public BookHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_book, parent, false));
 
             startDate = itemView.findViewById(R.id.details_up);
-            endDate = itemView.findViewById(R.id.details_down);
-
             startDate.setVisibility(View.VISIBLE);
-            endDate.setVisibility(View.VISIBLE);
         }
 
         public void bind(Book book, int pos) {
             super.bind(book, pos);
 
-            if (isFullDateFormat) {
-
-                if (!mBook.getStartDate().equals(DateHelper.unknownDate)
-                        && !mBook.getStartDate().equals(DateHelper.undefinedDate)) {
-                    startDate.setVisibility(View.VISIBLE);
-                    startDate.setText(String.format("+ %s", DateFormat.format("MMM dd, yyyy", mBook.getStartDate())));
-                } else
-                    startDate.setVisibility(View.INVISIBLE);
-
-                if (!mBook.getEndDate().equals(DateHelper.unknownDate)
-                        && !mBook.getEndDate().equals(DateHelper.undefinedDate)) {
-                    endDate.setText(String.format("- %s", DateFormat.format("MMM dd, yyyy", mBook.getEndDate())));
-                    endDate.setVisibility(View.VISIBLE);
-                } else
-                    endDate.setVisibility(View.INVISIBLE);
-
-            } else {
-                startDate.setText("");
-                if (!mBook.getStartDate().equals(DateHelper.unknownDate) &&
-                        !mBook.getEndDate().equals(DateHelper.unknownDate)
-                        && !mBook.getStartDate().equals(DateHelper.undefinedDate)
-                        && !mBook.getEndDate().equals(DateHelper.undefinedDate)) {
-
-                    long days = (mBook.getEndDate().getTime() - mBook.getStartDate().getTime())
-                            / 1000 / 60 / 60 / 24;
-                    if (days != 0)
-                        startDate.setText(String.valueOf(days));
-                    else
-                        startDate.setText("1");
-                }
-                endDate.setVisibility(View.GONE);
-            }
+            if (!mBook.getStartDate().equals(DateHelper.unknownDate)
+                    && !mBook.getStartDate().equals(DateHelper.undefinedDate)) {
+                startDate.setVisibility(View.VISIBLE);
+                startDate.setText(String.format("+ %s", DateFormat.format("MMM dd, yyyy", mBook.getStartDate())));
+            } else
+                startDate.setVisibility(View.INVISIBLE);
         }
 
-        @Override
-        public void onClick(View v) {
-//            mCallbacks.onBookSelected(mBook);
-            Toast.makeText(getContext(), "click", Toast.LENGTH_SHORT).show();
-        }
     }
 
 
@@ -142,7 +185,7 @@ public class AbandonedListFragment extends SimpleFragment {
         @Override
         public AbandonedListFragment.BookHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            return new AbandonedListFragment.BookHolder(layoutInflater, parent);
+            return new BookHolder(layoutInflater, parent);
         }
 
         @Override
