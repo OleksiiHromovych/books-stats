@@ -10,6 +10,7 @@ public class ValueConvector {
         public static final String READ_NOW = "read now";
         public static final String READ_YET = "read yet";
         public static final String WANT_READ = "want read";
+        public static final String ABANDONED = "abandoned";
 
         //For save priority in bd (Type is field for want read book: low, medium, high)
         public static final String LOW = "low";
@@ -33,6 +34,8 @@ public class ValueConvector {
                     return context.getString(R.string.title_read_yet);
                 case Constants.WANT_READ:
                     return context.getString(R.string.title_want_read);
+                case Constants.ABANDONED:
+                    return context.getString(R.string.title_abandoned);
                 default:
                     return s;
             }
@@ -78,6 +81,8 @@ public class ValueConvector {
                 return Constants.READ_YET;
             else if (s.equals(context.getString(R.string.title_want_read)))
                 return Constants.WANT_READ;
+            else if (s.equals(context.getString(R.string.title_abandoned)))
+                return Constants.ABANDONED;
             else {
                 return s;
             }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -20,6 +21,9 @@ import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.HelpersItems.DatePickerFragment;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.ValueConvector;
+import com.hromovych.android.bookstats.ui.abandoned.AbandonedListFragment;
+import com.hromovych.android.bookstats.ui.readYet.BookYetFragment;
+import com.hromovych.android.bookstats.ui.wantRead.WantBookFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -32,6 +36,7 @@ import java.util.UUID;
 public class BookNowFragment extends BookFragment {
 
     public static final int BOOK_FRAGMENT_ID = R.id.read_now;
+    public static final int ABANDONED_ID = AbandonedListFragment.class.hashCode();
 
     private static final int REQUEST_DATE = 0;
     private static final String DIALOG_DATE = "DialogDate";
@@ -51,7 +56,34 @@ public class BookNowFragment extends BookFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
+        final String[] choosesStatus = extendArray(getResources().getStringArray(R.array.status_spinner_list),
+                getString(R.string.title_abandoned));
+
+        mBookStatusSpinner.setAdapter(new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line,
+                choosesStatus
+        ));
+        mBookStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                int[] choose_id = {BookYetFragment.BOOK_FRAGMENT_ID,
+                        BookNowFragment.BOOK_FRAGMENT_ID,
+                        WantBookFragment.BOOK_FRAGMENT_ID,
+                        ABANDONED_ID
+                };
+                spinnerOnItemSelected(position, choosesStatus, choose_id);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         mBookStatusSpinner.setSelection(1);
+
         mBook.setEndDate(DateHelper.undefinedDate);
         if (mBook.getStartDate().equals(DateHelper.undefinedDate))
             mBook.setStartDate(DateHelper.today);
@@ -106,7 +138,7 @@ public class BookNowFragment extends BookFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mBook.setType(ValueConvector.ToConstant.toTypeConstant(getContext(),
                         getResources().getStringArray(
-                        R.array.type_spinner_list)[position]));
+                                R.array.type_spinner_list)[position]));
                 updateBook();
             }
 
@@ -129,7 +161,7 @@ public class BookNowFragment extends BookFragment {
         if (mBook.getStartDate().equals(mUnknownDate))
             mBookStartDate.setText("");
         else mBookStartDate.setText(new SimpleDateFormat("E dd:MM:yyyy", Locale.getDefault())
-                    .format(mBook.getStartDate()));
+                .format(mBook.getStartDate()));
     }
 
     @Override
@@ -153,6 +185,12 @@ public class BookNowFragment extends BookFragment {
             default:
                 super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    private <T> T[] extendArray(T[] array, T value) {
+        T[] newArray = Arrays.copyOf(array, array.length + 1);
+        newArray[newArray.length - 1] = value;
+        return newArray;
     }
 }
 

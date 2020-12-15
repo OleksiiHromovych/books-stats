@@ -1,4 +1,4 @@
-package com.hromovych.android.bookstats.settings;
+package com.hromovych.android.bookstats.HelpersItems;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -9,27 +9,24 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.hromovych.android.bookstats.R;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SimpleActivity extends AppCompatActivity {
+
+    protected ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_simple);
 
-        ActionBar actionBar = this.getSupportActionBar();
+        actionBar = this.getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(R.string.menu_settings);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.settings_container, new SettingsFragment())
-                .commit();
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);

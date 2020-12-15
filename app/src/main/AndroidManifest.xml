@@ -20,7 +20,9 @@
         <activity android:name=".slider.IntroSlider" />
         <activity android:name=".menuOption.Export.ExportDataActivity" />
 
-        <activity android:name=".settings.SettingsActivity" />
+        <activity android:name=".menuOption.settings.SettingsActivity" />
+
+        <activity android:name=".ui.abandoned.AbandonedActivity" />
 
         <activity android:name=".menuOption.Import.ImportDataActivity" />
         <activity

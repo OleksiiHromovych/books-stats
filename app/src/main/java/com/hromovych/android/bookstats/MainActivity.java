@@ -32,8 +32,9 @@ import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
 import com.hromovych.android.bookstats.menuOption.Export.ExportDataActivity;
 import com.hromovych.android.bookstats.menuOption.Import.ImportDataActivity;
-import com.hromovych.android.bookstats.settings.SettingsActivity;
+import com.hromovych.android.bookstats.menuOption.settings.SettingsActivity;
 import com.hromovych.android.bookstats.slider.IntroSlider;
+import com.hromovych.android.bookstats.ui.abandoned.AbandonedActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
 
     public static final int REQUEST_CODE_BOOK = 1;
     public static final int REQUEST_CODE_IMPORT = 2;
+    public static final int REQUEST_CODE_RECREATE_APPLICATION = 3;
     public static final String GET_SHARED_PREFERENCES = "com.hromovych.android.bookstats";
     private static final String FIRST_RUN_PREFERENCES = "first_run";
     private BottomNavigationView navView;
@@ -101,53 +103,65 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+
             case R.id.delete_book:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-                builder.setTitle(R.string.delete_books_alert_dialog_title);
-                List<String> list = new ArrayList<>(Arrays.asList(getResources()
-                        .getStringArray(R.array.status_spinner_list)));
-                list.add(getString(R.string.all_title));
-                final ArrayAdapter<String> adp = new ArrayAdapter<String>(this,
-                        android.R.layout.simple_spinner_item, list);
-                final Spinner sp = new Spinner(this);
-                sp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                sp.setAdapter(adp);
-                sp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                sp.setMinimumHeight(80);
-                sp.setPadding(5, 15, 5, 10);
-
-                builder.setView(sp);
-                builder.setNeutralButton(R.string.cancel_title, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                builder.setPositiveButton(R.string.delete_book, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteBooks(sp.getSelectedItem().toString());
-                    }
-                });
-
-                builder.show();
+                showDeleteDialog();
                 return true;
 
             case R.id.menu_settings:
-                startActivityForResult(new Intent(this, SettingsActivity.class), 0);
-                this.recreate();
+                startActivityForResult(new Intent(this, SettingsActivity.class),
+                        REQUEST_CODE_RECREATE_APPLICATION);
                 return true;
+
+            case R.id.menu_abandoned_books:
+                startActivity(new Intent(this, AbandonedActivity.class));
+                return true;
+
             case R.id.import_books:
                 startActivityForResult(ImportDataActivity.newIntent(MainActivity.this),
                         REQUEST_CODE_IMPORT);
                 return true;
+
             case R.id.export_books:
                 startActivity(ExportDataActivity.newIntent(this));
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showDeleteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.delete_books_alert_dialog_title);
+        List<String> list = new ArrayList<>(Arrays.asList(getResources()
+                .getStringArray(R.array.status_spinner_list)));
+        list.add(getString(R.string.all_title));
+        final ArrayAdapter<String> adp = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+        final Spinner sp = new Spinner(this);
+        sp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        sp.setAdapter(adp);
+        sp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        sp.setMinimumHeight(80);
+        sp.setPadding(5, 15, 5, 10);
+
+        builder.setView(sp);
+        builder.setNeutralButton(R.string.cancel_title, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.setPositiveButton(R.string.delete_book, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteBooks(sp.getSelectedItem().toString());
+            }
+        });
+
+        builder.show();
     }
 
 
@@ -182,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        this.recreate();
+        if (requestCode == REQUEST_CODE_RECREATE_APPLICATION)
+            this.recreate();
     }
 }

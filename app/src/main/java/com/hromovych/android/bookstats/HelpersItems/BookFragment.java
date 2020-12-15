@@ -191,27 +191,17 @@ public class BookFragment extends Fragment {
 
         bookCategoryField.setAdapter(new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, items));
+
         mBookStatusSpinner = v.findViewById(R.id.book_status);
         mBookStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String[] choose = getResources().getStringArray(R.array.status_spinner_list);
-                if (mBook.getStatus() == null) {
-                    mBook.setStatus(ValueConvector.ToConstant.toStatusConstant(getContext(),
-                            choose[position]));
-                    return;
-                }
-                if (mBook.getStatus().equals(ValueConvector.ToConstant.toStatusConstant(getContext(),
-                        choose[position]))) {
-                    return;
-                }
-                mBook.setStatus(ValueConvector.ToConstant.toStatusConstant(getContext(),
-                        choose[position]));
                 int[] choose_id = {BookYetFragment.BOOK_FRAGMENT_ID,
                         BookNowFragment.BOOK_FRAGMENT_ID,
                         WantBookFragment.BOOK_FRAGMENT_ID};
-                mCallbacks.changeFragmentByStatus(choose_id[position]);
 
+                spinnerOnItemSelected(position, choose, choose_id);
             }
 
             @Override
@@ -277,6 +267,21 @@ public class BookFragment extends Fragment {
             }
         });
         return v;
+    }
+
+    protected void spinnerOnItemSelected(int position, String[] choose, int[] choose_id) {
+        if (mBook.getStatus() == null) {
+            mBook.setStatus(ValueConvector.ToConstant.toStatusConstant(getContext(),
+                    choose[position]));
+            return;
+        }
+        if (mBook.getStatus().equals(ValueConvector.ToConstant.toStatusConstant(getContext(),
+                choose[position]))) {
+            return;
+        }
+        mBook.setStatus(ValueConvector.ToConstant.toStatusConstant(getContext(),
+                choose[position]));
+        mCallbacks.changeFragmentByStatus(choose_id[position]);
     }
 
     @Override

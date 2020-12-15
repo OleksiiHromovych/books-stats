@@ -37,7 +37,7 @@ import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookDBSchema;
 import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
-import com.hromovych.android.bookstats.settings.PreferencesManager;
+import com.hromovych.android.bookstats.menuOption.settings.PreferencesManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +56,9 @@ public class ReadYetFragment extends SimpleFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_read_yet, container, false);
+        View view = inflater.inflate(R.layout.fragment_books_list, container, false);
 
-        mRecyclerView = view.findViewById(R.id.read_yet_recycler_view);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 

@@ -168,6 +168,8 @@
     <string name="preferences_list_item_sort_by_category">category</string>
     <string name="preferences_list_item_sort_by_year">year</string>
     <string name="preferences_list_sort_format_title">Sort books by..</string>
+    <string name="title_abandoned">Abandoned</string>
+    <string name="menu_abandoned_books">Abandoned books</string>
 
     <string-array name="export_criteria_elements">
         <item>@string/book_category_title</item>

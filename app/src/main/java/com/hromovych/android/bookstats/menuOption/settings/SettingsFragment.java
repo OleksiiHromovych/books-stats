@@ -1,4 +1,4 @@
-package com.hromovych.android.bookstats.settings;
+package com.hromovych.android.bookstats.menuOption.settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;

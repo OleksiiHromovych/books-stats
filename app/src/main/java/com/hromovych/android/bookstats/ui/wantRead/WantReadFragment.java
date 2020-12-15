@@ -54,8 +54,8 @@ public class WantReadFragment extends SimpleFragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_want_read, container, false);
-        mRecyclerView = view.findViewById(R.id.want_read_recycler_view);
+        View view = inflater.inflate(R.layout.fragment_books_list, container, false);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 

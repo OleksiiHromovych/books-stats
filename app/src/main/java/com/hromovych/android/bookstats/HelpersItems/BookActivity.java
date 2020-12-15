@@ -39,7 +39,7 @@ public class BookActivity extends AppCompatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book);
+        setContentView(R.layout.activity_simple);
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_done_edit_menu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -49,31 +49,31 @@ public class BookActivity extends AppCompatActivity
         Integer fragment_id = getIntent().getIntExtra(ARG_BOOK_FRAGMENT, -1);
 
         fm = getSupportFragmentManager();
-        fragment = fm.findFragmentById(R.id.fragment_container);
+        fragment = fm.findFragmentById(R.id.container);
 
         if (fragment == null) {
             if (fragment_id.equals(BookNowFragment.BOOK_FRAGMENT_ID)) {
                 fragment = BookNowFragment.newInstance(bookId);
                 fm.beginTransaction()
-                        .add(R.id.fragment_container, fragment)
+                        .add(R.id.container, fragment)
                         .commit();
 
             } else if (fragment_id.equals(BookYetFragment.BOOK_FRAGMENT_ID)) {
                 fragment = BookYetFragment.newInstance(bookId);
                 fm.beginTransaction()
-                        .add(R.id.fragment_container, fragment)
+                        .add(R.id.container, fragment)
                         .commit();
 
 
             } else if (fragment_id.equals(WantBookFragment.BOOK_FRAGMENT_ID)) {
                 fragment = WantBookFragment.newInstance(bookId);
                 fm.beginTransaction()
-                        .add(R.id.fragment_container, fragment)
+                        .add(R.id.container, fragment)
                         .commit();
             } else {
                 fragment = BookFragment.newInstance(bookId);
                 fm.beginTransaction()
-                        .add(R.id.fragment_container, fragment)
+                        .add(R.id.container, fragment)
                         .commit();
             }
         }
@@ -120,6 +120,8 @@ public class BookActivity extends AppCompatActivity
                     .replace(fragment.getId(), fragment_new)
                     .commit();
             fragment = fragment_new;
+        } else {
+            finish();
         }
     }
 

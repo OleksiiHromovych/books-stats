@@ -31,7 +31,7 @@ import com.hromovych.android.bookstats.HelpersItems.SimpleFragment;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
-import com.hromovych.android.bookstats.settings.PreferencesManager;
+import com.hromovych.android.bookstats.menuOption.settings.PreferencesManager;
 
 import java.util.List;
 
@@ -55,8 +55,8 @@ public class ReadNowFragment extends SimpleFragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_read_now, container, false);
-        mRecyclerView = view.findViewById(R.id.read_now_recycler_view);
+        View view = inflater.inflate(R.layout.fragment_books_list, container, false);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
