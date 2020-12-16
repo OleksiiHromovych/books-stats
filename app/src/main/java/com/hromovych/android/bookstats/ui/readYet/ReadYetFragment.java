@@ -40,6 +40,7 @@ import com.hromovych.android.bookstats.database.ValueConvector;
 import com.hromovych.android.bookstats.menuOption.settings.PreferencesManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -186,6 +187,8 @@ public class ReadYetFragment extends SimpleFragment {
     private List<Group> getGroups(BookLab bookLab) {
         List<Group> groups = new ArrayList<>();
 
+        Boolean[] expendedStatus = getExpendedGroupArray(bookLab);
+
         if (sortByYear) {
             List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
                             .getString(R.string.title_read_yet)),
@@ -206,9 +209,11 @@ public class ReadYetFragment extends SimpleFragment {
                             booksDate.add(book);
                             continue;
                         }
-                        group = new Group(getString(R.string.unknown_date), booksDate);
+                        group = new Group(getString(R.string.unknown_date), booksDate,
+                                expendedStatus[groups.size()]); //it give next expended group status
                     } else
-                        group = new Group(Integer.toString(lastDate + 1900), booksDate);
+                        group = new Group(Integer.toString(lastDate + 1900), booksDate,
+                                expendedStatus[groups.size()]);
                     booksDate = new ArrayList<>();
                     lastDate = date;
                     groups.add(group);
@@ -216,7 +221,8 @@ public class ReadYetFragment extends SimpleFragment {
                 booksDate.add(book);
             }
             if (!booksDate.isEmpty()) {
-                Group group = new Group(Integer.toString(lastDate + 1900), booksDate);
+                Group group = new Group(Integer.toString(lastDate + 1900), booksDate,
+                        expendedStatus[groups.size()]);
                 groups.add(group);
             }
 
@@ -240,9 +246,10 @@ public class ReadYetFragment extends SimpleFragment {
                             booksCategory.add(book);
                             continue;
                         }
-                        group = new Group(getString(R.string.without_category_book), booksCategory);
+                        group = new Group(getString(R.string.without_category_book), booksCategory,
+                                expendedStatus[groups.size()]);
                     } else
-                        group = new Group(lastCategory, booksCategory);
+                        group = new Group(lastCategory, booksCategory, expendedStatus[groups.size()]);
                     booksCategory = new ArrayList<>();
                     groups.add(group);
                     lastCategory = category;
@@ -251,12 +258,27 @@ public class ReadYetFragment extends SimpleFragment {
 
             }
             if (!booksCategory.isEmpty()) {
-                Group group = new Group(lastCategory, booksCategory);
+                Group group = new Group(lastCategory, booksCategory, expendedStatus[groups.size()]);
                 groups.add(group);
             }
 
         }
         return groups;
+    }
+
+    private Boolean[] getExpendedGroupArray(BookLab bookLab) {
+        PreferencesManager manager = new PreferencesManager(getContext());
+
+        Boolean[] expendedStatus = manager.getExpendedArray(PreferencesManager.YET_EXPENDED_ARRAY_KEY);
+        List<String> titles = sortByYear ? bookLab.getColumnItems(BookDBSchema.BookTable.Cols.START_DATE)
+                : bookLab.getColumnItems(BookDBSchema.BookTable.Cols.CATEGORY);
+
+        if (titles.size() != expendedStatus.length) {
+            expendedStatus = new Boolean[titles.size()];
+            Arrays.fill(expendedStatus, false);
+            manager.putExpendedArray(expendedStatus, PreferencesManager.YET_EXPENDED_ARRAY_KEY);
+        }
+        return expendedStatus;
     }
 
     public class BookViewHolder extends Holders.BookHolder {
@@ -348,6 +370,7 @@ public class ReadYetFragment extends SimpleFragment {
         public GroupViewHolder onCreateParentViewHolder(@NonNull ViewGroup parentViewGroup, int viewType) {
             View groupView = mLayoutInflater.inflate(R.layout.list_item_group, parentViewGroup,
                     false);
+
             return new GroupViewHolder(groupView);
         }
 
@@ -361,8 +384,19 @@ public class ReadYetFragment extends SimpleFragment {
 
 
         @Override
-        public void onBindParentViewHolder(@NonNull GroupViewHolder parentViewHolder, int parentPosition, @NonNull Group parent) {
+        public void onBindParentViewHolder(@NonNull GroupViewHolder parentViewHolder, final int parentPosition, @NonNull Group parent) {
             parentViewHolder.bind(parent);
+            parentViewHolder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PreferencesManager preferencesManager = new PreferencesManager(getContext());
+                    Boolean[] expendedArray = preferencesManager.getExpendedArray(
+                            PreferencesManager.YET_EXPENDED_ARRAY_KEY);
+                    expendedArray[parentPosition] = !expendedArray[parentPosition];
+                    preferencesManager.putExpendedArray(expendedArray,
+                            PreferencesManager.YET_EXPENDED_ARRAY_KEY);
+                }
+            });
         }
 
         @Override

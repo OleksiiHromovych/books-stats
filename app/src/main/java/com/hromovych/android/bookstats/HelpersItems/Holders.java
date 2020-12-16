@@ -18,12 +18,12 @@ public class Holders {
     public static class BookHolder extends BaseHolder
             implements View.OnClickListener {
 
-        private TextView count;
-        private TextView bookName;
-        private TextView author;
-        private TextView pages;
+        private final TextView count;
+        private final TextView bookName;
+        private final TextView author;
+        private final TextView pages;
 
-        private LinearLayout pageLayout;
+        private final LinearLayout pageLayout;
 
         protected Book mBook;
 
@@ -62,12 +62,19 @@ public class Holders {
 
     public static class Group implements Parent<Book> {
 
-        private List<Book> groupItems;
-        private String title;
+        private final List<Book> groupItems;
+        private final String title;
+        private boolean isExpanded = false;
 
         public Group(String title, List<Book> books) {
             groupItems = books;
             this.title = title;
+        }
+
+        public Group(String title, List<Book> books, boolean isExpanded) {
+            groupItems = books;
+            this.title = title;
+            this.isExpanded = isExpanded;
         }
 
         public String getTitle() {
@@ -81,14 +88,14 @@ public class Holders {
 
         @Override
         public boolean isInitiallyExpanded() {
-            return false;
+            return isExpanded;
         }
     }
 
     public static class GroupViewHolder extends ParentViewHolder {
 
-        private TextView mGroupTextView;
-        private TextView mGroupBookCount;
+        private final TextView mGroupTextView;
+        private final TextView mGroupBookCount;
 
         public GroupViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -99,6 +106,20 @@ public class Holders {
         public void bind(Group groupItem) {
             mGroupTextView.setText(groupItem.getTitle());
             mGroupBookCount.setText(String.valueOf(groupItem.getChildList().size()));
+        }
+
+        public void setOnClickListener(final View.OnClickListener onClickListener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickListener.onClick(v);
+                    if (isExpanded()) {
+                        collapseView();
+                    } else {
+                        expandView();
+                    }
+                }
+            });
         }
     }
 
