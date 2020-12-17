@@ -27,11 +27,11 @@ import com.hromovych.android.bookstats.HelpersItems.Callbacks;
 import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.HelpersItems.Holders;
 import com.hromovych.android.bookstats.HelpersItems.Labels;
+import com.hromovych.android.bookstats.HelpersItems.PreferencesHelper;
 import com.hromovych.android.bookstats.HelpersItems.SimpleFragment;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
-import com.hromovych.android.bookstats.menuOption.settings.PreferencesManager;
 
 import java.util.List;
 
@@ -61,7 +61,7 @@ public class ReadNowFragment extends SimpleFragment {
 
         new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
-        showDate = new PreferencesManager(getContext()).isFullDateFormat();
+        showDate = new PreferencesHelper(getContext()).isFullDateFormat();
 
         return view;
     }

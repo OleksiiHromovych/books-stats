@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -29,6 +28,7 @@ import com.hromovych.android.bookstats.HelpersItems.Book;
 import com.hromovych.android.bookstats.HelpersItems.BookActivity;
 import com.hromovych.android.bookstats.HelpersItems.Callbacks;
 import com.hromovych.android.bookstats.HelpersItems.FileUtils;
+import com.hromovych.android.bookstats.HelpersItems.PreferencesHelper;
 import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
 import com.hromovych.android.bookstats.menuOption.Export.ExportDataActivity;
@@ -44,20 +44,19 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
     public static final int REQUEST_CODE_BOOK = 1;
     public static final int REQUEST_CODE_IMPORT = 2;
     public static final int REQUEST_CODE_RECREATE_APPLICATION = 3;
-    public static final String GET_SHARED_PREFERENCES = "com.hromovych.android.bookstats";
-    private static final String FIRST_RUN_PREFERENCES = "first_run";
+
     private BottomNavigationView navView;
-    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mSharedPreferences = getSharedPreferences(GET_SHARED_PREFERENCES,
-                MODE_PRIVATE);
-        if (mSharedPreferences.getBoolean(FIRST_RUN_PREFERENCES, true)) {
+
+        PreferencesHelper preferencesHelper = new PreferencesHelper(this);
+
+        if (preferencesHelper.isFirstRun()) {
             startActivity(new Intent(this, IntroSlider.class));
-            mSharedPreferences.edit().putBoolean(FIRST_RUN_PREFERENCES, false).apply();
+            preferencesHelper.putIsFirstRun(false);
         }
 
         if (getIntent().getData() != null) {

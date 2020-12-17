@@ -1,4 +1,4 @@
-package com.hromovych.android.bookstats.menuOption.settings;
+package com.hromovych.android.bookstats.HelpersItems;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,15 +8,14 @@ import androidx.preference.PreferenceManager;
 
 import com.hromovych.android.bookstats.R;
 
-public class PreferencesManager {
+public class PreferencesHelper {
 
-    public static final String YET_EXPENDED_ARRAY_KEY = "yet expended array key";
     private static final String ARRAY_JOINT_DELIMITER = "_";
 
     public SharedPreferences mSharedPreferences;
     private final Context context;
 
-    public PreferencesManager(Context context) {
+    public PreferencesHelper(Context context) {
         this.context = context;
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
@@ -37,11 +36,19 @@ public class PreferencesManager {
         return context.getString(id);
     }
 
-    public void putExpendedArray(Boolean[] array, String key) {
+    public void putExpendedYetArray(Boolean[] array) {
+        putExpendedArray(array, getKey(R.string.YET_EXPENDED_ARRAY_KEY));
+    }
+
+    public Boolean[] getExpendedYetArray() {
+        return getExpendedArray(getKey(R.string.YET_EXPENDED_ARRAY_KEY));
+    }
+
+    private void putExpendedArray(Boolean[] array, String key) {
         mSharedPreferences.edit().putString(key, arrayToString(array)).apply();
     }
 
-    public Boolean[] getExpendedArray(String key) {
+    private Boolean[] getExpendedArray(String key) {
         return arrayFromString(mSharedPreferences.getString(key, ""));
     }
 
@@ -58,4 +65,11 @@ public class PreferencesManager {
         return result;
     }
 
+    public boolean isFirstRun() {
+        return mSharedPreferences.getBoolean(getKey(R.string.FIRST_RUN_KEY), true);
+    }
+
+    public void putIsFirstRun(boolean isFirstRun) {
+        mSharedPreferences.edit().putBoolean(getKey(R.string.FIRST_RUN_KEY), isFirstRun).apply();
+    }
 }

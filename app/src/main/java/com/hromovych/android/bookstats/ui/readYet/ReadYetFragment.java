@@ -32,12 +32,12 @@ import com.hromovych.android.bookstats.HelpersItems.Holders;
 import com.hromovych.android.bookstats.HelpersItems.Holders.Group;
 import com.hromovych.android.bookstats.HelpersItems.Holders.GroupViewHolder;
 import com.hromovych.android.bookstats.HelpersItems.Labels;
+import com.hromovych.android.bookstats.HelpersItems.PreferencesHelper;
 import com.hromovych.android.bookstats.HelpersItems.SimpleFragment;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookDBSchema;
 import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
-import com.hromovych.android.bookstats.menuOption.settings.PreferencesManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,7 +64,7 @@ public class ReadYetFragment extends SimpleFragment {
         new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
 
-        PreferencesManager pm = new PreferencesManager(getContext());
+        PreferencesHelper pm = new PreferencesHelper(getContext());
         isFullDateFormat = pm.isFullDateFormat();
         sortByYear = pm.isSortByYear();
         updateUI();
@@ -267,16 +267,16 @@ public class ReadYetFragment extends SimpleFragment {
     }
 
     private Boolean[] getExpendedGroupArray(BookLab bookLab) {
-        PreferencesManager manager = new PreferencesManager(getContext());
+        PreferencesHelper helper = new PreferencesHelper(getContext());
 
-        Boolean[] expendedStatus = manager.getExpendedArray(PreferencesManager.YET_EXPENDED_ARRAY_KEY);
+        Boolean[] expendedStatus = helper.getExpendedYetArray();
         List<String> titles = sortByYear ? bookLab.getColumnItems(BookDBSchema.BookTable.Cols.START_DATE)
                 : bookLab.getColumnItems(BookDBSchema.BookTable.Cols.CATEGORY);
 
         if (titles.size() != expendedStatus.length) {
             expendedStatus = new Boolean[titles.size()];
             Arrays.fill(expendedStatus, false);
-            manager.putExpendedArray(expendedStatus, PreferencesManager.YET_EXPENDED_ARRAY_KEY);
+            helper.putExpendedYetArray(expendedStatus);
         }
         return expendedStatus;
     }
@@ -389,12 +389,10 @@ public class ReadYetFragment extends SimpleFragment {
             parentViewHolder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PreferencesManager preferencesManager = new PreferencesManager(getContext());
-                    Boolean[] expendedArray = preferencesManager.getExpendedArray(
-                            PreferencesManager.YET_EXPENDED_ARRAY_KEY);
+                    PreferencesHelper preferencesHelper = new PreferencesHelper(getContext());
+                    Boolean[] expendedArray = preferencesHelper.getExpendedYetArray();
                     expendedArray[parentPosition] = !expendedArray[parentPosition];
-                    preferencesManager.putExpendedArray(expendedArray,
-                            PreferencesManager.YET_EXPENDED_ARRAY_KEY);
+                    preferencesHelper.putExpendedYetArray(expendedArray);
                 }
             });
         }

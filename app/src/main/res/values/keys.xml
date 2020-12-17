@@ -5,4 +5,8 @@
 
     <string translatable="false" name="key_read_yet_category">read yet category</string>
     <string translatable="false" name="key_global_category">global category</string>
+
+    <string translatable="false" name="YET_EXPENDED_ARRAY_KEY">yet expended array key</string>
+    <string translatable="false" name="FIRST_RUN_KEY">first run</string>
+
 </resources>
