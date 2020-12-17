@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+
+        android:orientation="vertical">
+
+        <CheckBox
+            android:id="@+id/yet_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@drawable/checkbox_circle"
+            android:padding="5dp"
+            android:text="@string/title_read_yet" />
+
+        <CheckBox
+            android:id="@+id/now_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@drawable/checkbox_circle"
+            android:padding="5dp"
+            android:text="@string/title_read_now" />
+
+        <CheckBox
+            android:id="@+id/want_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@drawable/checkbox_circle"
+            android:padding="5dp"
+            android:text="@string/title_want_read" />
+
+    </LinearLayout>
+</FrameLayout>

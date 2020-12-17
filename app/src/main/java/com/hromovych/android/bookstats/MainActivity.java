@@ -7,12 +7,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,8 +37,6 @@ import com.hromovych.android.bookstats.menuOption.settings.SettingsActivity;
 import com.hromovych.android.bookstats.slider.IntroSlider;
 import com.hromovych.android.bookstats.ui.abandoned.AbandonedActivity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements Callbacks {
@@ -132,22 +131,32 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
     }
 
     private void showDeleteDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle(R.string.delete_books_alert_dialog_title);
-        List<String> list = new ArrayList<>(Arrays.asList(getResources()
-                .getStringArray(R.array.status_spinner_list)));
-        list.add(getString(R.string.all_title));
-        final ArrayAdapter<String> adp = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, list);
-        final Spinner sp = new Spinner(this);
-        sp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        sp.setAdapter(adp);
-        sp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        sp.setMinimumHeight(80);
-        sp.setPadding(5, 15, 5, 10);
 
-        builder.setView(sp);
+        final LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        for (String title : getResources().getStringArray(R.array.status_spinner_list)) {
+            CheckBox checkBox = new CheckBox(this);
+            checkBox.setText(title);
+            checkBox.setButtonDrawable(R.drawable.checkbox_circle);
+            checkBox.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            checkBox.setPadding(5, 5, 5, 5);
+            linearLayout.addView(checkBox);
+
+        }
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+        linearLayout.setLayoutParams(layoutParams);
+
+        FrameLayout frameLayout = new FrameLayout(this);
+        frameLayout.addView(linearLayout);
+
+        builder.setView(frameLayout);
         builder.setNeutralButton(R.string.cancel_title, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -157,7 +166,11 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
         builder.setPositiveButton(R.string.delete_book, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                deleteBooks(sp.getSelectedItem().toString());
+                for (int i = 0; i < linearLayout.getChildCount(); i++) {
+                    CheckBox checkBox = (CheckBox) linearLayout.getChildAt(i);
+                    if (checkBox.isChecked())
+                        deleteBooks(checkBox.getText().toString());
+                }
             }
         });
 
@@ -167,15 +180,10 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
 
     private void deleteBooks(String status) {
         BookLab bookLab = BookLab.get(MainActivity.this);
-        if (status.equals(getString(R.string.all_title))) {
-            bookLab.deleteBooks();
-        } else {
-            status = ValueConvector.ToConstant.toStatusConstant(getApplicationContext(), status);
-            List<Book> books = bookLab.getBooksByStatus(status);
-            for (Book book : books)
-                bookLab.deleteBook(book);
-
-        }
+        status = ValueConvector.ToConstant.toStatusConstant(getApplicationContext(), status);
+        List<Book> books = bookLab.getBooksByStatus(status);
+        for (Book book : books)
+            bookLab.deleteBook(book);
 
         this.recreate();
     }
