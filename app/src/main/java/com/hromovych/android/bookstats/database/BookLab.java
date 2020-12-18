@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 import com.hromovych.android.bookstats.HelpersItems.Book;
 import com.hromovych.android.bookstats.database.BookDBSchema.BookTable;
@@ -19,8 +20,8 @@ public class BookLab {
 
     private static BookLab sBookLab;
 
-    private Context mContext;
-    private SQLiteDatabase mDatabase;
+    private final Context mContext;
+    private final SQLiteDatabase mDatabase;
 
 
     private BookLab(Context context) {
@@ -82,22 +83,16 @@ public class BookLab {
 
     public List<Book> getBooksByWhereArgsMap(Map<String, String> map) {
         List<Book> books = new ArrayList<>();
-        StringBuilder whereClause = new StringBuilder();
-        for (String key : map.keySet()) {
-            whereClause.append(key).append(" AND ");
-        }
-        whereClause.delete(whereClause.length() - 5, whereClause.length());
-        BookCursorWrapper cursor = queryBooks(
-                whereClause.toString(),
-                map.values().toArray(new String[0]));
-        try {
+        String whereClause = TextUtils.join(" AND ", map.keySet());
+
+        try (BookCursorWrapper cursor = queryBooks(
+                whereClause,
+                map.values().toArray(new String[0]))) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 books.add(cursor.getBook());
                 cursor.moveToNext();
             }
-        } finally {
-            cursor.close();
         }
         return books;
     }

@@ -65,22 +65,22 @@
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
+        android:layout_marginTop="20dp"
         android:background="@color/backgroundItem"
-        app:layout_constraintTop_toBottomOf="@id/linearLayout4"
-        android:layout_marginTop="20dp">
+        app:layout_constraintTop_toBottomOf="@id/linearLayout4">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="@string/exported_fields_title"
             android:gravity="center"
-            app:layout_constraintTop_toTopOf="parent"
+            android:text="@string/exported_fields_title"
+            app:layout_constraintBottom_toTopOf="@id/exported_fields_textView"
             app:layout_constraintEnd_toStartOf="@id/export_fields_change_btn"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/exported_fields_textView" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/export_fields_change_btn"
@@ -95,17 +95,17 @@
             android:id="@+id/exported_fields_textView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
         android:background="@color/backgroundItem"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout3">
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
         <Button
             android:id="@+id/export_add_criteria_btn"
@@ -121,9 +121,9 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginStart="15dp"
             android:gravity="center_vertical|start"
             android:text="@string/export_text_add_criteria"
-            android:layout_marginStart="15dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/export_criteria_layout"
             app:layout_constraintEnd_toStartOf="@id/export_text_criteria_help_button"
@@ -136,10 +136,10 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:background="@color/transparent"
+            android:src="@drawable/ic_help_outline"
             app:layout_constraintBottom_toTopOf="@id/export_criteria_layout"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_help_outline" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/export_criteria_layout"
