@@ -57,7 +57,7 @@
     <string name="valueExceptionTitle">Помилка значення</string>
     <string name="exportedFieldsEmptyFieldsException">Повинно бути активним хоча б одне поле!</string>
     <string name="exportCriteriaHelpTitle">Коротка інструкція</string>
-    <string name="exportCriteriaHelpText">Використовуйте це, якщо ви хочете експортувати дані книг із певними полями.\n\nНаприклад: Виберіть дату та напишіть 2020, щоб отримати лише книги, дати закінчення яких - 2020</string>
+    <string name="exportCriteriaHelpText">Використовуйте це, якщо ви хочете експортувати дані книг із певними полями.\n\nНаприклад: Виберіть дату та напишіть 2020, щоб отримати лише книги, дати закінчення яких - 2020\n\nПримітка: якщо ви хочете імпортувати книги з невідомою, невизначеною датою чи категорією, використовуйте \'0000\' для дати та \'Без категорії\'для категорії.</string>
     <string name="exportedFieldsHelpText">Натисніть на елемент, щоб увімкнути / вимкнути;\nТривале натискання та переміщення вгору / вниз для зміни положення предмета;\n\n\nБудуть експортовані лише активні поля;\nПоля будуть експортовані залежно від порядку елементів. Зверху вниз;\nПринаймні одне поле має бути активним.</string>
     <string name="delete_dialog_title">Підтвердьте видалення книги!</string>
     <string name="delete_dialog_message">Ви збираєтеся видалити всю інформацію про книгу. Ви дійсно хочете продовжити?</string>
@@ -114,4 +114,16 @@
     <string name="menu_change_sort_format">Змінити формат сортування</string>
     <string name="menu_stats">Статистика</string>
     <string name="menu_export">Експорт</string>
+    <string name="empty_result_data_description">Щось не так із вашим запитом. Немає книг із такими статусами чи критеріями</string>
+    <string name="empty_result_data_message">Жодної книги не знайдено</string>
+    <string name="menu_abandoned_books">Кинуті книги</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="preferences_global_category_title">Глобальний</string>
+    <string name="preferences_list_date_format_title">Показувати дату як:</string>
+    <string name="preferences_list_item_date_full">Повна дата</string>
+    <string name="preferences_list_item_date_spend">Витрачений час</string>
+    <string name="preferences_list_item_sort_by_category">категорією</string>
+    <string name="preferences_list_item_sort_by_year">рік</string>
+    <string name="preferences_list_sort_format_title">Сортувати книги за ..</string>
+    <string name="title_abandoned">Покинуті</string>
 </resources>

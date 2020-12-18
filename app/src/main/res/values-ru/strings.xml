@@ -57,7 +57,7 @@
     <string name="valueExceptionTitle">Ошибка значения</string>
     <string name="exportedFieldsEmptyFieldsException">Должно быть активно хотя бы одно поле!</string>
     <string name="exportCriteriaHelpTitle">Краткое руководство</string>
-    <string name="exportCriteriaHelpText">Используйте это, если вы хотите экспортировать данные своих книг с определенными полями.\n\nНапример: выберите \"Дата\" и напишите 2020, чтобы получить только книги с датой окончания - 2020 г.</string>
+    <string name="exportCriteriaHelpText">Используйте это, если вы хотите экспортировать данные своих книг с определенными полями.  \n\n\nНапример: выберите \"Дата\" и напишите 2020, чтобы получить только книги с датой окончания - 2020 г.\n\nПримечание: если вы хотите импортировать книги с неизвестной, неопределенной датой или категорией, используйте «0000» для даты и «Без категории» для категории.</string>
     <string name="exportedFieldsHelpText">Нажмите на элемент, чтобы активировать / деактивировать;\nДлительное нажатие и перемещение вверх / вниз для изменения позиции элемента;\n\n\nБудут экспортированы только активные поля;\nПоля будут экспортированы в зависимости от порядка элементов. Сверху донизу;\nПо крайней мере одно поле должно быть активным.</string>
     <string name="delete_dialog_title">Подтвердите удаление книги!</string>
     <string name="delete_dialog_message">Вы собираетесь удалить всю информацию о книге. Вы действительно хотите продолжить?</string>
@@ -114,4 +114,16 @@
     <string name="menu_change_sort_format">Изменить формат сортировки</string>
     <string name="menu_stats">Статистика</string>
     <string name="menu_export">Экспорт</string>
+    <string name="empty_result_data_description">Что-то не так с вашим запросом. Нет книг с такими статусами или критериями</string>
+    <string name="empty_result_data_message">Ни одной книги не найдено</string>
+    <string name="menu_abandoned_books">Брошенные книги</string>
+    <string name="menu_settings">Налаштування</string>
+    <string name="preferences_global_category_title">Глобальный</string>
+    <string name="preferences_list_date_format_title">Показывать дату как:</string>
+    <string name="preferences_list_item_date_full">Полная дата</string>
+    <string name="preferences_list_item_date_spend">Проведенное время</string>
+    <string name="preferences_list_item_sort_by_category">категорией</string>
+    <string name="preferences_list_item_sort_by_year">рік</string>
+    <string name="preferences_list_sort_format_title">Сортировать книги по ..</string>
+    <string name="title_abandoned">Заброшенные</string>
 </resources>

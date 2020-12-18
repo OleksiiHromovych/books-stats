@@ -94,9 +94,9 @@
     <string name="valueExceptionTitle">Value Exception</string>
     <string name="exportedFieldsEmptyFieldsException">Must be active at least one field!</string>
     <string name="exportCriteriaHelpTitle">Quick Guide</string>
-    <string name="exportCriteriaHelpText">"Use this if you want to export your books data with particular fields.\n\n\nFor example: Choice Date and write 2020 to get only books that have end date - 2020 "</string>
+    <string name="exportCriteriaHelpText">Use this if you want to export your books data with particular fields.\n\n\nFor example: Choice Date and write 2020 to get only books that have end date - 2020.\n\nNote: if you want to import books with the unknown, undefined date or category, use \'0000\' for date, and \'Without category\' for category.</string>
 
-    <string name="exportedFieldsHelpText">"Press on item to activate/deactivate;\nLong press and move up/down to change item position;\n\n\nWill be exported only active fields;\nFields will be exported depending on the order of the elements. From top to bottom;\nAt least one field must be active.\n    "</string>
+    <string name="exportedFieldsHelpText">Press on item to activate/deactivate;\nLong press and move up/down to change item position;\n\n\nWill be exported only active fields;\nFields will be exported depending on the order of the elements. From top to bottom;\nAt least one field must be active.\n   </string>
 
     <!-- For delete alert dialog -->
     <string name="delete_dialog_title">Confirm book delete!</string>
@@ -114,7 +114,7 @@
     <string name="empty_field_exeption_title">Empty field</string>
     <string name="criteria_title_empty_exception">%s field are empty</string>
     <string name="incorrect_data_exception_title">Incorrect data</string>
-    <string name="criteria_inccorect_value">Value such - %s is not in books data</string>
+    <string name="criteria_inccorect_value">Value such "%s" is not in books data</string>
     <string name="unknown_value">Unknown</string>
     <string name="unknown_date">Unknown Date</string>
     <string name="undefined_date">Undefined Date</string>
@@ -158,10 +158,10 @@
     <string name="menu_export">Export</string>
 
     <string name="menu_settings">Settings</string>
-    <string name="preferences_read_yet_category_title">Read yet</string>
+    <string name="preferences_read_yet_category_title" translatable="false">@string/title_read_yet</string>
     <string name="preferences_global_category_title">Global</string>
 
-    <string name="preferences_list_item_date_spend">Spend Date</string>
+    <string name="preferences_list_item_date_spend">Time spent</string>
     <string name="preferences_list_item_date_full">Full Date</string>
     <string name="preferences_list_date_format_title">Show date as:</string>
 
@@ -170,8 +170,8 @@
     <string name="preferences_list_sort_format_title">Sort books by..</string>
     <string name="title_abandoned">Abandoned</string>
     <string name="menu_abandoned_books">Abandoned books</string>
-    <string name="empty_result_data_message">Any books find</string>
-    <string name="empty_result_data_description">Something wrong with your query. There are not books with choices status or criteria</string>
+    <string name="empty_result_data_message">None books find</string>
+    <string name="empty_result_data_description">Something wrong with your query. There are no books with those statuses or criteria</string>
 
     <plurals name="totalBooksExportCount">
         <item quantity="one">Exported %d book</item>
