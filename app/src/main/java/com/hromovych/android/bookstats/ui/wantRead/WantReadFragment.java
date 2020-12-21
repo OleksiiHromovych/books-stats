@@ -46,6 +46,8 @@ public class WantReadFragment extends SimpleFragment {
     private GroupAdapter mAdapter;
     private Callbacks mCallbacks;
 
+    private final String status = ValueConvector.Constants.WANT_READ;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -184,8 +186,7 @@ public class WantReadFragment extends SimpleFragment {
 
 //        } else {
         {
-            List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
-                            .getString(R.string.title_want_read)),
+            List<Book> books = bookLab.getBooksByStatus(status,
                     BookDBSchema.BookTable.Cols.CATEGORY + " , " +
                             BookDBSchema.BookTable.Cols.AUTHOR);
 
@@ -223,10 +224,11 @@ public class WantReadFragment extends SimpleFragment {
     private class BookViewHolder extends Holders.BookHolder implements View.OnClickListener {
 
         private final TextView priority;
+        private final int itemColor = getResources().getColor(R.color.bookPaperLight);
 
         public BookViewHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_book, parent, false));
-            itemView.setBackgroundColor(getResources().getColor(R.color.bookPaperLight));
+            itemView.setBackgroundColor(itemColor);
             priority = itemView.findViewById(R.id.details_up);
             priority.setVisibility(View.VISIBLE);
         }
@@ -235,15 +237,16 @@ public class WantReadFragment extends SimpleFragment {
             super.bind(book, pos);
             priority.setText(mBook.getType());
 
-            if (mBook.getLabel() != null) {
+            String label = mBook.getLabel();
+            if (label != null && !label.equals(Labels.NONE_VALUE)) {
                 GradientDrawable shape = new GradientDrawable();
                 shape.setShape(GradientDrawable.RECTANGLE);
-                shape.setStroke(10, new Labels(getContext(), ValueConvector.Constants.WANT_READ).getLabelColor(
-                        mBook.getLabel()));
-                shape.setColor(getResources().getColor(R.color.bookPaperLight));
+                shape.setStroke(getResources().getDimensionPixelOffset(R.dimen.label_stroke_size),
+                        new Labels(getContext(), status).getLabelColor(label));
+                shape.setColor(itemColor);
                 itemView.setBackground(shape);
             } else {
-                itemView.setBackgroundColor(getResources().getColor(R.color.bookPaperLight));
+                itemView.setBackgroundColor(itemColor);
             }
 
         }

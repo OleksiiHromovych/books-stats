@@ -54,6 +54,8 @@ public class ReadYetFragment extends SimpleFragment {
 
     private Callbacks mCallbacks;
 
+    private final String status = ValueConvector.Constants.READ_YET;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -227,8 +229,7 @@ public class ReadYetFragment extends SimpleFragment {
             }
 
         } else {
-            List<Book> books = bookLab.getBooksByStatus(getStatusConstant(getResources()
-                            .getString(R.string.title_read_yet)),
+            List<Book> books = bookLab.getBooksByStatus(status,
                     BookDBSchema.BookTable.Cols.CATEGORY + " , " +
                             BookDBSchema.BookTable.Cols.END_DATE + " , " +
                             BookDBSchema.BookTable.Cols.START_DATE);
@@ -285,9 +286,11 @@ public class ReadYetFragment extends SimpleFragment {
         private final TextView startDate;
         private final TextView endDate;
 
+        private final int itemColor = getResources().getColor(R.color.bookPaperDark);
+
         public BookViewHolder(View itemView) {
             super(itemView);
-            itemView.setBackgroundColor(getResources().getColor(R.color.bookPaperDark));
+            itemView.setBackgroundColor(itemColor);
 
             startDate = itemView.findViewById(R.id.details_up);
             endDate = itemView.findViewById(R.id.details_down);
@@ -326,20 +329,23 @@ public class ReadYetFragment extends SimpleFragment {
                     if (days != 0)
                         startDate.setText(String.valueOf(days));
                     else
-                        startDate.setText("1");
+                        startDate.setText("<1");
                 }
                 endDate.setVisibility(View.GONE);
 
             }
-            if (mBook.getLabel() != null) {
+            String label = mBook.getLabel();
+            if (label != null && !label.equals(Labels.NONE_VALUE)) {
+                Labels labels = new Labels(getContext(), status);
+
                 GradientDrawable shape = new GradientDrawable();
                 shape.setShape(GradientDrawable.RECTANGLE);
-                shape.setStroke(10, new Labels(getContext(), ValueConvector.Constants.READ_YET).getLabelColor(
-                        mBook.getLabel()));
-                shape.setColor(getResources().getColor(R.color.bookPaperDark));
+                shape.setStroke(getResources().getDimensionPixelOffset(R.dimen.label_stroke_size),
+                        labels.getLabelColor(label));
+                shape.setColor(itemColor);
                 itemView.setBackground(shape);
             } else {
-                itemView.setBackgroundColor(getResources().getColor(R.color.bookPaperDark));
+                itemView.setBackgroundColor(itemColor);
             }
 
         }
