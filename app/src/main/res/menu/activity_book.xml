@@ -3,9 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/delete_book"
+        android:id="@+id/action_delete_book"
         android:icon="@drawable/ic_menu_del"
         android:title="@string/delete_book"
         app:showAsAction="ifRoom|withText" />
+
+    <item
+        android:id="@+id/action_export_book"
+        android:icon="@drawable/ic_send"
+        android:title="@string/menu_action_export_book_title"
+        app:showAsAction="ifRoom" />
 
 </menu>

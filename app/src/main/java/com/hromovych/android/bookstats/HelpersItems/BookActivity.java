@@ -82,8 +82,12 @@ public class BookActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        setResult(RESULT_OK);
-        finish();
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            setResult(RESULT_OK);
+            finish();
+        } else {
+            super.onBackPressed();
+        }
     }
 
 

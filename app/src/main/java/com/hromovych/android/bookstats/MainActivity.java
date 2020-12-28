@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
 
-            case R.id.delete_book:
+            case R.id.action_delete_book:
                 showDeleteDialog();
                 return true;
 

@@ -172,6 +172,8 @@
     <string name="menu_abandoned_books">Abandoned books</string>
     <string name="empty_result_data_message">None books find</string>
     <string name="empty_result_data_description">Something wrong with your query. There are no books with those statuses or criteria</string>
+    <string name="menu_action_export_book_title">Export</string>
+    <string name="export_selected_book_preview_title">Preview</string>
 
     <plurals name="totalBooksExportCount">
         <item quantity="one">Exported %d book</item>

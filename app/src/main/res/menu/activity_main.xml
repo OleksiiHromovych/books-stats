@@ -11,7 +11,7 @@
         android:title="@string/menu_abandoned_books" />
 
     <item
-        android:id="@+id/delete_book"
+        android:id="@+id/action_delete_book"
         android:icon="@drawable/ic_menu_del"
         android:title="@string/delete_book"
         app:showAsAction="withText" />

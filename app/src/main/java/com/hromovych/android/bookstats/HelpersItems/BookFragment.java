@@ -293,7 +293,7 @@ public class BookFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.delete_book:
+            case R.id.action_delete_book:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                 builder.setTitle(R.string.delete_dialog_title);
@@ -316,6 +316,13 @@ public class BookFragment extends Fragment {
 
                 builder.show();
 
+                return true;
+            case R.id.action_export_book:
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.container, ExportSelectedBookFragment.newInstance(mBook.getId()))
+                        .addToBackStack(null)
+                        .commit();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
