@@ -3,7 +3,7 @@ package com.hromovych.android.bookstats.database;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
-import com.hromovych.android.bookstats.HelpersItems.Book;
+import com.hromovych.android.bookstats.helpersItems.Book;
 
 import java.util.Date;
 import java.util.UUID;

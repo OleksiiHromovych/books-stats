@@ -1,4 +1,4 @@
-package com.hromovych.android.bookstats.HelpersItems;
+package com.hromovych.android.bookstats.helpersItems;
 
 import java.util.Date;
 import java.util.UUID;

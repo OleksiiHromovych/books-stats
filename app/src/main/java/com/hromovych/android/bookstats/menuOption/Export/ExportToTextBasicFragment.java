@@ -9,16 +9,16 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.hromovych.android.bookstats.HelpersItems.Book;
-import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.R;
+import com.hromovych.android.bookstats.helpersItems.Book;
+import com.hromovych.android.bookstats.helpersItems.DateHelper;
 
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
-import static com.hromovych.android.bookstats.HelpersItems.DateHelper.getDateFormatString;
+import static com.hromovych.android.bookstats.helpersItems.DateHelper.getDateFormatString;
 
 public abstract class ExportToTextBasicFragment extends Fragment {
 
@@ -45,7 +45,7 @@ public abstract class ExportToTextBasicFragment extends Fragment {
 
         builder.setTitle(title);
         builder.setMessage(message);
-        builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }

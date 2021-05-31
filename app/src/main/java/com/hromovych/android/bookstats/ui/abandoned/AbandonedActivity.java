@@ -4,8 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import com.hromovych.android.bookstats.HelpersItems.SimpleActivity;
 import com.hromovych.android.bookstats.R;
+import com.hromovych.android.bookstats.helpersItems.SimpleActivity;
 
 public class AbandonedActivity extends SimpleActivity {
 

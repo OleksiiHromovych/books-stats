@@ -17,13 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.hromovych.android.bookstats.HelpersItems.Book;
-import com.hromovych.android.bookstats.HelpersItems.DateHelper;
-import com.hromovych.android.bookstats.HelpersItems.Holders;
-import com.hromovych.android.bookstats.HelpersItems.Labels;
-import com.hromovych.android.bookstats.HelpersItems.SimpleFragment;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookLab;
+import com.hromovych.android.bookstats.helpersItems.Book;
+import com.hromovych.android.bookstats.helpersItems.DateHelper;
+import com.hromovych.android.bookstats.helpersItems.Holders;
+import com.hromovych.android.bookstats.helpersItems.Labels;
+import com.hromovych.android.bookstats.helpersItems.SimpleFragment;
 
 import java.util.List;
 

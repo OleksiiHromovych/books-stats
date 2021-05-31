@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hromovych.android.bookstats.HelpersItems.Holders;
 import com.hromovych.android.bookstats.R;
+import com.hromovych.android.bookstats.helpersItems.Holders;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,7 +79,7 @@ public class ExportedFieldsFragment extends Fragment {
         return view;
     }
 
-    private ItemTouchHelper.SimpleCallback mItemTouchHelperCallback =
+    private final ItemTouchHelper.SimpleCallback mItemTouchHelperCallback =
             new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
                 @Override
                 public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
@@ -108,7 +108,7 @@ public class ExportedFieldsFragment extends Fragment {
                 }
             };
 
-    private View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Fragment fragment = null;
@@ -146,7 +146,7 @@ public class ExportedFieldsFragment extends Fragment {
 
         builder.setTitle(titleId);
         builder.setMessage(messageId);
-        builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }
@@ -172,7 +172,7 @@ public class ExportedFieldsFragment extends Fragment {
     private class FieldHolder extends Holders.BookHolder
             implements View.OnClickListener {
 
-        private TextView fieldView;
+        private final TextView fieldView;
 
         public FieldHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_export_change_field, parent, false));

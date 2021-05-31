@@ -16,7 +16,7 @@
         android:title="@string/delete_book"
         app:showAsAction="withText" />
 
-    <item android:title="@string/menu_stats" />
+<!--    <item android:title="@string/menu_stats" />-->
 
     <item
         android:id="@+id/import_books"

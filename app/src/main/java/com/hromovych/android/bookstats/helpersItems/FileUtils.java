@@ -1,4 +1,4 @@
-package com.hromovych.android.bookstats.HelpersItems;
+package com.hromovych.android.bookstats.helpersItems;
 
 import android.annotation.SuppressLint;
 import android.content.ContentUris;

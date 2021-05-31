@@ -12,6 +12,8 @@ import androidx.fragment.app.FragmentManager;
 
 import com.hromovych.android.bookstats.R;
 
+import static com.hromovych.android.bookstats.helpersItems.UiUtilsKt.showNotYetImplementedDialog;
+
 public class ImportDataActivity extends AppCompatActivity {
 
     private static final String EXTRA_DB_PATH = "extra_db_path";
@@ -49,10 +51,11 @@ public class ImportDataActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (path == null)
                     return;
-                FragmentManager fm = getSupportFragmentManager();
-                fm.beginTransaction()
-                        .add(R.id.import_activity_container, FromFileFragment.newInstance(path))
-                        .commit();
+                showNotYetImplementedDialog(ImportDataActivity.this);
+//                FragmentManager fm = getSupportFragmentManager();
+//                fm.beginTransaction()
+//                        .add(R.id.import_activity_container, FromFileFragment.newInstance(path))
+//                        .commit();
             }
         });
 

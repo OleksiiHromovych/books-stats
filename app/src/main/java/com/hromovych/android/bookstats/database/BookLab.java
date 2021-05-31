@@ -6,8 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
-import com.hromovych.android.bookstats.HelpersItems.Book;
 import com.hromovych.android.bookstats.database.BookDBSchema.BookTable;
+import com.hromovych.android.bookstats.helpersItems.Book;
 
 import java.util.ArrayList;
 import java.util.HashSet;

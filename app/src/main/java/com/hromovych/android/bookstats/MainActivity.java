@@ -24,20 +24,21 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.hromovych.android.bookstats.HelpersItems.Book;
-import com.hromovych.android.bookstats.HelpersItems.BookActivity;
-import com.hromovych.android.bookstats.HelpersItems.Callbacks;
-import com.hromovych.android.bookstats.HelpersItems.FileUtils;
-import com.hromovych.android.bookstats.HelpersItems.PreferencesHelper;
 import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
+import com.hromovych.android.bookstats.helpersItems.Book;
+import com.hromovych.android.bookstats.helpersItems.BookActivity;
+import com.hromovych.android.bookstats.helpersItems.Callbacks;
+import com.hromovych.android.bookstats.helpersItems.FileUtils;
+import com.hromovych.android.bookstats.helpersItems.PreferencesHelper;
 import com.hromovych.android.bookstats.menuOption.Export.ExportDataActivity;
 import com.hromovych.android.bookstats.menuOption.Import.ImportDataActivity;
 import com.hromovych.android.bookstats.menuOption.settings.SettingsActivity;
-import com.hromovych.android.bookstats.slider.IntroSlider;
 import com.hromovych.android.bookstats.ui.abandoned.AbandonedActivity;
 
 import java.util.List;
+
+import static com.hromovych.android.bookstats.helpersItems.UiUtilsKt.showNotYetImplementedDialog;
 
 public class MainActivity extends AppCompatActivity implements Callbacks {
 
@@ -54,10 +55,11 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
 
         PreferencesHelper preferencesHelper = new PreferencesHelper(this);
 
-        if (preferencesHelper.isFirstRun()) {
-            startActivity(new Intent(this, IntroSlider.class));
-            preferencesHelper.putIsFirstRun(false);
-        }
+// TODO: Redesign slider photos or delete it ;)
+//        if (preferencesHelper.isFirstRun()) {
+//            startActivity(new Intent(this, IntroSlider.class));
+//            preferencesHelper.putIsFirstRun(false);
+//        }
 
         if (getIntent().getData() != null) {
             Uri uri = getIntent().getData();
@@ -104,29 +106,30 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
 
             case R.id.action_delete_book:
                 showDeleteDialog();
-                return true;
+                break;
 
             case R.id.menu_settings:
                 startActivityForResult(new Intent(this, SettingsActivity.class),
                         REQUEST_CODE_RECREATE_APPLICATION);
-                return true;
+                break;
 
             case R.id.menu_abandoned_books:
                 startActivity(new Intent(this, AbandonedActivity.class));
-                return true;
+                break;
 
             case R.id.import_books:
                 startActivityForResult(ImportDataActivity.newIntent(MainActivity.this),
                         REQUEST_CODE_IMPORT);
-                return true;
+                break;
 
             case R.id.export_books:
                 startActivity(ExportDataActivity.newIntent(this));
-                return true;
+                break;
 
             default:
-                return super.onOptionsItemSelected(item);
+                showNotYetImplementedDialog(this);
         }
+        return true;
     }
 
     private void showDeleteDialog() {

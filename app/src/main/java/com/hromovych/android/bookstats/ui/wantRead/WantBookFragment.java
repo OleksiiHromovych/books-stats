@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
-import com.hromovych.android.bookstats.HelpersItems.BookFragment;
-import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.ValueConvector;
+import com.hromovych.android.bookstats.helpersItems.BookFragment;
+import com.hromovych.android.bookstats.helpersItems.DateHelper;
 
 import java.util.Arrays;
 import java.util.List;

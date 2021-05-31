@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 
 import com.hromovych.android.bookstats.R;
 
+import static com.hromovych.android.bookstats.helpersItems.UiUtilsKt.showNotYetImplementedDialog;
+
 public class ExportDataActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static Intent newIntent(Context context) {
@@ -36,13 +38,15 @@ public class ExportDataActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         Fragment fragment;
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.export_as_text_btn:
                 fragment = ToTextFragment.newInstance();
                 break;
             case R.id.export_as_bd_btn:
-                fragment = ToFileFragment.newInstance();
-                break;
+                showNotYetImplementedDialog(this);
+//                fragment = ToFileFragment.newInstance();
+                //break;
+                return;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());
         }

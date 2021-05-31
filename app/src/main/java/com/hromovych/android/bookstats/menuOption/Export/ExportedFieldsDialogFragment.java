@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hromovych.android.bookstats.HelpersItems.Holders;
 import com.hromovych.android.bookstats.R;
+import com.hromovych.android.bookstats.helpersItems.Holders;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -144,7 +144,7 @@ public class ExportedFieldsDialogFragment extends DialogFragment {
 
         builder.setTitle(titleId);
         builder.setMessage(messageId);
-        builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }

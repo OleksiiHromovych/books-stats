@@ -21,12 +21,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.hromovych.android.bookstats.HelpersItems.Book;
-import com.hromovych.android.bookstats.HelpersItems.DateHelper;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookDBSchema;
 import com.hromovych.android.bookstats.database.BookLab;
 import com.hromovych.android.bookstats.database.ValueConvector;
+import com.hromovych.android.bookstats.helpersItems.Book;
+import com.hromovych.android.bookstats.helpersItems.DateHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.hromovych.android.bookstats.HelpersItems.DateHelper.getYearStringFromDate;
+import static com.hromovych.android.bookstats.helpersItems.DateHelper.getYearStringFromDate;
 
 public class ToTextFragment extends ExportToTextBasicFragment {
 
@@ -290,9 +290,10 @@ public class ToTextFragment extends ExportToTextBasicFragment {
         for (String key : map.keySet()) {
             if (key.equals(getString(R.string.book_end_date_title))) {
                 if (map.get(key).equals(DATE_UNKNOWN_VALUE)) {
-                    whereClause.put(BookDBSchema.BookTable.Cols.END_DATE + " = " +
-                            DateHelper.unknownDate.getTime() +
-                            " OR ?", Long.toString(DateHelper.undefinedDate.getTime()));
+                    whereClause.put("(" + BookDBSchema.BookTable.Cols.END_DATE + " = " +
+                                    DateHelper.unknownDate.getTime() +
+                                    " OR " + BookDBSchema.BookTable.Cols.END_DATE + " = ?",
+                            DateHelper.undefinedDate.getTime() + ")");
                 } else {
                     whereClause.put(BookDBSchema.BookTable.Cols.END_DATE + " BETWEEN ?",
                             Long.toString(DateHelper.getSecondFromDate(Integer.parseInt(map.get(key)), 0, 1)));
@@ -301,8 +302,9 @@ public class ToTextFragment extends ExportToTextBasicFragment {
                 }
             } else if (key.equals(getString(R.string.book_category_title))) {
                 if (map.get(key).equals(getString(R.string.without_category_book)))
-                    whereClause.put(BookDBSchema.BookTable.Cols.CATEGORY + " ISNULL OR " +
-                            BookDBSchema.BookTable.Cols.CATEGORY + " is ?", "");
+                    whereClause.put("(" + BookDBSchema.BookTable.Cols.CATEGORY + " ISNULL OR " +
+                                    BookDBSchema.BookTable.Cols.CATEGORY + " is ?)",
+                            "");
                 else
                     whereClause.put(BookDBSchema.BookTable.Cols.CATEGORY + " = ?", map.get(key));
             }

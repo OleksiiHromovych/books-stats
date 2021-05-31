@@ -17,11 +17,11 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.hromovych.android.bookstats.HelpersItems.BookFragment;
-import com.hromovych.android.bookstats.HelpersItems.DateHelper;
-import com.hromovych.android.bookstats.HelpersItems.DatePickerFragment;
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.ValueConvector;
+import com.hromovych.android.bookstats.helpersItems.BookFragment;
+import com.hromovych.android.bookstats.helpersItems.DateHelper;
+import com.hromovych.android.bookstats.helpersItems.DatePickerFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -198,7 +198,7 @@ public class BookYetFragment extends BookFragment {
                     builder.setTitle(R.string.date_request_exception_title);
                     builder.setMessage(R.string.date_start_request_exception_text);
                     builder.setCancelable(false);
-                    builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mBook.setStartDate(date);
@@ -235,7 +235,7 @@ public class BookYetFragment extends BookFragment {
                     builder.setTitle(R.string.date_request_exception_title);
                     builder.setMessage(R.string.date_end_request_exception_text);
                     builder.setCancelable(false);
-                    builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mBook.setEndDate(endDate);
@@ -244,7 +244,7 @@ public class BookYetFragment extends BookFragment {
                         }
                     });
 
-                    builder.setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                         }

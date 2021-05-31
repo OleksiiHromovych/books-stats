@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:background="@color/backgroundFont"
-            android:text="@string/button_ok"
+            android:text="@string/ok"
             android:textColor="@color/activeIcon" />
 
     </RelativeLayout>
