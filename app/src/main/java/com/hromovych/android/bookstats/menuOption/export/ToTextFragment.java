@@ -1,4 +1,4 @@
-package com.hromovych.android.bookstats.menuOption.Export;
+package com.hromovych.android.bookstats.menuOption.export;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -127,7 +127,7 @@ public class ToTextFragment extends ExportToTextBasicFragment {
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.export_activity_container,
+                        .replace(R.id.container,
                                 ExportedFieldsFragment.newInstance(fieldsList))
                         .addToBackStack(null)
                         .commit();

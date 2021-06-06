@@ -17,13 +17,13 @@
             android:name=".helpersItems.BookActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".slider.IntroSlider" />
-        <activity android:name=".menuOption.Export.ExportDataActivity" />
+        <activity android:name=".menuOption.export.ExportDataActivity" />
 
         <activity android:name=".menuOption.settings.SettingsActivity" />
 
         <activity android:name=".ui.abandoned.AbandonedActivity" />
 
-        <activity android:name=".menuOption.Import.ImportDataActivity" />
+        <activity android:name=".menuOption.import_option.ImportDataActivity" />
         <activity
             android:name=".ui.splash.SplashActivity"
             android:theme="@style/SplashTheme">

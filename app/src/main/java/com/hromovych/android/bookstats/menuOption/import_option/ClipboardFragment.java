@@ -1,4 +1,4 @@
-package com.hromovych.android.bookstats.menuOption.Import;
+package com.hromovych.android.bookstats.menuOption.import_option;
 
 import android.content.ClipboardManager;
 import android.os.Bundle;

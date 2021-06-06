@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
@@ -29,10 +28,9 @@ import com.hromovych.android.bookstats.database.ValueConvector;
 import com.hromovych.android.bookstats.helpersItems.Book;
 import com.hromovych.android.bookstats.helpersItems.BookActivity;
 import com.hromovych.android.bookstats.helpersItems.Callbacks;
-import com.hromovych.android.bookstats.helpersItems.FileUtils;
 import com.hromovych.android.bookstats.helpersItems.PreferencesHelper;
-import com.hromovych.android.bookstats.menuOption.Export.ExportDataActivity;
-import com.hromovych.android.bookstats.menuOption.Import.ImportDataActivity;
+import com.hromovych.android.bookstats.menuOption.export.ExportDataActivity;
+import com.hromovych.android.bookstats.menuOption.import_option.ImportDataActivity;
 import com.hromovych.android.bookstats.menuOption.settings.SettingsActivity;
 import com.hromovych.android.bookstats.ui.abandoned.AbandonedActivity;
 
@@ -61,15 +59,16 @@ public class MainActivity extends AppCompatActivity implements Callbacks {
 //            preferencesHelper.putIsFirstRun(false);
 //        }
 
-        if (getIntent().getData() != null) {
-            Uri uri = getIntent().getData();
-            String path = new FileUtils(this).getPath(uri);
-            startActivityForResult(ImportDataActivity.newIntent(MainActivity.this,
-                    path),
-                    REQUEST_CODE_IMPORT);
-            getIntent().setData(null);
-
-        }
+        // todo: delete this ;) or no ?)
+//        if (getIntent().getData() != null) {
+//            Uri uri = getIntent().getData();
+//            String path = new FileUtils(this).getPath(uri);
+//            startActivityForResult(ImportDataActivity.newIntent(MainActivity.this,
+//                    path),
+//                    REQUEST_CODE_IMPORT);
+//            getIntent().setData(null);
+//
+//        }
         navView = findViewById(R.id.nav_view);
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(

@@ -1,4 +1,4 @@
-package com.hromovych.android.bookstats.menuOption.Export;
+package com.hromovych.android.bookstats.menuOption.export;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,31 +27,29 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class ExportedFieldsDialogFragment extends DialogFragment {
+public class ExportedFieldsFragment extends Fragment {
+    public static final String BUNDLE_FIELDS_LIST_KEY = "bundle fields list key";
 
     private RecyclerView mRecyclerView;
     private FieldAdapter mAdapter;
     private List<String> fields;
-    private final ArrayList<String> activeFields;
+    private ArrayList<String> activeFields;
     private LinkedHashMap<String, Boolean> fieldActive;
-    private final CallBack mCallBack;
 
-    public ExportedFieldsDialogFragment(CallBack callBack, ArrayList<String> activeFields) {
-        this.activeFields = activeFields;
-        mCallBack = callBack;
+    public static ExportedFieldsFragment newInstance(ArrayList<String> strings) {
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(BUNDLE_FIELDS_LIST_KEY, strings);
+        ExportedFieldsFragment fragment = new ExportedFieldsFragment();
+        fragment.setArguments(bundle);
+        return fragment;
     }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_FRAME, R.style.ThemeFieldsDialog);
-    }
-
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_export_text_change_fields, container, false);
+
+        activeFields = getArguments().getStringArrayList(BUNDLE_FIELDS_LIST_KEY);
 
         mRecyclerView = view.findViewById(R.id.exported_fields_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -113,8 +111,10 @@ public class ExportedFieldsDialogFragment extends DialogFragment {
     private final View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Fragment fragment = null;
+
             if (v.getId() == R.id.exported_fields_cancel_btn) {
-                dismiss();
+                getActivity().getSupportFragmentManager().popBackStack();
 
             } else if (v.getId() == R.id.exported_fields_ok_btn) {
 
@@ -129,15 +129,16 @@ public class ExportedFieldsDialogFragment extends DialogFragment {
                             R.string.exportedFieldsEmptyFieldsException);
                     return;
                 }
-                mCallBack.setFields(fields);
-                dismiss();
+
+                fragment = ToTextFragment.newInstance(fields);
             }
+            if (fragment != null)
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.container, fragment)
+                        .commit();
         }
     };
-
-    public interface CallBack {
-        void setFields(ArrayList<String> fields);
-    }
 
     public void showAlertMessage(int titleId, int messageId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

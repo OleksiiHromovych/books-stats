@@ -14,8 +14,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.hromovych.android.bookstats.R;
 import com.hromovych.android.bookstats.database.BookLab;
-import com.hromovych.android.bookstats.menuOption.Export.ExportToTextBasicFragment;
-import com.hromovych.android.bookstats.menuOption.Export.ExportedFieldsDialogFragment;
+import com.hromovych.android.bookstats.menuOption.export.ExportToTextBasicFragment;
+import com.hromovych.android.bookstats.menuOption.export.ExportedFieldsDialogFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;

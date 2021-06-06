@@ -1,4 +1,4 @@
-package com.hromovych.android.bookstats.menuOption.Import;
+package com.hromovych.android.bookstats.menuOption.import_option;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;

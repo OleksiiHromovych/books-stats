@@ -1,4 +1,4 @@
-package com.hromovych.android.bookstats.menuOption.Export;
+package com.hromovych.android.bookstats.menuOption.export;
 
 import android.app.AlertDialog;
 import android.content.ClipData;
