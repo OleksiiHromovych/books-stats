@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +70,6 @@ public class ReadYetFragment extends SimpleFragment {
         PreferencesHelper pm = new PreferencesHelper(getContext());
         isFullDateFormat = pm.isFullDateFormat();
         sortByYear = pm.isSortByYear();
-        updateUI();
 
         return view;
     }
@@ -223,7 +223,10 @@ public class ReadYetFragment extends SimpleFragment {
                 booksDate.add(book);
             }
             if (!booksDate.isEmpty()) {
-                Group group = new Group(Integer.toString(lastDate + 1900), booksDate,
+                String groupTitle = lastDate == 0 ? getString(R.string.unknown_date) :
+                        Integer.toString(lastDate + 1900);
+
+                Group group = new Group(groupTitle, booksDate,
                         expendedStatus[groups.size()]);
                 groups.add(group);
             }
@@ -259,6 +262,9 @@ public class ReadYetFragment extends SimpleFragment {
 
             }
             if (!booksCategory.isEmpty()) {
+                if (lastCategory.isEmpty())
+                    lastCategory = getString(R.string.without_category_book);
+
                 Group group = new Group(lastCategory, booksCategory, expendedStatus[groups.size()]);
                 groups.add(group);
             }
@@ -392,14 +398,12 @@ public class ReadYetFragment extends SimpleFragment {
         @Override
         public void onBindParentViewHolder(@NonNull GroupViewHolder parentViewHolder, final int parentPosition, @NonNull Group parent) {
             parentViewHolder.bind(parent);
-            parentViewHolder.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    PreferencesHelper preferencesHelper = new PreferencesHelper(getContext());
-                    Boolean[] expendedArray = preferencesHelper.getExpendedYetArray();
-                    expendedArray[parentPosition] = !expendedArray[parentPosition];
-                    preferencesHelper.putExpendedYetArray(expendedArray);
-                }
+            parentViewHolder.setOnClickListener(v -> {
+                PreferencesHelper preferencesHelper = new PreferencesHelper(getContext());
+                Boolean[] expendedArray = preferencesHelper.getExpendedYetArray();
+                Log.d("TAG", "onBindParentViewHolder: " + parentPosition + " " + expendedArray.length);
+                expendedArray[parentPosition] = !expendedArray[parentPosition];
+                preferencesHelper.putExpendedYetArray(expendedArray);
             });
         }
 

@@ -66,17 +66,14 @@ public class BookLab {
     public List<Book> getBooksByStatus(String s) {
         List<Book> books = new ArrayList<>();
 
-        BookCursorWrapper cursor = queryBooks(
+        try (BookCursorWrapper cursor = queryBooks(
                 BookTable.Cols.STATUS + " = ?",
-                new String[]{s});
-        try {
+                new String[]{s})) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 books.add(cursor.getBook());
                 cursor.moveToNext();
             }
-        } finally {
-            cursor.close();
         }
         return books;
     }
@@ -100,35 +97,29 @@ public class BookLab {
     public List<Book> getBooksByStatus(String s, String orderBy) {
         List<Book> books = new ArrayList<>();
 
-        BookCursorWrapper cursor = queryBooks(
+        try (BookCursorWrapper cursor = queryBooks(
                 BookTable.Cols.STATUS + " = ?",
-                new String[]{s}, orderBy);
-        try {
+                new String[]{s}, orderBy)) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 books.add(cursor.getBook());
                 cursor.moveToNext();
             }
-        } finally {
-            cursor.close();
         }
         return books;
     }
 
     public Book getBook(UUID id) {
-        BookCursorWrapper cursor = queryBooks(
+
+        try (BookCursorWrapper cursor = queryBooks(
                 BookTable.Cols.UUID + " = ?",
                 new String[]{id.toString()}
-        );
-
-        try {
+        )) {
             if (cursor.getCount() == 0) {
                 return null;
             }
             cursor.moveToFirst();
             return cursor.getBook();
-        } finally {
-            cursor.close();
         }
     }
 
@@ -177,50 +168,46 @@ public class BookLab {
     public List<String> getColumnItems(String column) {
         List<String> columnItems = new ArrayList<>();
 
-        Cursor cursor = mDatabase.query(
+        try (Cursor cursor = mDatabase.query(
                 BookTable.NAME,
                 new String[]{column},
                 null,
                 null,
                 null,
                 null,
-                null);
-        try {
+                null)) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                columnItems.add(cursor.getString(0));
+                String item = cursor.getString(0);
+                if (item == null) item = "";
+                columnItems.add(item);
                 cursor.moveToNext();
             }
-        } finally {
-            cursor.close();
         }
         Set<String> set = new HashSet<>(columnItems);
         columnItems.clear();
         columnItems.addAll(set);
         columnItems.remove(null);
-        columnItems.remove("");
+//        columnItems.remove("");
         return columnItems;
 
     }
 
     public void extendFromBase(SQLiteDatabase database) {
-        BookCursorWrapper cursor = new BookCursorWrapper(database.query(
+
+        try (BookCursorWrapper cursor = new BookCursorWrapper(database.query(
                 BookTable.NAME,
                 null,
                 null,
                 null,
                 null,
                 null,
-                null));
-
-        try {
+                null))) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 sBookLab.addBook(cursor.getBook());
                 cursor.moveToNext();
             }
-        } finally {
-            cursor.close();
         }
     }
 

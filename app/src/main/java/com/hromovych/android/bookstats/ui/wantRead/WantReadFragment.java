@@ -213,6 +213,7 @@ public class WantReadFragment extends SimpleFragment {
 
             }
             if (!booksCategory.isEmpty()) {
+
                 Holders.Group group = new Holders.Group(lastCategory, booksCategory);
                 groups.add(group);
             }
